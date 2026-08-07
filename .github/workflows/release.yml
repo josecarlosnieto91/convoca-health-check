@@ -123,6 +123,41 @@ jobs:
           path: dist/${{ matrix.repo }}.zip
           if-no-files-found: error
 
+  svn-deploy:
+    name: Deploy WordPress.org SVN
+    needs: publish
+    runs-on: ubuntu-latest
+    if: ${{ secrets.WP_ORG_SVN_USER != '' }}
+    steps:
+      - name: Download todos los ZIPs
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Checkout scripts
+        uses: actions/checkout@v4
+        with:
+          repository: josecarlosnieto91/convoca-health-check
+          path: qa
+
+      - name: Instalar SVN
+        run: sudo apt-get update -q && sudo apt-get install -y -q subversion unzip
+
+      - name: Deploy a WordPress.org
+        env:
+          SVN_USER: ${{ secrets.WP_ORG_SVN_USER }}
+          SVN_PASS: ${{ secrets.WP_ORG_SVN_PASS }}
+        run: |
+          cd qa
+          for f in ../dist/*.zip; do
+            slug=$(basename "$f" .zip)
+            # Solo plugins (el theme se despliega a themes.svn.wordpress.org aparte)
+            case "$slug" in convoca-theme) continue;; esac
+            echo "=== Deploy: $slug ==="
+            bash scripts/svn-deploy.sh "$slug" "$f" || echo "::warning::Fallo SVN deploy de $slug"
+          done
+
   publish:
     name: Publicar release
     needs: build
