@@ -1,0 +1,18 @@
+{
+  "name": "convoca-health-check",
+  "version": "1.0.0",
+  "description": "Batería de validación permanente del ecosistema Convoca. Un único comando valida todas las funcionalidades públicas y las integraciones entre plugins, sin depender de auditorías manuales.",
+  "main": "playwright.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-convoca-health:josecarlosnieto91/convoca-health-check.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "dependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}
