@@ -19,12 +19,25 @@ $GLOBALS['hc_pass'] = 0;
 $GLOBALS['hc_fail'] = 0;
 $GLOBALS['hc_warn'] = 0;
 $GLOBALS['hc_results'] = [];
+// Modo local (CI sin demo): los checks de configuración del sitio (páginas,
+// credenciales, índice, tema) pasan a WARN en vez de FAIL. La lógica
+// funcional (shortcodes, CPTs, REST, rate limiter, flujos) sigue estricta.
+$GLOBALS['hc_local'] = in_array('--local', $_SERVER['argv'] ?? [], true);
 
 function hc_out($component, $name, $ok, $detail = '') {
     $status = $ok ? 'PASS' : 'FAIL';
     echo "  [$status] $component :: $name" . ($detail ? " ($detail)" : '') . "\n";
     $GLOBALS['hc_results'][] = ['component' => $component, 'name' => $name, 'status' => $status, 'detail' => $detail];
     $ok ? $GLOBALS['hc_pass']++ : $GLOBALS['hc_fail']++;
+}
+
+// Check de configuración de sitio: en modo local, un fallo es WARN (no FAIL).
+function hc_cfg($component, $name, $ok, $detail = '') {
+    if (!$ok && $GLOBALS['hc_local']) {
+        hc_warn($component, $name, $detail . ' [config sitio]');
+        return;
+    }
+    hc_out($component, $name, $ok, $detail);
 }
 
 function hc_warn($component, $name, $detail = '') {
@@ -235,10 +248,10 @@ function hc_gateway() {
     hc_section('Convoca Gateway');
     $settings = get_option('convoca_gateway_settings', []);
 
-    hc_out('Gateway', 'Merchant code', !empty($settings['merchant_code']), $settings['merchant_code'] ?? '');
-    hc_out('Gateway', 'Entorno test', ($settings['environment'] ?? '') === 'test', $settings['environment'] ?? '?');
+    hc_cfg('Gateway', 'Merchant code', !empty($settings['merchant_code']), $settings['merchant_code'] ?? '');
+    hc_cfg('Gateway', 'Entorno test', ($settings['environment'] ?? '') === 'test', $settings['environment'] ?? '?');
     $key = $settings['secret_key'] ?? '';
-    hc_out('Gateway', 'Clave encriptada enc:', strpos($key, 'enc:') === 0, substr($key, 0, 15) . '...');
+    hc_cfg('Gateway', 'Clave encriptada enc:', strpos($key, 'enc:') === 0, substr($key, 0, 15) . '...');
 
     $scs = hc_shortcodes();
     foreach (['convoca_pago', 'convoca_pago_ok', 'convoca_pago_ko'] as $sc) {
@@ -252,9 +265,9 @@ function hc_gateway() {
 
     // Páginas de retorno
     $r = wp_remote_get(home_url('/pago-ok/'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Gateway', 'Página /pago-ok/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Gateway', 'Página /pago-ok/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
     $r = wp_remote_get(home_url('/pago-ko/'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Gateway', 'Página /pago-ko/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Gateway', 'Página /pago-ko/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     // CPT pago
     hc_out('Gateway', 'CPT pago', post_type_exists('pago'), '');
@@ -354,7 +367,7 @@ function hc_assistant() {
 
     // Índice
     $upload = wp_upload_dir();
-    hc_out('Assistant', 'Índice JSON', file_exists($upload['basedir'] . '/convoca-assistant/index.json'), 'index.json');
+    hc_cfg('Assistant', 'Índice JSON', file_exists($upload['basedir'] . '/convoca-assistant/index.json'), 'index.json');
 
     // Rebuild protegido
     $r = wp_remote_post(home_url('/wp-json/convoca/v1/assistant/rebuild-index'), ['timeout' => 10, 'sslverify' => false, 'body' => []]);
@@ -364,7 +377,7 @@ function hc_assistant() {
 function hc_theme() {
     hc_section('Convoca Theme');
     $theme = wp_get_theme();
-    hc_out('Theme', 'Tema activo Convoca', stripos($theme->get('Name'), 'convoca') !== false, $theme->get('Name'));
+    hc_cfg('Theme', 'Tema activo Convoca', stripos($theme->get('Name'), 'convoca') !== false, $theme->get('Name'));
 
     $scs = hc_shortcodes();
     hc_out('Theme', 'Shortcode dark_mode', in_array('convoca_dark_mode_toggle', $scs), '');
@@ -377,7 +390,7 @@ function hc_theme() {
     // Home 200
     $r = wp_remote_get(home_url('/'), ['timeout' => 10, 'sslverify' => false]);
     $body = wp_remote_retrieve_body($r);
-    hc_out('Theme', 'Home 200 + HTML', wp_remote_retrieve_response_code($r) === 200 && strpos($body, '<!DOCTYPE') !== false, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Theme', 'Home 200 + HTML', wp_remote_retrieve_response_code($r) === 200 && strpos($body, '<!DOCTYPE') !== false, 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
 function hc_clean_code() {

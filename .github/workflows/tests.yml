@@ -51,8 +51,6 @@ jobs:
       - name: Ejecutar PHPUnit unit (bootstrap-unit standalone)
         working-directory: ${{ matrix.plugin }}
         run: |
-          # Los tests unitarios corren standalone con mocks WP (bootstrap-unit.php),
-          # sin necesidad de WordPress real ni WP test suite.
           if [ -f tests/bootstrap-unit.php ]; then
             vendor/bin/phpunit --bootstrap tests/bootstrap-unit.php tests/Unit 2>&1 | tail -30
           elif [ -f tests/bootstrap.php ]; then
@@ -61,18 +59,75 @@ jobs:
             echo "Sin tests unitarios"
           fi
 
-  health-check:
-    name: Health Check en demo
+  health-check-local:
+    name: Health Check local (WP de test)
     runs-on: ubuntu-latest
     needs: phpunit-unit
+    services:
+      mysql:
+        image: mariadb:10.11
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
-      - name: Checkout
+      - name: Checkout health-check
         uses: actions/checkout@v4
         with:
           repository: josecarlosnieto91/convoca-health-check
           path: health
 
-      - name: SSH al servidor
+      - name: Setup PHP + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, mysqli
+          tools: wp-cli
+
+      - name: Descargar e instalar WordPress
+        run: |
+          mkdir -p /tmp/wp && cd /tmp/wp
+          wp core download --allow-root --locale=es_ES 2>&1 | tail -2
+          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check 2>&1 | tail -2
+          wp core install --allow-root --url=http://localhost --title="Convoca Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email 2>&1 | tail -2
+
+      - name: Instalar plugins Convoca
+        run: |
+          cd /tmp/wp
+          for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null
+            cd /tmp/wp/wp-content/plugins/$p && composer install --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -1
+            cd /tmp/wp
+          done
+          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null
+          wp plugin activate convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant --allow-root 2>&1 | tail -2
+          wp theme activate convoca --allow-root 2>&1 | tail -1
+
+      - name: Ejecutar Health Check local (modo --local)
+        working-directory: /tmp/wp
+        run: |
+          OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --local --allow-root 2>&1)
+          echo "$OUTPUT"
+          FAILS=$(echo "$OUTPUT" | grep -c "\[FAIL\]" || true)
+          if [ "$FAILS" -gt 0 ]; then
+            echo "::error::$FAILS checks fallaron en modo local"
+            exit 1
+          fi
+          echo "Health check local OK (0 FAILs)"
+
+  health-check-demo:
+    name: Health Check demo (requiere túnel)
+    runs-on: ubuntu-latest
+    needs: health-check-local
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: SSH al servidor (vía túnel configurado)
         env:
           SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
         run: |
@@ -80,31 +135,22 @@ jobs:
           chmod 700 ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          # Alias andromeda → IP Tailscale (100.77.127.2). La clave dedicada CI
-          # tiene command= restringido: SOLO ejecuta el health check.
-          printf 'Host andromeda\n    HostName 100.77.127.2\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
+          printf 'Host andromeda-ci\n    HostName andromeda.example.trycloudflare.com\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
           chmod 600 ~/.ssh/config
-          # Verificar conexión (el comando forzado ejecuta el health check)
-          ssh -o ConnectTimeout=30 andromeda 'test' 2>&1 | tail -5
 
-      - name: Ejecutar batería (vía clave restringida)
+      - name: Ejecutar batería en demo
         run: |
-          # La clave CI está restringida a ejecutar SOLO el health check en
-          # /usr/local/bin/convoca-health-check.php — sin shell, sin scp.
-          OUT=$(ssh -o ConnectTimeout=60 andromeda 'test' 2>&1)
+          OUT=$(ssh -o ConnectTimeout=60 andromeda-ci 'test' 2>&1)
           echo "$OUT"
           if echo "$OUT" | grep -q "FAIL"; then
-            echo "::error::Convoca Health Check FALLÓ"
+            echo "::error::Convoca Health Check FALLÓ en demo"
             exit 1
-          fi
-          if ! echo "$OUT" | grep -q "Coverage: 100%"; then
-            echo "::warning::Coverage inferior a 100%"
           fi
 
   e2e:
-    name: E2E Playwright (demo)
+    name: E2E Playwright (público)
     runs-on: ubuntu-latest
-    needs: health-check
+    needs: health-check-local
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -124,7 +170,7 @@ jobs:
           npm install @playwright/test >/dev/null 2>&1
           npx playwright install chromium --with-deps >/dev/null 2>&1
 
-      - name: Ejecutar E2E contra demo
+      - name: Ejecutar E2E contra demo pública
         working-directory: health
         env:
           E2E_BASE: https://demo.getconvoca.app
