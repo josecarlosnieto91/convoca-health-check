@@ -118,11 +118,24 @@ jobs:
         env:
           CONVOCA_HC_LOCAL: '1'
         run: |
+          # Verificar que wp-cli y el health-check están disponibles
+          which wp || echo "wp NO encontrado en PATH"
+          ls -la /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php || echo "health-check.php NO existe"
+          wp --version --allow-root 2>&1 | head -1 || true
+          # Ejecutar el health check capturando salida y exit code por separado
+          set +e
           OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --allow-root 2>&1)
+          EXIT=$?
+          set -e
+          echo "EXIT_CODE: $EXIT"
           echo "$OUTPUT"
           FAILS=$(echo "$OUTPUT" | grep -c "\[FAIL\]" || true)
           if [ "$FAILS" -gt 0 ]; then
             echo "::error::$FAILS checks fallaron en modo local"
+            exit 1
+          fi
+          if [ "$EXIT" -ne 0 ]; then
+            echo "::error::wp eval-file terminó con exit $EXIT"
             exit 1
           fi
           echo "Health check local OK (0 FAILs)"
