@@ -51,13 +51,22 @@ jobs:
       - name: Ejecutar PHPUnit unit (bootstrap-unit standalone)
         working-directory: ${{ matrix.plugin }}
         run: |
+          # Sin pipe: preservar el exit code real de phpunit (el pipe con tail
+          # enmascara fallos — assistant "pasaba" sin ejecutar tests).
+          set +e
           if [ -f tests/bootstrap-unit.php ]; then
             vendor/bin/phpunit --bootstrap tests/bootstrap-unit.php tests/Unit 2>&1 | tail -30
+            EXIT=${PIPESTATUS[0]}
           elif [ -f tests/bootstrap.php ]; then
             vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/Unit 2>&1 | tail -30
+            EXIT=${PIPESTATUS[0]}
           else
             echo "Sin tests unitarios"
+            EXIT=0
           fi
+          set -e
+          echo "PHPUNIT_EXIT: $EXIT"
+          exit $EXIT
 
   health-check-local:
     name: Health Check local (WP de test)
