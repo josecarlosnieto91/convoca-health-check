@@ -1,0 +1,37 @@
+name: Convoca Health Check
+
+on:
+  schedule:
+    # Diario a las 06:30 UTC (valida que el ecosistema sigue sano)
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+    # Permite lanzar manualmente desde GitHub
+
+jobs:
+  health-check:
+    name: Health Check en demo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar SSH al servidor
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.ANDROMEDA_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh-keyscan -H andromeda >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Ejecutar batería de validación
+        run: |
+          chmod +x bin/convoca-health
+          ./bin/convoca-health --ssh=andromeda --path=/var/www/demo.getconvoca.app/public
+
+      - name: Notificar si hay fallos
+        if: failure()
+        run: |
+          echo "::error::Convoca Health Check FALLÓ en demo. Revisa los logs del workflow."

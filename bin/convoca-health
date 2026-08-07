@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# convoca-health — un único comando para validar todo el ecosistema Convoca.
+#
+# Uso:
+#   convoca-health                      # ejecuta contra el WP por defecto
+#   convoca-health --path=/ruta/al/wp   # WP en otra ruta
+#   convoca-health --format=json        # salida JSON (para CI)
+#   convoca-health --ssh=andromeda      # ejecutar vía SSH en un servidor
+#
+# Requiere: WP-CLI en el servidor destino.
+
+set -euo pipefail
+
+WP_PATH="${WP_PATH:-}"
+SSH_TARGET=""
+FORMAT="text"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT="$SCRIPT_DIR/../health-check.php"
+
+for arg in "$@"; do
+  case "$arg" in
+    --path=*) WP_PATH="${arg#*=}" ;;
+    --ssh=*) SSH_TARGET="${arg#*=}" ;;
+    --format=*) FORMAT="${arg#*=}" ;;
+    *) echo "Argumento desconocido: $arg" >&2; exit 2 ;;
+  esac
+done
+
+WP_ARGS=""
+[ -n "$WP_PATH" ] && WP_ARGS="--path=$WP_PATH"
+
+run_local() {
+  wp eval-file "$SCRIPT" $WP_ARGS "$@"
+}
+
+run_ssh() {
+  scp -q "$SCRIPT" "$SSH_TARGET:/tmp/convoca-health-check.php"
+  # Esperar a que scp termine antes de wp (fish en Andromeda)
+  sleep 2
+  ssh "$SSH_TARGET" "sudo -n wp eval-file /tmp/convoca-health-check.php --allow-root $WP_ARGS 2>&1"
+}
+
+echo "== Convoca Health Check =="
+
+if [ -n "$SSH_TARGET" ]; then
+  OUTPUT="$(run_ssh)"
+else
+  OUTPUT="$(run_local)"
+fi
+
+# Exit code: la batería ya sale con 1 si hay FAILs (--exit-code)
+echo "$OUTPUT"
+
+if echo "$OUTPUT" | grep -q "FAIL"; then
+  exit 1
+fi
+exit 0
