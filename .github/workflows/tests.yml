@@ -80,17 +80,26 @@ jobs:
           chmod 700 ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          # Alias andromeda → IP Tailscale (100.77.127.2)
+          # Alias andromeda → IP Tailscale (100.77.127.2). La clave dedicada CI
+          # tiene command= restringido: SOLO ejecuta el health check.
           printf 'Host andromeda\n    HostName 100.77.127.2\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
           chmod 600 ~/.ssh/config
-          # Verificar conexión
-          ssh -o ConnectTimeout=15 andromeda 'echo SSH_OK' 2>&1 | tail -1
+          # Verificar conexión (el comando forzado ejecuta el health check)
+          ssh -o ConnectTimeout=30 andromeda 'test' 2>&1 | tail -5
 
-      - name: Ejecutar batería
-        working-directory: health
+      - name: Ejecutar batería (vía clave restringida)
         run: |
-          chmod +x bin/convoca-health
-          ./bin/convoca-health --ssh=andromeda --path=/var/www/demo.getconvoca.app/public
+          # La clave CI está restringida a ejecutar SOLO el health check en
+          # /usr/local/bin/convoca-health-check.php — sin shell, sin scp.
+          OUT=$(ssh -o ConnectTimeout=60 andromeda 'test' 2>&1)
+          echo "$OUT"
+          if echo "$OUT" | grep -q "FAIL"; then
+            echo "::error::Convoca Health Check FALLÓ"
+            exit 1
+          fi
+          if ! echo "$OUT" | grep -q "Coverage: 100%"; then
+            echo "::warning::Coverage inferior a 100%"
+          fi
 
   e2e:
     name: E2E Playwright (demo)
