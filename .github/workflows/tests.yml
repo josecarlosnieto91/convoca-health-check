@@ -77,9 +77,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H andromeda >> ~/.ssh/known_hosts 2>/dev/null || true
+          # Alias andromeda → IP Tailscale (100.77.127.2)
+          printf 'Host andromeda\n    HostName 100.77.127.2\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          # Verificar conexión
+          ssh -o ConnectTimeout=15 andromeda 'echo SSH_OK' 2>&1 | tail -1
 
       - name: Ejecutar batería
         working-directory: health
