@@ -1,0 +1,116 @@
+name: Convoca Release Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versión de release (ej: 3.0.0)'
+        required: true
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  health-check:
+    name: Health Check (pre-release)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: josecarlosnieto91/convoca-health-check
+          path: health
+
+      - name: Ejecutar Health Check en demo (clave restringida)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf 'Host andromeda-ci\n    HostName 100.77.127.2\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
+          chmod 600 ~/.ssh/config
+          OUT=$(ssh -o ConnectTimeout=60 andromeda-ci 'test' 2>&1)
+          echo "$OUT"
+          if echo "$OUT" | grep -q "FAIL"; then
+            echo "::error::Health Check FALLÓ — release abortada"
+            exit 1
+          fi
+          if ! echo "$OUT" | grep -q "Coverage: 100%"; then
+            echo "::warning::Coverage inferior a 100%"
+          fi
+
+  build:
+    name: Build ZIP (${{ matrix.repo }})
+    needs: health-check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        repo: [convoca-core, convoca-members, convoca-enroll, convoca-gateway, convoca-shifts, convoca-publisher, convoca-assistant, convoca-theme]
+    steps:
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          repository: josecarlosnieto91/${{ matrix.repo }}
+          path: src
+
+      - name: Checkout scripts
+        uses: actions/checkout@v4
+        with:
+          repository: josecarlosnieto91/convoca-health-check
+          path: qa
+
+      - name: Setup PHP + Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, iconv, zip
+          tools: composer
+
+      - name: Ejecutar build-release
+        run: |
+          bash qa/scripts/build-release.sh src dist
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.repo }}
+          path: dist/${{ matrix.repo }}.zip
+          if-no-files-found: error
+
+  publish:
+    name: Publicar release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download todos los ZIPs
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Determinar versión
+        id: version
+        env:
+          DISPATCH_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${DISPATCH_VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Crear release con ZIPs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ls -la dist/
+          gh release create "v${{ steps.version.outputs.VERSION }}" \
+            dist/*.zip \
+            --repo josecarlosnieto91/convoca-health-check \
+            --title "Convoca v${{ steps.version.outputs.VERSION }}" \
+            --notes "Release generada por el pipeline de distribución.
+            Los ZIPs están listos para WordPress.org (< 10 MB)."
