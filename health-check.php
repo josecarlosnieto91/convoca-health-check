@@ -395,6 +395,31 @@ function hc_theme() {
     hc_cfg('Theme', 'Home 200 + HTML', wp_remote_retrieve_response_code($r) === 200 && strpos($body, '<!DOCTYPE') !== false, 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
+function hc_migrations() {
+    hc_section('Migraciones');
+
+    if ( ! class_exists( 'Convoca\\Core\\Migration_History' ) ) {
+        hc_out( 'Migraciones', 'Migration_History disponible', false, 'clase no encontrada' );
+        return;
+    }
+
+    $history = \Convoca\Core\Migration_History::get_all();
+    $fails   = 0;
+    foreach ( $history as $h ) {
+        if ( ( $h['status'] ?? '' ) === 'failed' ) {
+            $fails++;
+        }
+    }
+    hc_out( 'Migraciones', 'Sin migraciones fallidas', $fails === 0, $fails ? "{$fails} fallidas" : count( $history ) . ' en historial' );
+
+    // Mostrar últimas 3 entradas
+    $recent = array_slice( $history, -3 );
+    foreach ( $recent as $h ) {
+        $mark = ( $h['status'] ?? '' ) === 'failed' ? '⚠️' : '✅';
+        printf( "  %s %s %s→%s (%s)\n", $mark, $h['plugin'] ?? '?', $h['from'] ?? '?', $h['to'] ?? '?', $h['status'] ?? '?' );
+    }
+}
+
 function hc_clean_code() {
     hc_section('Higiene de código');
 
@@ -527,6 +552,7 @@ hc_shifts();
 hc_publisher();
 hc_assistant();
 hc_theme();
+hc_migrations();
 hc_clean_code();
 hc_integrations();
 
