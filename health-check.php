@@ -380,6 +380,66 @@ function hc_theme() {
     hc_out('Theme', 'Home 200 + HTML', wp_remote_retrieve_response_code($r) === 200 && strpos($body, '<!DOCTYPE') !== false, 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
+function hc_clean_code() {
+    hc_section('Higiene de código');
+
+    // Cadenas prohibidas: referencias a proyectos reales o datos de producción
+    // que no deben colarse en el código fuente. El check escanea los archivos
+    // de los plugins (no la BD — el contenido de demo se audita aparte).
+    $prohibited = array(
+        'Los Lugg',
+        'Lugones',
+        'Biodevas',
+        'Taller de Yoga',
+        'Sierra del Sueve',
+        'Finca Biodevas',
+        'biodevas.org',
+        'lugg.biodevas.org',
+        'coordinacion@biodevas.org',
+        'Centro Social Turnos',
+        'Turnos Centro Social',
+    );
+
+    $dirs = array('convoca-core', 'convoca-members', 'convoca-enroll', 'convoca-gateway',
+                  'convoca-shifts', 'convoca-publisher', 'convoca-assistant', 'convoca-theme');
+    $found = array();
+    foreach ($dirs as $dir) {
+        $base = WP_PLUGIN_DIR . '/' . $dir;
+        if (!is_dir($base)) {
+            continue;
+        }
+        $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($base));
+        foreach ($it as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            $ext = strtolower($file->getExtension());
+            if (!in_array($ext, array('php', 'js', 'html', 'md', 'txt', 'json'), true)) {
+                continue;
+            }
+            $path = $file->getPathname();
+            if (strpos($path, '/vendor/') !== false || strpos($path, '/node_modules/') !== false) {
+                continue;
+            }
+            // Los CHANGELOGs documentan el histórico real del proyecto
+            // (incluidos fixes de dominios antiguos) — no son código reutilizable.
+            if (basename($path) === 'CHANGELOG.md') {
+                continue;
+            }
+            $content = @file_get_contents($path);
+            if ($content === false) {
+                continue;
+            }
+            foreach ($prohibited as $term) {
+                if (strpos($content, $term) !== false) {
+                    $found[] = str_replace(WP_PLUGIN_DIR . '/', '', $path) . " contiene '{$term}'";
+                }
+            }
+        }
+    }
+    hc_out('Higiene', 'Sin cadenas de proyectos reales', empty($found), $found ? implode(' | ', array_slice($found, 0, 5)) : 'OK');
+}
+
 function hc_integrations() {
     hc_section('Integraciones');
     $handler = null;
@@ -452,6 +512,7 @@ hc_shifts();
 hc_publisher();
 hc_assistant();
 hc_theme();
+hc_clean_code();
 hc_integrations();
 
 $elapsed = round(microtime(true) - $start, 1);
