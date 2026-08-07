@@ -22,7 +22,9 @@ $GLOBALS['hc_results'] = [];
 // Modo local (CI sin demo): los checks de configuración del sitio (páginas,
 // credenciales, índice, tema) pasan a WARN en vez de FAIL. La lógica
 // funcional (shortcodes, CPTs, REST, rate limiter, flujos) sigue estricta.
-$GLOBALS['hc_local'] = in_array('--local', $_SERVER['argv'] ?? [], true);
+// Se activa con variable de entorno CONVOCA_HC_LOCAL=1 o arg --local.
+$GLOBALS['hc_local'] = getenv('CONVOCA_HC_LOCAL') === '1'
+    || in_array('--local', $_SERVER['argv'] ?? [], true);
 
 function hc_out($component, $name, $ok, $detail = '') {
     $status = $ok ? 'PASS' : 'FAIL';

@@ -101,18 +101,24 @@ jobs:
         run: |
           cd /tmp/wp
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
-            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null
-            cd /tmp/wp/wp-content/plugins/$p && composer install --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -1
-            cd /tmp/wp
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null || true
+            if [ -f /tmp/wp/wp-content/plugins/$p/composer.json ]; then
+              cd /tmp/wp/wp-content/plugins/$p
+              # composer update genera lock compatible con el PHP del runner
+              composer update --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -2 || echo "composer update falló en $p (continuando)"
+              cd /tmp/wp
+            fi
           done
-          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null
-          wp plugin activate convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant --allow-root 2>&1 | tail -2
+          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null || true
+          wp plugin activate convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant --allow-root 2>&1 | tail -3
           wp theme activate convoca --allow-root 2>&1 | tail -1
 
       - name: Ejecutar Health Check local (modo --local)
         working-directory: /tmp/wp
+        env:
+          CONVOCA_HC_LOCAL: '1'
         run: |
-          OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --local --allow-root 2>&1)
+          OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --allow-root 2>&1)
           echo "$OUTPUT"
           FAILS=$(echo "$OUTPUT" | grep -c "\[FAIL\]" || true)
           if [ "$FAILS" -gt 0 ]; then
