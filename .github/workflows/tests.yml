@@ -106,6 +106,8 @@ jobs:
               cd /tmp/wp/wp-content/plugins/$p
               # composer update genera lock compatible con el PHP del runner
               composer update --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -2 || echo "composer update falló en $p (continuando)"
+              # Regenerar autoloader (el update con --no-scripts no lo hace)
+              composer dump-autoload --no-interaction 2>&1 | tail -1 || true
               cd /tmp/wp
             fi
           done
