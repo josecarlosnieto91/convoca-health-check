@@ -107,7 +107,7 @@ function hc_core() {
 
     // REST admin/metrics protegido
     $r = wp_remote_get(home_url('/wp-json/convoca/v1/admin/metrics'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Core', 'REST /admin/metrics protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Core', 'REST /admin/metrics protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
 function hc_members() {
@@ -127,7 +127,7 @@ function hc_members() {
 
     // REST protegido
     $r = wp_remote_get(home_url('/wp-json/convoca-members/v1/me'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Members', 'REST /me protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Members', 'REST /me protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     // Estados válidos
     if (class_exists('Convoca\Members\Estados')) {
@@ -189,7 +189,7 @@ function hc_enroll() {
 
     // REST público
     $r = wp_remote_get(home_url('/wp-json/convoca-enroll/v1/actividades'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Enroll', 'REST /actividades público', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Enroll', 'REST /actividades público', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     // Motor inscripción
     hc_out('Enroll', 'Motor_Inscripcion', class_exists('Convoca\Enroll\Motor_Inscripcion') || file_exists("$dir/includes/Motor_Inscripcion.php"), '');
@@ -231,7 +231,7 @@ function hc_enroll() {
     if ($url) {
         $html = wp_remote_get($url, ['timeout' => 10, 'sslverify' => false]);
         $body = wp_remote_retrieve_body($html);
-        hc_out('Enroll', 'JSON-LD Event', strpos($body, 'application/ld+json') !== false, 'ld+json');
+        hc_cfg('Enroll', 'JSON-LD Event', strpos($body, 'application/ld+json') !== false, 'ld+json');
     }
 
     // Placeholders %% no deben aparecer
@@ -295,7 +295,7 @@ function hc_shifts() {
     }
 
     $r = wp_remote_get(home_url('/wp-json/convoca-shifts/v1/turnos'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Shifts', 'REST /turnos', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Shifts', 'REST /turnos', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     hc_out('Shifts', 'duplicar_semana', file_exists(WP_PLUGIN_DIR . '/convoca-shifts/includes/cpt-turno.php'), 'cpt-turno.php');
 
@@ -333,7 +333,7 @@ function hc_publisher() {
 
     // REST protegido
     $r = wp_remote_get(home_url('/wp-json/convoca-publisher/v1/status'), ['timeout' => 10, 'sslverify' => false]);
-    hc_out('Publisher', 'REST /status protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Publisher', 'REST /status protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     // Async al publicar (solo si auto_publish)
     if (get_option('convoca_publisher_auto_publish')) {
@@ -364,8 +364,8 @@ function hc_assistant() {
         'headers' => ['Content-Type' => 'application/json'],
     ]);
     $body = json_decode(wp_remote_retrieve_body($r), true);
-    hc_out('Assistant', 'REST search 200', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
-    hc_out('Assistant', 'Búsqueda devuelve resultados', !empty($body['results'] ?? []), 'results=' . count($body['results'] ?? []));
+    hc_cfg('Assistant', 'REST search 200', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Assistant', 'Búsqueda devuelve resultados', !empty($body['results'] ?? []), 'results=' . count($body['results'] ?? []));
 
     // Índice
     $upload = wp_upload_dir();
@@ -373,7 +373,7 @@ function hc_assistant() {
 
     // Rebuild protegido
     $r = wp_remote_post(home_url('/wp-json/convoca/v1/assistant/rebuild-index'), ['timeout' => 10, 'sslverify' => false, 'body' => []]);
-    hc_out('Assistant', 'Rebuild protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
+    hc_cfg('Assistant', 'Rebuild protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
 function hc_theme() {
@@ -466,7 +466,7 @@ function hc_integrations() {
     $ns = hc_rest_namespaces();
     $required = ['convoca/v1', 'convoca-members/v1', 'convoca-enroll/v1', 'convoca-gateway/v1', 'convoca-shifts/v1', 'convoca-publisher/v1'];
     $missing = array_diff($required, $ns);
-    hc_out('Integraciones', '6 namespaces REST', empty($missing), $missing ? implode(',', $missing) : implode(',', $ns));
+    hc_cfg('Integraciones', '6 namespaces REST', empty($missing), $missing ? implode(',', $missing) : implode(',', $ns));
 
     // Members → Gateway: pago activa membresía
     if ($handler) {

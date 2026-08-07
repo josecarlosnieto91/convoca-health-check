@@ -114,6 +114,8 @@ jobs:
           git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null || true
           wp plugin activate convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant --allow-root 2>&1 | tail -3
           wp theme activate convoca --allow-root 2>&1 | tail -1
+          echo "--- ESTADO PLUGINS ---"
+          wp plugin list --allow-root --fields=name,status 2>&1 | head -10
 
       - name: Ejecutar Health Check local (modo --local)
         working-directory: /tmp/wp
