@@ -103,6 +103,32 @@ jobs:
         run: |
           bash health/scripts/check-api-freeze.sh 2>&1 | tail -10
 
+  observability:
+    name: Observability
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: josecarlosnieto91/convoca-health-check
+          path: health
+
+      - name: Ejecutar observability (si hay clave de acceso)
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
+        run: |
+          if [ -n "$SSH_PRIVATE_KEY" ]; then
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            # Nota: los runners no alcanzan Tailscale — este job es informativo
+            # y se completa sin ejecutar si no hay túnel configurado.
+            echo "Observability requiere acceso al servidor (túnel o runner propio)"
+          else
+            echo "Sin secret ANDROMEDA_SSH_KEY — job informativo"
+          fi
+
   health-check-local:
     name: Health Check local (WP de test)
     runs-on: ubuntu-latest
