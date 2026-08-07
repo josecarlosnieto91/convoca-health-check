@@ -13,8 +13,21 @@ on:
 
 jobs:
   health-check:
-    name: Health Check (pre-release)
+    name: Health Check (pre-release, local)
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mariadb:10.11
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,25 +35,54 @@ jobs:
           repository: josecarlosnieto91/convoca-health-check
           path: health
 
-      - name: Ejecutar Health Check en demo (clave restringida)
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
+      - name: Setup PHP + WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, mysqli
+          tools: wp-cli
+
+      - name: Descargar e instalar WordPress
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          printf 'Host andromeda-ci\n    HostName 100.77.127.2\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
-          chmod 600 ~/.ssh/config
-          OUT=$(ssh -o ConnectTimeout=60 andromeda-ci 'test' 2>&1)
-          echo "$OUT"
-          if echo "$OUT" | grep -q "FAIL"; then
+          mkdir -p /tmp/wp && cd /tmp/wp
+          wp core download --allow-root --locale=es_ES 2>&1 | tail -1
+          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check 2>&1 | tail -1
+          wp core install --allow-root --url=http://localhost --title="Convoca Release Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email 2>&1 | tail -1
+
+      - name: Instalar plugins Convoca
+        run: |
+          cd /tmp/wp
+          for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null || true
+            if [ -f /tmp/wp/wp-content/plugins/$p/composer.json ]; then
+              cd /tmp/wp/wp-content/plugins/$p
+              composer update --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -1 || true
+              composer dump-autoload --no-interaction 2>&1 | tail -1 || true
+              cd /tmp/wp
+            fi
+          done
+          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null || true
+          for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
+            wp plugin activate $p --allow-root 2>&1 | tail -1
+          done
+          wp theme activate convoca --allow-root 2>&1 | tail -1
+
+      - name: Ejecutar Health Check local (modo --local)
+        working-directory: /tmp/wp
+        env:
+          CONVOCA_HC_LOCAL: '1'
+        run: |
+          set +e
+          OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --allow-root 2>&1)
+          EXIT=$?
+          echo "$OUTPUT"
+          FAILS=$(echo "$OUTPUT" | grep -c "\[FAIL\]")
+          echo "FAILS: $FAILS"
+          if [ "$FAILS" -gt 0 ] || [ "$EXIT" -ne 0 ]; then
             echo "::error::Health Check FALLÓ — release abortada"
             exit 1
           fi
-          if ! echo "$OUT" | grep -q "Coverage: 100%"; then
-            echo "::warning::Coverage inferior a 100%"
-          fi
+          echo "Health Check OK — release puede proceder"
 
   build:
     name: Build ZIP (${{ matrix.repo }})
