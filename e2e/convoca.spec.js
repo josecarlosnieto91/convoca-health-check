@@ -30,13 +30,8 @@ test.describe('Convoca E2E — funcionalidades públicas', () => {
     expect(inputs).toBeGreaterThan(0);
   });
 
-  test('Página de voluntariado renderiza el formulario (si existe)', async ({ page }) => {
+  test('Página de voluntariado renderiza el formulario', async ({ page }) => {
     const resp = await page.goto(BASE + '/voluntariado/', { waitUntil: 'networkidle' });
-    // La página puede no existir en la demo (contenido, no plugin)
-    if (resp.status() === 404) {
-      test.skip(true, 'Página /voluntariado/ no publicada en demo');
-      return;
-    }
     expect(resp.status()).toBe(200);
     const inputs = await page.locator('input, select, textarea').count();
     expect(inputs).toBeGreaterThan(0);
