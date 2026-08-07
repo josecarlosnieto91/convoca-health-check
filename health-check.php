@@ -329,7 +329,7 @@ function hc_publisher() {
     // Tabla retry
     global $wpdb;
     $table = $wpdb->prefix . 'convoca_publisher_retry_queue';
-    hc_out('Publisher', 'Tabla retry_queue', $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table, '');
+    hc_cfg('Publisher', 'Tabla retry_queue', $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table, '');
 
     // REST protegido
     $r = wp_remote_get(home_url('/wp-json/convoca-publisher/v1/status'), ['timeout' => 10, 'sslverify' => false]);
