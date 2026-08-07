@@ -1,0 +1,851 @@
+# Convoca REST API — OpenAPI 3.0
+# GENERADO AUTOMÁTICAMENTE. No editar a mano.
+
+openapi: 3.0.3
+info:
+  title: Convoca REST API
+  version: 3.0.0
+  description: |
+    API pública del ecosistema Convoca.
+    Generada automáticamente desde el código.
+servers:
+  - url: 'https://{site}/wp-json'
+    variables:
+      site:
+        default: tu-dominio.org
+tags:
+  - name: convoca/v1
+    description: Endpoints de convoca-core
+  - name: convoca-members/v1
+    description: Endpoints de convoca-members
+  - name: convoca-enroll/v1
+    description: Endpoints de convoca-enroll
+  - name: convoca-gateway/v1
+    description: Endpoints de convoca-gateway
+  - name: convoca-shifts/v1
+    description: Endpoints de convoca-shifts
+  - name: convoca-publisher/v1
+    description: Endpoints de convoca-publisher
+paths:
+  /convoca-enroll/v1/checkin/flush:
+    get:
+      tags: [convoca-enroll/v1]
+      summary: "GET /convoca-enroll/v1/checkin/flush"
+      description: "Endpoint del plugin convoca-enroll (fuente: includes/Checkin_PWA.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-gateway/v1/notify:
+    get:
+      tags: [convoca-gateway/v1]
+      summary: "GET /convoca-gateway/v1/notify"
+      description: "Endpoint del plugin convoca-gateway (fuente: convoca-gateway.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/admin/members/search:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/admin/members/search"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/alta:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/alta"
+      description: "Endpoint del plugin convoca-members (fuente: public/class-form-handler.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/documentos/{id}:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/documentos/{id}"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/login:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/login"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/card:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/card"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/certificate:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/certificate"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/certificate/download:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/certificate/download"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/confirm-email:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/confirm-email"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/horas:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/horas"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/inscripciones:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/inscripciones"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/pagos:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/pagos"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/profile:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/profile"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/renovar:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/renovar"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/unsubscribe:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/unsubscribe"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/verify-phone:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/verify-phone"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/member/notifications:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/member/notifications"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/member/notifications/read:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/member/notifications/read"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/member/notifications/read-all:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/member/notifications/read-all"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/proyectos:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/proyectos"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/search:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/search"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-publisher/v1/publish/{post_id}:
+    get:
+      tags: [convoca-publisher/v1]
+      summary: "GET /convoca-publisher/v1/publish/{post_id}"
+      description: "Endpoint del plugin convoca-publisher (fuente: includes/class-rest.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-publisher/v1/status:
+    get:
+      tags: [convoca-publisher/v1]
+      summary: "GET /convoca-publisher/v1/status"
+      description: "Endpoint del plugin convoca-publisher (fuente: includes/class-rest.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-publisher/v1/test/{channel}:
+    get:
+      tags: [convoca-publisher/v1]
+      summary: "GET /convoca-publisher/v1/test/{channel}"
+      description: "Endpoint del plugin convoca-publisher (fuente: includes/class-rest.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos/apuntarse-proximo:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos/apuntarse-proximo"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos/crear:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos/crear"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos/proximo-libre:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos/proximo-libre"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos/{id}/apuntarse:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos/{id}/apuntarse"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-shifts/v1/turnos/{id}/desapuntarse:
+    get:
+      tags: [convoca-shifts/v1]
+      summary: "GET /convoca-shifts/v1/turnos/{id}/desapuntarse"
+      description: "Endpoint del plugin convoca-shifts (fuente: includes/rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/admin/metrics:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/admin/metrics"
+      description: "Endpoint del plugin convoca-core (fuente: convoca-core.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/clear-logs:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/clear-logs"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/index:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/index"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/log:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/log"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/rebuild-index:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/rebuild-index"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/search:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/search"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/stats:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/stats"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/unanswered:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/unanswered"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/media/blog/create:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/media/blog/create"
+      description: "Endpoint del plugin convoca-enroll (fuente: media/class-media-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/media/poster/regenerate:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/media/poster/regenerate"
+      description: "Endpoint del plugin convoca-enroll (fuente: media/class-media-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/media/poster/render:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/media/poster/render"
+      description: "Endpoint del plugin convoca-enroll (fuente: media/class-media-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/media/templates:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/media/templates"
+      description: "Endpoint del plugin convoca-enroll (fuente: media/class-media-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/media/templates/{id}:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/media/templates/{id}"
+      description: "Endpoint del plugin convoca-enroll (fuente: media/class-media-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/accounts:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/accounts"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/accounts/{id}:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/accounts/{id}"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/auth/google:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/auth/google"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/auth/meta:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/auth/meta"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/callback/google:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/callback/google"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/social/callback/meta:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/social/callback/meta"
+      description: "Endpoint del plugin convoca-enroll (fuente: social/class-social-rest-api.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: wordpress_logged_in

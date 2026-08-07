@@ -1,0 +1,263 @@
+{
+  "convoca-core": {
+    "hooks": [
+      "convoca_admin_appearance_url",
+      "convoca_common_webhook_sslverify",
+      "convoca_continue_access_codes",
+      "convoca_enroll_asistencia_cambiada",
+      "convoca_enroll_inscripcion_cancelada",
+      "convoca_enroll_inscripcion_nueva",
+      "convoca_gateway_payment_completed",
+      "convoca_gateway_payment_failed",
+      "convoca_hours_submitted",
+      "convoca_inscripcion_pendiente_pago",
+      "convoca_license_api_url",
+      "convoca_license_validate",
+      "convoca_log_cleanup",
+      "convoca_log_purge",
+      "convoca_member_created",
+      "convoca_members_created",
+      "convoca_members_estado_changed",
+      "convoca_members_hora_aprobada",
+      "convoca_members_hora_rechazada",
+      "convoca_members_hours_submitted",
+      "convoca_members_membership_expired",
+      "convoca_members_payment_reminder_sent",
+      "convoca_members_unsubscribe_request",
+      "convoca_module_registered",
+      "convoca_need_common_assets",
+      "convoca_payment_failed",
+      "convoca_pdf_allowed_html",
+      "convoca_pdf_html_safe_keys",
+      "convoca_register_module",
+      "convoca_voluntario_aprobado",
+      "convoca_voluntario_pendiente",
+      "convoca_webhook_retry",
+      "convoca_weekly_event"
+    ],
+    "rest": [
+      "convoca/v1 /admin/metrics GET"
+    ],
+    "shortcodes": []
+  },
+  "convoca-members": {
+    "hooks": [
+      "convoca_daily_event",
+      "convoca_email_objetivo_voluntariado",
+      "convoca_email_providers",
+      "convoca_gamification_tracks",
+      "convoca_gateway_payment_completed",
+      "convoca_gateway_payment_failed",
+      "convoca_member_created",
+      "convoca_members_alta_document_url",
+      "convoca_members_auto_renewal_created",
+      "convoca_members_created",
+      "convoca_members_cuota_pagada",
+      "convoca_members_email_bienvenida",
+      "convoca_members_email_cambiado",
+      "convoca_members_email_confirm",
+      "convoca_members_email_credenciales",
+      "convoca_members_email_objetivo_voluntariado",
+      "convoca_members_email_recordatorio_pago",
+      "convoca_members_email_renovacion",
+      "convoca_members_email_renovacion_automatica",
+      "convoca_members_email_renovacion_completada",
+      "convoca_members_email_solicitud",
+      "convoca_members_email_verify_phone",
+      "convoca_members_estado_changed",
+      "convoca_members_hora_aprobada",
+      "convoca_members_hora_rechazada",
+      "convoca_members_hours_submitted",
+      "convoca_members_interest_areas",
+      "convoca_members_membership_expired",
+      "convoca_members_objetivo_completado",
+      "convoca_members_payment_reminder_sent",
+      "convoca_members_phone_verificado",
+      "convoca_members_plans",
+      "convoca_members_renewal_reminder_sent",
+      "convoca_members_sensitive_meta",
+      "convoca_members_unsubscribe_request",
+      "convoca_voluntario_aprobado",
+      "convoca_voluntario_aprobado_attachments",
+      "convoca_voluntario_pendiente",
+      "convoca_weekly_event"
+    ],
+    "rest": [
+      "convoca-members/v1 /admin/members/search GET",
+      "convoca-members/v1 /alta GET",
+      "convoca-members/v1 /documentos/(?P<id>\\d+) GET",
+      "convoca-members/v1 /login GET",
+      "convoca-members/v1 /me GET",
+      "convoca-members/v1 /me/card GET",
+      "convoca-members/v1 /me/certificate GET",
+      "convoca-members/v1 /me/certificate/download GET",
+      "convoca-members/v1 /me/confirm-email GET",
+      "convoca-members/v1 /me/horas GET",
+      "convoca-members/v1 /me/inscripciones GET",
+      "convoca-members/v1 /me/pagos GET",
+      "convoca-members/v1 /me/profile GET",
+      "convoca-members/v1 /me/renovar GET",
+      "convoca-members/v1 /me/unsubscribe GET",
+      "convoca-members/v1 /me/verify-phone GET",
+      "convoca-members/v1 /member/notifications GET",
+      "convoca-members/v1 /member/notifications/read GET",
+      "convoca-members/v1 /member/notifications/read-all GET",
+      "convoca-members/v1 /proyectos GET",
+      "convoca-members/v1 /search GET"
+    ],
+    "shortcodes": [
+      "convoca_alta_socio",
+      "convoca_mi_area",
+      "convoca_mi_perfil",
+      "convoca_renovar",
+      "convoca_verificar_certificado",
+      "convoca_verificar_socio",
+      "convoca_voluntariado"
+    ]
+  },
+  "convoca-enroll": {
+    "hooks": [
+      "convoca_after_horas_voluntario_actualizadas",
+      "convoca_enroll_aportacion_label",
+      "convoca_enroll_asistencia_cambiada",
+      "convoca_enroll_cleanup_orphan_codes",
+      "convoca_enroll_daily_maintenance",
+      "convoca_enroll_eval_reminder",
+      "convoca_enroll_feedback",
+      "convoca_enroll_google_photos_share",
+      "convoca_enroll_inscripcion_cancelada",
+      "convoca_enroll_inscripcion_confirmada",
+      "convoca_enroll_inscripcion_nueva",
+      "convoca_enroll_inscripcion_promovida",
+      "convoca_enroll_process_email_queue",
+      "convoca_enroll_process_webhook_queue",
+      "convoca_enroll_reminder_1hora",
+      "convoca_enroll_reminder_24h",
+      "convoca_enroll_reminder_7dias",
+      "convoca_evaluacion_completada",
+      "convoca_gateway_payment_completed",
+      "convoca_inscripcion_cancelada",
+      "convoca_inscripcion_confirmada",
+      "convoca_inscripcion_promovida",
+      "convoca_social_publish",
+      "convoca_social_token_healthcheck"
+    ],
+    "rest": [
+      "convoca-enroll/v1 /checkin/flush GET",
+      "convoca/v1 /media/blog/create GET",
+      "convoca/v1 /media/poster/regenerate GET",
+      "convoca/v1 /media/poster/render GET",
+      "convoca/v1 /media/templates GET",
+      "convoca/v1 /media/templates/(?P<id>\\d+) GET",
+      "convoca/v1 /social/accounts GET",
+      "convoca/v1 /social/accounts/(?P<id>\\d+) GET",
+      "convoca/v1 /social/auth/google GET",
+      "convoca/v1 /social/auth/meta GET",
+      "convoca/v1 /social/callback/google GET",
+      "convoca/v1 /social/callback/meta GET"
+    ],
+    "shortcodes": [
+      "convoca_actividad_meta",
+      "convoca_evaluacion",
+      "convoca_form_inscripcion",
+      "convoca_inscripcion_actual",
+      "convoca_inscripcion_page",
+      "convoca_panel_reservas"
+    ]
+  },
+  "convoca-gateway": {
+    "hooks": [
+      "convoca_gateway_bank_entity",
+      "convoca_gateway_payment_completed",
+      "convoca_gateway_payment_failed",
+      "convoca_gateway_payment_refunded",
+      "convoca_gateway_redsys_allowed_ips",
+      "convoca_gateway_resend_email",
+      "convoca_payment_completed",
+      "convoca_payment_failed"
+    ],
+    "rest": [
+      "convoca-gateway/v1 /notify GET"
+    ],
+    "shortcodes": [
+      "convoca_pago",
+      "convoca_pago_ko",
+      "convoca_pago_ok"
+    ]
+  },
+  "convoca-shifts": {
+    "hooks": [
+      "convoca_after_horas_voluntario_actualizadas",
+      "convoca_shifts_actividad_add_form_fields",
+      "convoca_shifts_actividad_edit_form_fields",
+      "convoca_shifts_confirm_signup",
+      "convoca_shifts_daily_event",
+      "convoca_shifts_force_enqueue_assets",
+      "convoca_shifts_hourly_event",
+      "convoca_voluntario_aprobado",
+      "convoca_voluntario_aprobado_attachments"
+    ],
+    "rest": [
+      "convoca-shifts/v1 /turnos GET",
+      "convoca-shifts/v1 /turnos/(?P<id>\\d+)/apuntarse GET",
+      "convoca-shifts/v1 /turnos/(?P<id>\\d+)/desapuntarse GET",
+      "convoca-shifts/v1 /turnos/apuntarse-proximo GET",
+      "convoca-shifts/v1 /turnos/crear GET",
+      "convoca-shifts/v1 /turnos/proximo-libre GET"
+    ],
+    "shortcodes": [
+      "convoca_boton_apuntarse",
+      "convoca_calendario",
+      "convoca_proximos_turnos",
+      "convoca_resumen_turnos"
+    ]
+  },
+  "convoca-publisher": {
+    "hooks": [
+      "convoca_publisher_async_publish",
+      "convoca_publisher_retry_failed_posts",
+      "convoca_publisher_retry_process"
+    ],
+    "rest": [
+      "convoca-publisher/v1 /publish/(?P<post_id>\\d+) GET",
+      "convoca-publisher/v1 /status GET",
+      "convoca-publisher/v1 /test/(?P<channel>[a-z_]+) GET"
+    ],
+    "shortcodes": []
+  },
+  "convoca-assistant": {
+    "hooks": [
+      "convoca_assistant_log_cleanup",
+      "convoca_assistant_regenerate"
+    ],
+    "rest": [
+      "convoca/v1 /assistant/clear-logs GET",
+      "convoca/v1 /assistant/index GET",
+      "convoca/v1 /assistant/log GET",
+      "convoca/v1 /assistant/rebuild-index GET",
+      "convoca/v1 /assistant/search GET",
+      "convoca/v1 /assistant/stats GET",
+      "convoca/v1 /assistant/unanswered GET"
+    ],
+    "shortcodes": [
+      "convoca_assistant"
+    ]
+  },
+  "convoca-theme": {
+    "hooks": [
+      "convoca_theme_centro_url",
+      "convoca_theme_community_url",
+      "convoca_theme_footer_replacements",
+      "convoca_theme_lugg_url",
+      "convoca_theme_social_facebook",
+      "convoca_theme_social_handle",
+      "convoca_theme_social_instagram",
+      "convoca_theme_social_youtube",
+      "convoca_theme_volunteer_email"
+    ],
+    "rest": [],
+    "shortcodes": [
+      "convoca_dark_mode_toggle"
+    ]
+  }
+}
