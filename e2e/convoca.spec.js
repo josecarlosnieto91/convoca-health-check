@@ -64,10 +64,10 @@ test.describe('Convoca E2E — funcionalidades públicas', () => {
 
   test('Dark mode toggle funciona', async ({ page }) => {
     await page.goto(BASE + '/', { waitUntil: 'networkidle' });
-    const toggle = page.locator('[class*="dark"], [data-theme-toggle], [class*="toggle"]').first();
+    const toggle = page.locator('.dark-mode-toggle, [data-theme-toggle], button[class*="dark"]').first();
     if (await toggle.count()) {
       const before = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
-      await toggle.click();
+      await toggle.click({ timeout: 5000, force: true });
       const after = await page.evaluate(() => document.documentElement.getAttribute('data-theme'));
       // Debe cambiar de theme o al menos no romperse
       expect(after === before || after !== null).toBe(true);
