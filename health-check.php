@@ -26,6 +26,27 @@ $GLOBALS['hc_results'] = [];
 $GLOBALS['hc_local'] = getenv('CONVOCA_HC_LOCAL') === '1'
     || in_array('--local', $_SERVER['argv'] ?? [], true);
 
+// Modo sin efectos secundarios (producción): NO crea miembros/posts de prueba
+// y BLOQUEA el envío de emails durante la ejecución. Los checks de integración
+// (flujos Members→Gateway, Enroll→Gateway) pasan a WARN porque no pueden
+// ejecutarse sin crear datos reales que dispararían notificaciones.
+// Se activa con CONVOCA_HC_SAFE=1 o arg --safe. En sitios de producción reales
+// (no demo), el modo seguro se activa automáticamente.
+$GLOBALS['hc_safe'] = getenv('CONVOCA_HC_SAFE') === '1'
+    || in_array('--safe', $_SERVER['argv'] ?? [], true)
+    || (false === stripos((string) home_url(), 'demo.') && 'local' !== wp_get_environment_type());
+
+// Bloquear emails en modo seguro: intercepta wp_mail y registra que se intentó
+// enviar, pero NO lo envía. Así los checks que disparan notificaciones no
+// producen correos reales en producción.
+if ($GLOBALS['hc_safe']) {
+    add_filter('pre_wp_mail', function ($null, $atts) {
+        $to = is_array($atts['to']) ? implode(',', $atts['to']) : (string) ($atts['to'] ?? '?');
+        hc_warn('Seguridad', 'Email bloqueado (modo safe)', "para=$to asunto=" . substr((string) ($atts['subject'] ?? ''), 0, 40));
+        return true; // wp_mail devuelve true sin enviar
+    }, 10, 2);
+}
+
 function hc_out($component, $name, $ok, $detail = '') {
     $status = $ok ? 'PASS' : 'FAIL';
     echo "  [$status] $component :: $name" . ($detail ? " ($detail)" : '') . "\n";
@@ -46,6 +67,16 @@ function hc_warn($component, $name, $detail = '') {
     echo "  [WARN] $component :: $name" . ($detail ? " ($detail)" : '') . "\n";
     $GLOBALS['hc_results'][] = ['component' => $component, 'name' => $name, 'status' => 'WARN', 'detail' => $detail];
     $GLOBALS['hc_warn']++;
+}
+
+// En modo seguro: los checks que crean posts/miembros de prueba (y pueden
+// disparar emails/notificaciones) se saltan. Devuelve true si hay que saltar.
+function hc_skip_side_effects($component) {
+    if (!$GLOBALS['hc_safe']) {
+        return false;
+    }
+    hc_warn($component, 'Flujos con datos de prueba', 'modo safe: no se crean datos (usa la demo para validar flujos)');
+    return true;
 }
 
 function hc_section($title) {
@@ -137,6 +168,7 @@ function hc_members() {
     }
 
     // Flujo: alta → edición → renovación (con plan correcto)
+    if (hc_skip_side_effects('Members')) { return; }
     $member_id = wp_insert_post(['post_type' => 'miembro', 'post_status' => 'publish', 'post_title' => 'HC Member']);
     update_post_meta($member_id, '_convoca_email', 'hc@example.com');
     update_post_meta($member_id, '_convoca_plan', 'bronze');
@@ -214,6 +246,7 @@ function hc_enroll() {
     hc_out('Enroll', 'Poster engine', file_exists("$dir/media/class-poster-engine.php"), '');
 
     // Flujo: actividad + inscripción + JSON-LD
+    if (hc_skip_side_effects('Enroll')) { return; }
     $act_id = wp_insert_post(['post_type' => 'actividad', 'post_status' => 'publish', 'post_title' => 'HC Actividad']);
     update_post_meta($act_id, '_convoca_fecha_inicio', date('Y-m-d', strtotime('+7 days')) . ' 10:00');
     update_post_meta($act_id, '_convoca_plazas_totales', 10);
@@ -300,6 +333,7 @@ function hc_shifts() {
     hc_out('Shifts', 'duplicar_semana', file_exists(WP_PLUGIN_DIR . '/convoca-shifts/includes/cpt-turno.php'), 'cpt-turno.php');
 
     // Flujo CRUD + estados
+    if (hc_skip_side_effects('Shifts')) { return; }
     $turno_id = wp_insert_post(['post_type' => 'centro_turno', 'post_status' => 'publish', 'post_title' => 'HC Turno']);
     update_post_meta($turno_id, '_fecha_inicio', date('Y-m-d', strtotime('+3 days')));
     update_post_meta($turno_id, '_estado', 'abierto_disponible');
@@ -336,7 +370,7 @@ function hc_publisher() {
     hc_cfg('Publisher', 'REST /status protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 
     // Async al publicar (solo si auto_publish)
-    if (get_option('convoca_publisher_auto_publish')) {
+    if (get_option('convoca_publisher_auto_publish') && !hc_skip_side_effects('Publisher')) {
         $post_id = wp_insert_post(['post_type' => 'post', 'post_status' => 'publish', 'post_title' => 'HC Publisher']);
         $scheduled = wp_next_scheduled('convoca_publisher_async_publish', [$post_id]);
         hc_out('Publisher', 'Publicación automática async', $scheduled !== false, $scheduled ? 'programado' : 'no');
@@ -492,6 +526,14 @@ function hc_integrations() {
     $required = ['convoca/v1', 'convoca-members/v1', 'convoca-enroll/v1', 'convoca-gateway/v1', 'convoca-shifts/v1', 'convoca-publisher/v1'];
     $missing = array_diff($required, $ns);
     hc_cfg('Integraciones', '6 namespaces REST', empty($missing), $missing ? implode(',', $missing) : implode(',', $ns));
+
+    // En modo seguro (producción): los flujos que crean datos de prueba y
+    // disparan notificaciones NO se ejecutan. Se validan los namespaces y se
+    // marca WARN indicando que el flujo completo requiere entorno de demo.
+    if ($GLOBALS['hc_safe']) {
+        hc_warn('Integraciones', 'Flujos Members←Gateway / Enroll←Gateway', 'modo safe: no se crean datos de prueba (usa la demo para validar flujos)');
+        return;
+    }
 
     // Members → Gateway: pago activa membresía
     if ($handler) {
