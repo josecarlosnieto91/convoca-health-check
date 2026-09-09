@@ -134,6 +134,11 @@ function hc_core() {
         $l1 = \Convoca\Core\Utils::acquire_lock('hc_lock', 30);
         $l2 = \Convoca\Core\Utils::acquire_lock('hc_lock', 30);
         hc_out('Core', 'Locks exclusivos', $l1 && !$l2, '');
+        // Liberar SIEMPRE: sin release, una 2a ejecución en <TTL encuentra el
+        // lock residual y da falso positivo (intermitente).
+        if ($l1) {
+            \Convoca\Core\Utils::release_lock('hc_lock');
+        }
     }
 
     // REST admin/metrics protegido
@@ -415,8 +420,12 @@ function hc_theme() {
     $theme = wp_get_theme();
     hc_cfg('Theme', 'Tema activo Convoca', stripos($theme->get('Name'), 'convoca') !== false, $theme->get('Name'));
 
-    $scs = hc_shortcodes();
-    hc_out('Theme', 'Shortcode dark_mode', in_array('convoca_dark_mode_toggle', $scs), '');
+    // El shortcode de dark mode se eliminó en la auditoría wp.org (convoca-theme 9019288):
+    // los shortcodes son territorio de plugins. El toggle vive como bloque
+    // wp:html con clase dark-mode-toggle en parts/header.html.
+    $header_file = get_stylesheet_directory() . '/parts/header.html';
+    $header_html = file_exists($header_file) ? (string) file_get_contents($header_file) : '';
+    hc_out('Theme', 'Dark mode toggle en header (wp:html)', strpos($header_html, 'dark-mode-toggle') !== false, '');
 
     $patterns = is_dir(get_stylesheet_directory() . '/patterns') ? glob(get_stylesheet_directory() . '/patterns/*.php') : [];
     hc_out('Theme', 'Block patterns', count($patterns) >= 15, count($patterns));
