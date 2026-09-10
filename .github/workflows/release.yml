@@ -127,24 +127,42 @@ jobs:
     name: Deploy WordPress.org SVN
     needs: publish
     runs-on: ubuntu-latest
-    if: ${{ secrets.WP_ORG_SVN_USER != '' }}
     steps:
+      # El contexto secrets NO está disponible en jobs.<job_id>.if (solo
+      # github, needs, vars e inputs): usarlo ahí invalida el workflow entero
+      # y el run falla sin llegar a crear jobs. La comprobación va en un step.
+      - name: Comprobar credenciales de WordPress.org
+        id: creds
+        env:
+          SVN_USER: ${{ secrets.WP_ORG_SVN_USER }}
+        run: |
+          if [ -n "$SVN_USER" ]; then
+            echo "ok=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=0" >> "$GITHUB_OUTPUT"
+            echo "::notice::Sin credenciales de WordPress.org — se omite el deploy a SVN."
+          fi
+
       - name: Download todos los ZIPs
+        if: steps.creds.outputs.ok == '1'
         uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
 
       - name: Checkout scripts
+        if: steps.creds.outputs.ok == '1'
         uses: actions/checkout@v4
         with:
           repository: josecarlosnieto91/convoca-health-check
           path: qa
 
       - name: Instalar SVN
+        if: steps.creds.outputs.ok == '1'
         run: sudo apt-get update -q && sudo apt-get install -y -q subversion unzip
 
       - name: Deploy a WordPress.org
+        if: steps.creds.outputs.ok == '1'
         env:
           SVN_USER: ${{ secrets.WP_ORG_SVN_USER }}
           SVN_PASS: ${{ secrets.WP_ORG_SVN_PASS }}
