@@ -30,7 +30,11 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          # 8.4: es el PHP de producción (Orion 8.4.23; Andromeda 8.5) y el
+          # que exige composer.lock (eluceo/ical 2.17.0 requiere ~8.4||~8.5).
+          # Con 8.2 el 'composer install' del lock fallaba y convoca-enroll
+          # se quedaba sin vendor/bin/phpunit (exit 127).
+          php-version: '8.4'
           extensions: mbstring, intl, gd
           coverage: none
 
@@ -156,7 +160,11 @@ jobs:
       - name: Setup PHP + WP-CLI
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          # 8.4: es el PHP de producción (Orion 8.4.23; Andromeda 8.5) y el
+          # que exige composer.lock (eluceo/ical 2.17.0 requiere ~8.4||~8.5).
+          # Con 8.2 el 'composer install' del lock fallaba y convoca-enroll
+          # se quedaba sin vendor/bin/phpunit (exit 127).
+          php-version: '8.4'
           extensions: mbstring, intl, gd, mysqli
           tools: wp-cli
 
