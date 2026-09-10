@@ -13,6 +13,9 @@
  * Uso:
  *   wp eval-file observability.php --path=/ruta/al/wp
  * Exit 0 = OK, 1 = hay errores críticos (para CI).
+  *
+ * Licencia: GPL-2.0-or-later (ver LICENSE). Es una herramienta de desarrollo,
+ * no un plugin distribuible: se ejecuta con `wp eval-file`.
  */
 echo "══════════════════════════════════════════\n";
 echo "  CONVOCA OBSERVABILITY\n";

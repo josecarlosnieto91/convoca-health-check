@@ -12,6 +12,9 @@
  *
  * Cada check se ejecuta contra la instalación real. Los datos de prueba
  * se crean y se limpian dentro del mismo check (no deja residuos).
+  *
+ * Licencia: GPL-2.0-or-later (ver LICENSE). Es una herramienta de desarrollo,
+ * no un plugin distribuible: se ejecuta con `wp eval-file`.
  */
 
 // ── Salida y contadores ──
