@@ -68,9 +68,14 @@ GitHub Actions ejecuta la batería diariamente (cron 06:30 UTC) y bajo demanda
 
 - `health-check.php` — la batería completa (WP-CLI `wp eval-file`)
 - `bin/convoca-health` — wrapper bash (path/ssh/format)
+- `observability.php` — panel de estado en vivo (cron, licencias, logs, memoria, errores, REST) vía `wp eval-file`
 - Añade un check nuevo con el patrón `hc_out('Componente', 'Nombre', $condicion, $detalle)`
 
 ## Regla
 
 Nunca añadir un check que deje residuos en la BD. Todo dato de prueba se crea
 y se elimina dentro del mismo check.
+
+## Licencia
+
+GPL-2.0-or-later. Ver [LICENSE](LICENSE).
