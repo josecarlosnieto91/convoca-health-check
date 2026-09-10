@@ -61,7 +61,7 @@ personas designadas en eventos en línea o no.
 
 Instancias de comportamiento abusivo, acosador o inaceptable de otro modo
 podrán ser reportadas a los líderes de la comunidad responsables del
-cumplimiento a través de **coordinacion@getconvoca.app**. Todas las quejas
+cumplimiento a través de **hola@mg.getconvoca.app**. Todas las quejas
 serán evaluadas e investigadas de una manera puntual y justa.
 
 Todos los líderes de la comunidad están obligados a respetar la privacidad y
