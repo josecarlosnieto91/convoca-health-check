@@ -49,7 +49,7 @@ PYEOF
 # 3. Comparar
 CHANGES=$(python3 - << 'PYEOF'
 import json
-frozen = json.load(open("/home/josecnr91/.openclaw/workspace/convoca-health-check/api/api-v3.0.json"))
+frozen = json.load(open("/home/josecnr91/repos/convoca-health-check/api/api-v3.0.json"))
 current = json.load(open("/tmp/api-current-sigs.json"))
 diffs = []
 for repo in sorted(set(frozen) | set(current)):
