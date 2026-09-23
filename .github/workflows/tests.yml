@@ -93,7 +93,9 @@ jobs:
         run: |
           mkdir -p workspace
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant convoca-theme; do
-            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git workspace/$p 2>/dev/null || true
+            # Sin `|| true`: un clon que falla deja el baseline incompleto y el check
+            # diría «todo igual» comparando contra menos código del real.
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git workspace/$p
           done
 
       - name: Setup Python
@@ -108,6 +110,9 @@ jobs:
           # Sin `| tail`: el pipe devolvería el exit code de tail y el job pasaría
           # siempre. El script ya imprime solo el resultado.
           bash health/scripts/check-api-freeze.sh
+
+      - name: El inventario no puede mentir (doc vs JSON)
+        run: python3 health/scripts/check-inventory-doc.py health
 
   observability:
     name: Observability

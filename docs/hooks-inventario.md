@@ -1,8 +1,9 @@
 # Convoca API Pública v3.0 — Hooks y Shortcodes
 
-> **GENERADO AUTOMÁTICAMENTE** desde el código. No editar a mano.
-> Regenerar con: pendiente — el generador vivía en `/tmp` y se perdió. El dato fiable de verdad es
-> `api/api-v3.0.json` (lo regenera `scripts/api-extract.py`, verificado por CI).
+> Instantánea legible de la API pública. La fuente de verdad es `api/api-v3.0.json`
+> (lo regenera `scripts/api-extract.py`) y este documento se contrasta con ella en CI
+> mediante `scripts/check-inventory-doc.py`: si aparece un shortcode retirado o falta
+> uno nuevo, el check falla. Las tablas de hooks y su detalle se actualizan al cambiar la API.
 
 ## Resumen
 
@@ -42,7 +43,6 @@
 | `[convoca_relacionadas]` | convoca-core |
 | `[convoca_stats]` | convoca-core |
 | `[convoca_assistant]` | convoca-assistant |
-| `[convoca_dark_mode_toggle]` | convoca-theme |
 
 ## Hooks
 
