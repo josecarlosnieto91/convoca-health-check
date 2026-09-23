@@ -38,6 +38,11 @@ for repo in REPOS:
     taxos = set()
 
     for fp in scan(repo):
+        # Los artefactos de compilación (build-dir/ del theme) son una COPIA del
+        # código: si se leen, el inventario declara hooks y shortcodes que el
+        # código fuente ya no tiene (y el baseline se compara contra fantasmas).
+        if "/build-dir/" in fp or "/build/" in fp:
+            continue
         try:
             c = open(fp, encoding="utf-8", errors="replace").read()
         except Exception:

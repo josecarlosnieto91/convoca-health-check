@@ -1,14 +1,15 @@
 # Convoca API Pública v3.0 — Hooks y Shortcodes
 
 > **GENERADO AUTOMÁTICAMENTE** desde el código. No editar a mano.
-> Regenerar con: `python3 /tmp/api-extract2.py && python3 /tmp/api-hooks-doc.py`
+> Regenerar con: pendiente — el generador vivía en `/tmp` y se perdió. El dato fiable de verdad es
+> `api/api-v3.0.json` (lo regenera `scripts/api-extract.py`, verificado por CI).
 
 ## Resumen
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 127 |
-| Shortcodes | 22 |
+| Hooks | 164 |
+| Shortcodes | 27 |
 
 ## Shortcodes
 
@@ -34,6 +35,12 @@
 | `[convoca_calendario]` | convoca-shifts |
 | `[convoca_proximos_turnos]` | convoca-shifts |
 | `[convoca_resumen_turnos]` | convoca-shifts |
+| `[convoca_menu]` | convoca-core |
+| `[convoca_socials]` | convoca-core |
+| `[convoca_cuando]` | convoca-core |
+| `[convoca_donde]` | convoca-core |
+| `[convoca_relacionadas]` | convoca-core |
+| `[convoca_stats]` | convoca-core |
 | `[convoca_assistant]` | convoca-assistant |
 | `[convoca_dark_mode_toggle]` | convoca-theme |
 

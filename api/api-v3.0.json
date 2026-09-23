@@ -9,6 +9,7 @@
       "convoca_enroll_asistencia_cambiada",
       "convoca_enroll_inscripcion_cancelada",
       "convoca_enroll_inscripcion_nueva",
+      "convoca_event_meta_legacy_keys",
       "convoca_gateway_payment_completed",
       "convoca_gateway_payment_failed",
       "convoca_hours_submitted",
@@ -35,6 +36,8 @@
       "convoca_pdf_html_safe_keys",
       "convoca_register_module",
       "convoca_security_thresholds",
+      "convoca_site_stats",
+      "convoca_social_links",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_pendiente",
       "convoca_webhook_retry",
@@ -46,7 +49,14 @@
     "rest": [
       "convoca/v1 /admin/metrics GET"
     ],
-    "shortcodes": []
+    "shortcodes": [
+      "convoca_cuando",
+      "convoca_donde",
+      "convoca_menu",
+      "convoca_relacionadas",
+      "convoca_socials",
+      "convoca_stats"
+    ]
   },
   "convoca-members": {
     "hooks": [
@@ -273,6 +283,8 @@
   },
   "convoca-theme": {
     "hooks": [
+      "convoca_site_stats",
+      "convoca_social_links",
       "convoca_theme_centro_url",
       "convoca_theme_community_url",
       "convoca_theme_copyright_extra",
@@ -286,11 +298,6 @@
       "convoca_theme_link_labels",
       "convoca_theme_lugg_url",
       "convoca_theme_site_links",
-      "convoca_theme_social_facebook",
-      "convoca_theme_social_handle",
-      "convoca_theme_social_instagram",
-      "convoca_theme_social_youtube",
-      "convoca_theme_stats",
       "convoca_theme_volunteer_email"
     ],
     "rest": [],
