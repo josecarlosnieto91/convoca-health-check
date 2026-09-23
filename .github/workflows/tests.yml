@@ -249,31 +249,14 @@ jobs:
           fi
           echo "Health check local OK (0 FAILs)"
 
-  health-check-demo:
-    name: Health Check demo (requiere túnel)
-    runs-on: ubuntu-latest
-    needs: health-check-local
-    if: github.event_name == 'workflow_dispatch'
-    steps:
-      - name: SSH al servidor (vía túnel configurado)
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.ANDROMEDA_SSH_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          printf 'Host andromeda-ci\n    HostName andromeda.example.trycloudflare.com\n    User josecnr91\n    IdentityFile ~/.ssh/id_ed25519\n    StrictHostKeyChecking no\n    UserKnownHostsFile /dev/null\n' >> ~/.ssh/config
-          chmod 600 ~/.ssh/config
-
-      - name: Ejecutar batería en demo
-        run: |
-          OUT=$(ssh -o ConnectTimeout=60 andromeda-ci 'test' 2>&1)
-          echo "$OUT"
-          if echo "$OUT" | grep -q "FAIL"; then
-            echo "::error::Convoca Health Check FALLÓ en demo"
-            exit 1
-          fi
+  # ⛔ Aquí vivía el job «Health Check demo (requiere túnel)». Se retira el 2026-09-23
+  # porque no podía funcionar desde un runner: apuntaba a un host de ejemplo
+  # (`andromeda.example.trycloudflare.com`) y ejecutaba `ssh ... 'test'`, que no
+  # comprueba nada. Los runners de Actions NO alcanzan la tailnet, así que el
+  # chequeo de los hosts reales vive DENTRO de la red: Andromeda ejecuta cada día
+  # a las 06:30 `/usr/local/bin/convoca-daily-health` (deja /var/log/convoca-health.log
+  # y un marcador de fallo) y el cron `convoca-health-watch` de Cassiopeia avisa por
+  # Telegram si hay FAILs. No lo vuelvas a añadir aquí.
 
   e2e:
     name: E2E Playwright (público)
