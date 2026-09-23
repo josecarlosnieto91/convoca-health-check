@@ -187,7 +187,10 @@ jobs:
           done
           (exec 3<>/dev/tcp/127.0.0.1/3306) 2>/dev/null || { echo "::error::MariaDB no acepta conexiones en 127.0.0.1:3306"; exit 1; }
 
-          wp core download --allow-root --locale=es_ES
+          # Sin --locale=es_ES: el endpoint de descarga no sirve ese paquete y el
+          # paso moría con «The requested locale (es_ES) was not found». El health
+          # check no depende del idioma del WordPress de prueba.
+          wp core download --allow-root
           wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
           wp core install --allow-root --url=http://localhost --title="Convoca Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email
           wp core is-installed --allow-root && echo "WordPress de prueba instalado: $(wp core version --allow-root)"
