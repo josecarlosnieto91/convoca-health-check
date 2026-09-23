@@ -172,28 +172,44 @@ jobs:
 
       - name: Descargar e instalar WordPress
         run: |
+          # Sin `| tail`: el pipe devolvería el exit code de tail y el job pasaría
+          # aunque la instalación fallara (así llegaba el error final, engañoso:
+          # «This does not seem to be a WordPress installation»).
+          set -euo pipefail
           mkdir -p /tmp/wp && cd /tmp/wp
-          wp core download --allow-root --locale=es_ES 2>&1 | tail -1
-          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check 2>&1 | tail -1
-          wp core install --allow-root --url=http://localhost --title="Convoca Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email 2>&1 | tail -1
+
+          # La base de datos de servicio puede tardar: se espera EN SERIO, con
+          # credenciales (un `mariadb-admin ping` sin ellas responde aun sin poder
+          # autenticar y da la base por lista antes de estarlo).
+          for i in $(seq 1 30); do
+            if mariadb -h 127.0.0.1 -u root -proot -e 'SELECT 1' >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          mariadb -h 127.0.0.1 -u root -proot -e 'SELECT 1' >/dev/null
+
+          wp core download --allow-root --locale=es_ES
+          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+          wp core install --allow-root --url=http://localhost --title="Convoca Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email
+          wp core is-installed --allow-root && echo "WordPress de prueba instalado: $(wp core version --allow-root)"
 
       - name: Instalar plugins Convoca
         run: |
           cd /tmp/wp
+          set -euo pipefail
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
-            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null || true
+            # Un clon que falla en silencio deja el ecosistema a medias y el health
+            # check miente: se exige que el plugin esté.
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p
             if [ -f /tmp/wp/wp-content/plugins/$p/composer.json ]; then
-              cd /tmp/wp/wp-content/plugins/$p
-              composer update --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -1 || true
-              composer dump-autoload --no-interaction 2>&1 | tail -1 || true
-              cd /tmp/wp
+              ( cd /tmp/wp/wp-content/plugins/$p && composer install --no-interaction --prefer-dist --no-progress --no-scripts --ignore-platform-req=ext-iconv                 && composer dump-autoload --no-interaction )
             fi
           done
-          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null || true
+          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
-            wp plugin activate $p --allow-root 2>&1 | tail -1
+            wp plugin activate $p --allow-root
           done
-          wp theme activate convoca --allow-root 2>&1 | tail -1
+          wp theme activate convoca --allow-root
+          echo "Plugins activos:"; wp plugin list --allow-root --status=active --field=name
 
       - name: Ejecutar Health Check local (modo --local)
         working-directory: /tmp/wp
@@ -205,6 +221,9 @@ jobs:
           which wp || echo "wp NO encontrado en PATH"
           ls -la /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php || echo "health-check.php NO existe"
           wp --version --allow-root 2>&1 | head -1
+          # Si el paso anterior no dejó WordPress, el fallo se explica aquí en vez
+          # de dejar un «This does not seem to be a WordPress installation» opaco.
+          wp core is-installed --allow-root || { echo "::error::El paso de instalación no dejó un WordPress en /tmp/wp"; exit 1; }
           # Ejecutar el health check capturando salida y exit code por separado
           OUTPUT=$(wp eval-file /home/runner/work/convoca-health-check/convoca-health-check/health/health-check.php --allow-root 2>&1)
           EXIT=$?
