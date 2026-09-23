@@ -11,12 +11,12 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 127 |
-| REST endpoints | 51 |
-| Shortcodes | 22 |
-| Meta keys | 209 |
-| Opciones | 67 |
-| **Total elementos API** | **200** (hooks+REST+shortcodes) |
+| Hooks | 164 |
+| REST endpoints | 52 |
+| Shortcodes | 21 |
+| Meta keys | 239 |
+| Opciones | 85 |
+| **Total elementos API** | **237** (hooks+REST+shortcodes) |
 
 ## Mecanismo de verificación
 

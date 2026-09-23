@@ -4,6 +4,8 @@
       "convoca_admin_appearance_url",
       "convoca_common_webhook_sslverify",
       "convoca_continue_access_codes",
+      "convoca_document_theme",
+      "convoca_document_theme_",
       "convoca_enroll_asistencia_cambiada",
       "convoca_enroll_inscripcion_cancelada",
       "convoca_enroll_inscripcion_nueva",
@@ -14,7 +16,9 @@
       "convoca_license_api_url",
       "convoca_license_validate",
       "convoca_log_cleanup",
+      "convoca_log_level",
       "convoca_log_purge",
+      "convoca_log_retention_days",
       "convoca_member_created",
       "convoca_members_created",
       "convoca_members_estado_changed",
@@ -30,10 +34,14 @@
       "convoca_pdf_allowed_html",
       "convoca_pdf_html_safe_keys",
       "convoca_register_module",
+      "convoca_security_thresholds",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_pendiente",
       "convoca_webhook_retry",
-      "convoca_weekly_event"
+      "convoca_webhook_retry_backoff",
+      "convoca_weekly_event",
+      "convoca_wizard_legacy_shortcodes",
+      "convoca_wizard_system_pages"
     ],
     "rest": [
       "convoca/v1 /admin/metrics GET"
@@ -50,7 +58,9 @@
       "convoca_gateway_payment_failed",
       "convoca_member_created",
       "convoca_members_alta_document_url",
+      "convoca_members_auto_renewal_completed",
       "convoca_members_auto_renewal_created",
+      "convoca_members_certificado_validez_anios",
       "convoca_members_created",
       "convoca_members_cuota_pagada",
       "convoca_members_email_bienvenida",
@@ -70,16 +80,19 @@
       "convoca_members_hours_submitted",
       "convoca_members_interest_areas",
       "convoca_members_membership_expired",
+      "convoca_members_miembro_dado_de_baja",
       "convoca_members_objetivo_completado",
       "convoca_members_payment_reminder_sent",
       "convoca_members_phone_verificado",
       "convoca_members_plans",
+      "convoca_members_reactivado",
       "convoca_members_renewal_reminder_sent",
       "convoca_members_sensitive_meta",
       "convoca_members_unsubscribe_request",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_aprobado_attachments",
       "convoca_voluntario_pendiente",
+      "convoca_voluntario_revocado",
       "convoca_weekly_event"
     ],
     "rest": [
@@ -118,6 +131,7 @@
   "convoca-enroll": {
     "hooks": [
       "convoca_after_horas_voluntario_actualizadas",
+      "convoca_enroll_activity_reminder",
       "convoca_enroll_aportacion_label",
       "convoca_enroll_asistencia_cambiada",
       "convoca_enroll_cleanup_orphan_codes",
@@ -129,6 +143,7 @@
       "convoca_enroll_inscripcion_confirmada",
       "convoca_enroll_inscripcion_nueva",
       "convoca_enroll_inscripcion_promovida",
+      "convoca_enroll_late_cancel_admin_email",
       "convoca_enroll_process_email_queue",
       "convoca_enroll_process_webhook_queue",
       "convoca_enroll_reminder_1hora",
@@ -136,6 +151,7 @@
       "convoca_enroll_reminder_7dias",
       "convoca_evaluacion_completada",
       "convoca_gateway_payment_completed",
+      "convoca_gateway_payment_failed",
       "convoca_inscripcion_cancelada",
       "convoca_inscripcion_confirmada",
       "convoca_inscripcion_promovida",
@@ -168,9 +184,12 @@
   "convoca-gateway": {
     "hooks": [
       "convoca_gateway_bank_entity",
+      "convoca_gateway_expiry_notice",
       "convoca_gateway_payment_completed",
       "convoca_gateway_payment_failed",
       "convoca_gateway_payment_refunded",
+      "convoca_gateway_pending_reminder",
+      "convoca_gateway_receipt_payer_name",
       "convoca_gateway_redsys_allowed_ips",
       "convoca_gateway_resend_email",
       "convoca_payment_completed",
@@ -190,12 +209,17 @@
       "convoca_after_horas_voluntario_actualizadas",
       "convoca_shifts_actividad_add_form_fields",
       "convoca_shifts_actividad_edit_form_fields",
+      "convoca_shifts_admin_email",
       "convoca_shifts_confirm_signup",
       "convoca_shifts_daily_event",
       "convoca_shifts_force_enqueue_assets",
       "convoca_shifts_hourly_event",
+      "convoca_shifts_no_show_email_admin",
+      "convoca_shifts_no_show_email_admin_subject",
+      "convoca_shifts_no_show_email_socio",
+      "convoca_shifts_no_show_email_socio_subject",
       "convoca_voluntario_aprobado",
-      "convoca_voluntario_aprobado_attachments"
+      "convoca_voluntario_revocado"
     ],
     "rest": [
       "convoca-shifts/v1 /turnos GET",
@@ -215,8 +239,10 @@
   "convoca-publisher": {
     "hooks": [
       "convoca_publisher_async_publish",
-      "convoca_publisher_retry_failed_posts",
-      "convoca_publisher_retry_process"
+      "convoca_publisher_retry_backoff",
+      "convoca_publisher_retry_failed",
+      "convoca_publisher_retry_failed_notify_email",
+      "convoca_publisher_retry_failed_posts"
     ],
     "rest": [
       "convoca-publisher/v1 /publish/(?P<post_id>\\d+) GET",
@@ -228,13 +254,15 @@
   "convoca-assistant": {
     "hooks": [
       "convoca_assistant_log_cleanup",
-      "convoca_assistant_regenerate"
+      "convoca_assistant_regenerate",
+      "convoca_assistant_regenerate_now"
     ],
     "rest": [
       "convoca/v1 /assistant/clear-logs GET",
       "convoca/v1 /assistant/index GET",
       "convoca/v1 /assistant/log GET",
       "convoca/v1 /assistant/rebuild-index GET",
+      "convoca/v1 /assistant/recent GET",
       "convoca/v1 /assistant/search GET",
       "convoca/v1 /assistant/stats GET",
       "convoca/v1 /assistant/unanswered GET"
@@ -247,17 +275,25 @@
     "hooks": [
       "convoca_theme_centro_url",
       "convoca_theme_community_url",
+      "convoca_theme_copyright_extra",
+      "convoca_theme_cta_heading",
+      "convoca_theme_cta_label",
+      "convoca_theme_cta_text",
+      "convoca_theme_cta_url",
+      "convoca_theme_event_country",
+      "convoca_theme_event_region",
       "convoca_theme_footer_replacements",
+      "convoca_theme_link_labels",
       "convoca_theme_lugg_url",
+      "convoca_theme_site_links",
       "convoca_theme_social_facebook",
       "convoca_theme_social_handle",
       "convoca_theme_social_instagram",
       "convoca_theme_social_youtube",
+      "convoca_theme_stats",
       "convoca_theme_volunteer_email"
     ],
     "rest": [],
-    "shortcodes": [
-      "convoca_dark_mode_toggle"
-    ]
+    "shortcodes": []
   }
 }

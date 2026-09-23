@@ -105,7 +105,9 @@ jobs:
         env:
           API_WS: ${{ github.workspace }}/workspace
         run: |
-          bash health/scripts/check-api-freeze.sh 2>&1 | tail -10
+          # Sin `| tail`: el pipe devolvería el exit code de tail y el job pasaría
+          # siempre. El script ya imprime solo el resultado.
+          bash health/scripts/check-api-freeze.sh
 
   observability:
     name: Observability
