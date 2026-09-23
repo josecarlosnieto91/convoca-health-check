@@ -178,14 +178,14 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/wp && cd /tmp/wp
 
-          # La base de datos de servicio puede tardar: se espera EN SERIO, con
-          # credenciales (un `mariadb-admin ping` sin ellas responde aun sin poder
-          # autenticar y da la base por lista antes de estarlo).
+          # A la base se le espera por el PUERTO: el runner no trae cliente de
+          # MariaDB (`mariadb: command not found`) y GitHub ya espera al
+          # health-check del servicio. Esto solo cubre el hueco de arranque.
           for i in $(seq 1 30); do
-            if mariadb -h 127.0.0.1 -u root -proot -e 'SELECT 1' >/dev/null 2>&1; then break; fi
+            if (exec 3<>/dev/tcp/127.0.0.1/3306) 2>/dev/null; then break; fi
             sleep 2
           done
-          mariadb -h 127.0.0.1 -u root -proot -e 'SELECT 1' >/dev/null
+          (exec 3<>/dev/tcp/127.0.0.1/3306) 2>/dev/null || { echo "::error::MariaDB no acepta conexiones en 127.0.0.1:3306"; exit 1; }
 
           wp core download --allow-root --locale=es_ES
           wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
