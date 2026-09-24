@@ -48,28 +48,40 @@ jobs:
 
       - name: Descargar e instalar WordPress
         run: |
+          # Sin `| tail`: el pipe devolvía el exit code de `tail`, así que una
+          # instalación fallida dejaba el release «validado» con el health check
+          # corriendo sobre un WordPress que no existía.
+          # Sin --locale=es_ES: ese paquete no existe en el endpoint de descarga.
+          set -euo pipefail
           mkdir -p /tmp/wp && cd /tmp/wp
-          wp core download --allow-root --locale=es_ES 2>&1 | tail -1
-          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check 2>&1 | tail -1
-          wp core install --allow-root --url=http://localhost --title="Convoca Release Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email 2>&1 | tail -1
+          for i in $(seq 1 30); do
+            if (exec 3<>/dev/tcp/127.0.0.1/3306) 2>/dev/null; then break; fi
+            sleep 2
+          done
+          (exec 3<>/dev/tcp/127.0.0.1/3306) 2>/dev/null || { echo "::error::MariaDB no acepta conexiones en 127.0.0.1:3306"; exit 1; }
+          wp core download --allow-root
+          wp config create --allow-root --dbname=wordpress_test --dbuser=root --dbpass=root --dbhost=127.0.0.1 --skip-check
+          wp core install --allow-root --url=http://localhost --title="Convoca Release Test" --admin_user=admin --admin_password=admin --admin_email=admin@example.com --skip-email
+          wp core is-installed --allow-root
 
       - name: Instalar plugins Convoca
         run: |
           cd /tmp/wp
+          set -euo pipefail
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
-            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p 2>/dev/null || true
+            # Un clon que falla en silencio deja el release validado contra menos
+            # plugins de los que se van a publicar: aquí tiene que fallar.
+            git clone -q --depth 1 https://github.com/josecarlosnieto91/$p.git /tmp/wp/wp-content/plugins/$p
             if [ -f /tmp/wp/wp-content/plugins/$p/composer.json ]; then
-              cd /tmp/wp/wp-content/plugins/$p
-              composer update --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -1 || true
-              composer dump-autoload --no-interaction 2>&1 | tail -1 || true
-              cd /tmp/wp
+              ( cd /tmp/wp/wp-content/plugins/$p && composer install --no-interaction --prefer-dist --no-progress --no-scripts --ignore-platform-req=ext-iconv && composer dump-autoload --no-interaction )
             fi
           done
-          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca 2>/dev/null || true
+          git clone -q --depth 1 https://github.com/josecarlosnieto91/convoca-theme.git /tmp/wp/wp-content/themes/convoca
           for p in convoca-core convoca-members convoca-enroll convoca-gateway convoca-shifts convoca-publisher convoca-assistant; do
-            wp plugin activate $p --allow-root 2>&1 | tail -1
+            wp plugin activate $p --allow-root
           done
-          wp theme activate convoca --allow-root 2>&1 | tail -1
+          wp theme activate convoca --allow-root
+          echo "Plugins activos:"; wp plugin list --allow-root --status=active --field=name
 
       - name: Ejecutar Health Check local (modo --local)
         working-directory: /tmp/wp
