@@ -277,12 +277,20 @@ jobs:
       - name: Instalar Playwright
         working-directory: health
         run: |
-          npm init -y >/dev/null
-          npm install @playwright/test >/dev/null 2>&1
-          npx playwright install chromium --with-deps >/dev/null 2>&1
+          # Sin silenciar la salida: si la instalación de Playwright o de los
+          # navegadores falla, el job tiene que caer AQUÍ y decir por qué, no más
+          # tarde con un error confuso de test.
+          npm init -y
+          npm install @playwright/test
+          npx playwright install chromium --with-deps
 
       - name: Ejecutar E2E contra demo pública
         working-directory: health
         env:
           E2E_BASE: https://demo.getconvoca.app
-        run: npx playwright test e2e/ 2>&1 | tail -30 || true
+        run: |
+          # Sin `| tail` ni `|| true`: el exit code es el de Playwright.
+          # Con ellos, este job NO PODÍA FALLAR NUNCA: un E2E roto se veía verde
+          # para siempre. Si algo se rompe, el sitio de referencia es la demo
+          # pública (sandbox del producto), no un sitio de cliente.
+          npx playwright test e2e/ --reporter=list
