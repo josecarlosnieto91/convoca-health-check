@@ -73,7 +73,7 @@ if ( ! $total ) {
 
 // Páginas del sistema: las que crea el asistente y a las que apuntan los emails.
 echo "\n--- PÁGINAS DEL SISTEMA ---\n";
-$system_slugs = array( 'alta-socios', 'panel-socio', 'pago', 'pago-completado', 'pago-error', 'renovar', 'panel-reservas', 'checkin' );
+$system_slugs = array( 'alta-socios', 'panel-socio', 'pago', 'pago-completado', 'pago-error', 'renovar', 'panel-reservas' );
 foreach ( $system_slugs as $slug ) {
 	$page = get_page_by_path( $slug );
 	if ( ! $page ) {
@@ -86,6 +86,26 @@ foreach ( $system_slugs as $slug ) {
 		$found[] = '[' . $t . ( shortcode_exists( $t ) ? '] ok' : '] SIN REGISTRAR' );
 	}
 	printf( "%-18s #%-6d %-9s %s\n", $slug, $page->ID, $page->post_status, implode( ' ', $found ) );
+}
+
+// El check-in NO es una página con shortcode: es la ruta /checkin/, servida por Checkin_PWA de
+// convoca-enroll (manifest, start_url, scope y la regla de reescritura convoca_enroll_checkin_page).
+// Buscar una página con ese slug daba un falso positivo, y peor: invitaba a crear una página /checkin/
+// que taparía la ruta. Se comprueba la ruta, no la página.
+echo "\n--- RUTA DE CHECK-IN ---\n";
+$regla = false;
+foreach ( (array) $GLOBALS['wp_rewrite']->wp_rewrite_rules() as $patron => $destino ) {
+	if ( false !== strpos( (string) $destino, 'convoca_enroll_checkin' ) || false !== strpos( (string) $patron, 'checkin' ) ) {
+		$regla = true;
+		break;
+	}
+}
+if ( $regla ) {
+	echo "checkin (ruta /checkin/)   regla de reescritura presente  ok\n";
+} elseif ( post_type_exists( 'convoca_inscripcion' ) ) {
+	echo "checkin (ruta /checkin/)   SIN regla de reescritura  AVISO\n";
+} else {
+	echo "checkin (ruta /checkin/)   no aplica: convoca-enroll no está activo\n";
 }
 
 echo "\n(Leyenda: [tag] SIN REGISTRAR = nadie lo registra; el visitante ve los corchetes)\n";
