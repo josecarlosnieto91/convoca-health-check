@@ -483,7 +483,8 @@ function hc_clean_code() {
         'lugg.biodevas.org',
         'coordinacion@biodevas.org',
         'Centro Social Turnos',
-        'Turnos Centro Social',
+        // 'Turnos Centro Social' se retiro: es castellano generico (una etiqueta de
+        // tabla lo usa) y marcaba un falso positivo en cada pasada.
         // El nombre del cliente a secas: se colaba porque la lista solo tenia el
         // nombre compuesto, la localidad y los dominios.
         'Lugg',
