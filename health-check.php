@@ -484,6 +484,12 @@ function hc_clean_code() {
         'coordinacion@biodevas.org',
         'Centro Social Turnos',
         'Turnos Centro Social',
+        // El nombre del cliente a secas: se colaba porque la lista solo tenia el
+        // nombre compuesto, la localidad y los dominios.
+        'Lugg',
+        'lugg',
+        'Biodevas',
+        'biodevas',
     );
 
     $dirs = array('convoca-core', 'convoca-members', 'convoca-enroll', 'convoca-gateway',
@@ -517,7 +523,8 @@ function hc_clean_code() {
                 continue;
             }
             foreach ($prohibited as $term) {
-                if (strpos($content, $term) !== false) {
+                // Insensible a mayusculas: 'LUGG' o 'biodevas' en minusculas tambien son la fuga.
+                if (stripos($content, $term) !== false) {
                     $found[] = str_replace(WP_PLUGIN_DIR . '/', '', $path) . " contiene '{$term}'";
                 }
             }
