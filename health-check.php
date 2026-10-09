@@ -29,6 +29,18 @@ $GLOBALS['hc_results'] = [];
 $GLOBALS['hc_local'] = getenv('CONVOCA_HC_LOCAL') === '1'
     || in_array('--local', $_SERVER['argv'] ?? [], true);
 
+// En el entorno de desarrollo la direccion canonica del sitio lleva el puerto con el que
+// se entra desde el anfitrion (8080), pero dentro del contenedor el sitio escucha en el 80.
+// Sin esto, todas las comprobaciones HTTP fallan por la direccion y no por el codigo, que
+// es justo lo contrario de lo que esta bateria debe medir. Solo en modo local.
+if ($GLOBALS['hc_local'] && !function_exists('hc_reescribe_direccion')) {
+    function hc_reescribe_direccion($url) {
+        return str_replace('localhost:8080', 'localhost', (string) $url);
+    }
+    add_filter('home_url', 'hc_reescribe_direccion');
+    add_filter('site_url', 'hc_reescribe_direccion');
+}
+
 // Modo sin efectos secundarios (producción): NO crea miembros/posts de prueba
 // y BLOQUEA el envío de emails durante la ejecución. Los checks de integración
 // (flujos Members→Gateway, Enroll→Gateway) pasan a WARN porque no pueden
@@ -511,7 +523,9 @@ function hc_clean_code() {
                 continue;
             }
             $path = $file->getPathname();
-            if (strpos($path, '/vendor/') !== false || strpos($path, '/node_modules/') !== false) {
+            // build-dir es el resultado de compilar el tema: no es codigo fuente, se regenera.
+            if (strpos($path, '/vendor/') !== false || strpos($path, '/node_modules/') !== false
+                || strpos($path, '/build-dir/') !== false || strpos($path, '__pycache__') !== false) {
                 continue;
             }
             // Los CHANGELOGs documentan el histórico real del proyecto
@@ -523,9 +537,20 @@ function hc_clean_code() {
             if ($content === false) {
                 continue;
             }
+            // Las lineas marcadas con `convoca-hygiene-ignore` no cuentan: hay cadenas que
+            // son funcionales (un filtro de dominios de correo, un alias publicado) y no
+            // decorativas. La marca exige motivo en la misma linea.
+            $escaneable = '';
+            foreach (explode("\n", (string) $content) as $linea) {
+                if (strpos($linea, 'convoca-hygiene-ignore') === false) {
+                    $escaneable .= $linea . "\n";
+                }
+            }
             foreach ($prohibited as $term) {
                 // Insensible a mayusculas: 'LUGG' o 'biodevas' en minusculas tambien son la fuga.
-                if (stripos($content, $term) !== false) {
+                // Con limites de palabra: sin ellos, 'Lugg' coincide dentro de 'pluggable'
+                // y marca un falso positivo.
+                if (preg_match('/\b' . preg_quote($term, '/') . '\b/i', $escaneable)) {
                     $found[] = str_replace(WP_PLUGIN_DIR . '/', '', $path) . " contiene '{$term}'";
                 }
             }
