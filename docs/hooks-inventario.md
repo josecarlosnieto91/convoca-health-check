@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 164 |
+| Hooks | 173 |
 | Shortcodes | 27 |
 
 ## Shortcodes
@@ -46,7 +46,7 @@
 
 ## Hooks
 
-### convoca-core (33 hooks)
+### convoca-core (49 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -82,9 +82,14 @@
 | `convoca_voluntario_aprobado` | escucha | includes/Notifications.php |
 | `convoca_voluntario_pendiente` | escucha | includes/Notifications.php |
 | `convoca_webhook_retry` | escucha | includes/Webhook_Manager.php |
+| `convoca_email_copy_enabled` | dispara | includes/Email_Copy.php |
+| `convoca_email_copy_payload` | dispara | includes/Email_Copy.php |
+| `convoca_email_copy_recipients` | dispara | includes/Email_Copy.php |
+| `convoca_email_footer_links` | dispara | includes/Email_Links.php |
+| `convoca_email_panel_url` | dispara | includes/Email_Links.php |
 | `convoca_weekly_event` | escucha | includes/Memory_Report.php |
 
-### convoca-members (39 hooks)
+### convoca-members (46 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -126,9 +131,11 @@
 | `convoca_voluntario_aprobado` | escucha | convoca-members.php, includes/PDF_Document.php |
 | `convoca_voluntario_aprobado_attachments` | escucha | includes/PDF_Document.php |
 | `convoca_voluntario_pendiente` | dispara | public/class-form-voluntariado.php |
+| `convoca_documento_horas` | dispara | includes/Texto_PDF.php |
+| `convoca_mi_area_links` | dispara | public/class-mi-area.php |
 | `convoca_weekly_event` | escucha | includes/Cron_Manager.php |
 
-### convoca-enroll (24 hooks)
+### convoca-enroll (29 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -155,9 +162,11 @@
 | `convoca_inscripcion_confirmada` | escucha | includes/Google_Sheets.php, includes/Email_Automation.php |
 | `convoca_inscripcion_promovida` | escucha | includes/Google_Sheets.php, includes/Email_Automation.php |
 | `convoca_social_publish` | escucha | convoca-enroll.php |
+| `convoca_enroll_form_en_ficha` | dispara | includes/CPT_Actividad.php |
+| `convoca_enroll_form_repetido` | dispara | includes/CPT_Actividad.php |
 | `convoca_social_token_healthcheck` | escucha | social/class-social-healthcheck.php |
 
-### convoca-gateway (8 hooks)
+### convoca-gateway (11 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -170,7 +179,7 @@
 | `convoca_payment_completed` | escucha | includes/Email_Notifications.php |
 | `convoca_payment_failed` | escucha | includes/Email_Notifications.php |
 
-### convoca-shifts (9 hooks)
+### convoca-shifts (14 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -184,7 +193,7 @@
 | `convoca_voluntario_aprobado` | dispara | includes/admin-approval.php |
 | `convoca_voluntario_aprobado_attachments` | dispara | includes/admin-approval.php |
 
-### convoca-publisher (3 hooks)
+### convoca-publisher (5 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -192,14 +201,14 @@
 | `convoca_publisher_retry_failed_posts` | escucha | includes/class-scheduler.php |
 | `convoca_publisher_retry_process` | escucha | includes/class-retry.php |
 
-### convoca-assistant (2 hooks)
+### convoca-assistant (3 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_assistant_log_cleanup` | escucha | includes/Statistics.php |
 | `convoca_assistant_regenerate` | escucha | includes/Indexer.php |
 
-### convoca-theme (9 hooks)
+### convoca-theme (16 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
