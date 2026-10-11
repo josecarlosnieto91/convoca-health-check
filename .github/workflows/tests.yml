@@ -52,27 +52,25 @@ jobs:
             composer install --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -5
           fi
 
-      - name: Ejecutar PHPUnit unit (bootstrap-unit standalone)
+      - name: Ejecutar PHPUnit unit (con el arranque que declara el repositorio)
         working-directory: ${{ matrix.plugin }}
         run: |
-          # Sin pipe: preservar el exit code real de phpunit (el pipe con tail
-          # enmascara fallos — assistant "pasaba" sin ejecutar tests).
+          # Se ejecuta el PHPUnit con la configuración del PROPIO repositorio.
+          # Antes se forzaba `--bootstrap tests/bootstrap-unit.php tests/Unit`, que no es
+          # su arranque: con esa vara, los tests que usan WP_Query fallaban con
+          # «Class WP_Query not found» mientras el CI del propio plugin los daba por
+          # buenos. Dos varas para lo mismo, y la buena es la del repositorio (es la que
+          # ejecuta quien desarrolla). El --bootstrap queda como último recurso.
+          # Sin pipe: el pipe devolvía el exit code de tail y un fallo se veía verde.
           set +e
-          if [ -f tests/bootstrap-unit.php ]; then
-            vendor/bin/phpunit --bootstrap tests/bootstrap-unit.php tests/Unit 2>&1 | tail -30
-            EXIT=${PIPESTATUS[0]}
-          elif [ -f tests/bootstrap.php ] && [ -d tests/Unit ]; then
-            # Plugins con solo tests de integración (WP_UnitTestCase): el CI
-            # no tiene WP test suite; los cubre el health-check local.
-            if [ "${{ matrix.plugin }}" = "convoca-assistant" ]; then
-              echo "Skipped: assistant solo tiene tests de integración (WP_UnitTestCase) — cubiertos por health-check local"
-              EXIT=0
-            else
-              vendor/bin/phpunit --bootstrap tests/bootstrap.php tests/Unit 2>&1 | tail -30
-              EXIT=${PIPESTATUS[0]}
-            fi
+          if [ -f phpunit.xml ] || [ -f phpunit.xml.dist ]; then
+            vendor/bin/phpunit
+            EXIT=$?
+          elif [ -f tests/bootstrap-unit.php ]; then
+            vendor/bin/phpunit --bootstrap tests/bootstrap-unit.php tests/Unit
+            EXIT=$?
           else
-            echo "Sin tests unitarios"
+            echo "Sin tests unitarios en este plugin"
             EXIT=0
           fi
           set -e
