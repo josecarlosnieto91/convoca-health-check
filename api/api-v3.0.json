@@ -1,4 +1,53 @@
 {
+  "convoca-assistant": {
+    "hooks": [
+      "convoca_assistant_log_cleanup",
+      "convoca_assistant_regenerate",
+      "convoca_assistant_regenerate_now"
+    ],
+    "hooks_detail": {
+      "convoca_assistant_log_cleanup": {
+        "files": [
+          "includes/Statistics.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_assistant_regenerate": {
+        "files": [
+          "includes/Indexer.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_assistant_regenerate_now": {
+        "files": [
+          "includes/Indexer.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
+    "rest": [
+      "convoca/v1 /assistant/clear-logs GET",
+      "convoca/v1 /assistant/index GET",
+      "convoca/v1 /assistant/log GET",
+      "convoca/v1 /assistant/rebuild-index GET",
+      "convoca/v1 /assistant/recent GET",
+      "convoca/v1 /assistant/search GET",
+      "convoca/v1 /assistant/stats GET",
+      "convoca/v1 /assistant/unanswered GET"
+    ],
+    "shortcodes": [
+      "convoca_assistant"
+    ]
+  },
   "convoca-core": {
     "hooks": [
       "convoca_admin_appearance_url",
@@ -17,7 +66,6 @@
       "convoca_event_meta_legacy_keys",
       "convoca_gateway_payment_completed",
       "convoca_gateway_payment_failed",
-      "convoca_hours_submitted",
       "convoca_inscripcion_pendiente_pago",
       "convoca_license_api_url",
       "convoca_license_validate",
@@ -36,7 +84,6 @@
       "convoca_members_unsubscribe_request",
       "convoca_module_registered",
       "convoca_need_common_assets",
-      "convoca_payment_failed",
       "convoca_pdf_allowed_html",
       "convoca_pdf_html_safe_keys",
       "convoca_register_module",
@@ -51,6 +98,433 @@
       "convoca_wizard_legacy_shortcodes",
       "convoca_wizard_system_pages"
     ],
+    "hooks_detail": {
+      "convoca_admin_appearance_url": {
+        "files": [
+          "includes/admin-appearance.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_common_webhook_sslverify": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_continue_access_codes": {
+        "files": [
+          "convoca-core.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_document_theme": {
+        "files": [
+          "includes/Utils.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_document_theme_": {
+        "files": [
+          "includes/Utils.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_copy_enabled": {
+        "files": [
+          "includes/Email_Copy.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_copy_payload": {
+        "files": [
+          "includes/Email_Copy.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_copy_recipients": {
+        "files": [
+          "includes/Email_Copy.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_footer_links": {
+        "files": [
+          "includes/Email_Links.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_panel_url": {
+        "files": [
+          "includes/Email_Links.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_asistencia_cambiada": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_cancelada": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_nueva": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_event_meta_legacy_keys": {
+        "files": [
+          "includes/event-meta.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_completed": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_failed": {
+        "files": [
+          "includes/Webhook_Manager.php",
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_inscripcion_pendiente_pago": {
+        "files": [
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_license_api_url": {
+        "files": [
+          "includes/License_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_license_validate": {
+        "files": [
+          "includes/License_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_log_cleanup": {
+        "files": [
+          "convoca-core.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_log_level": {
+        "files": [
+          "includes/Logger.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_log_purge": {
+        "files": [
+          "convoca-core.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_log_retention_days": {
+        "files": [
+          "includes/Logger.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_created": {
+        "files": [
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_created": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_estado_changed": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hora_aprobada": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hora_rechazada": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hours_submitted": {
+        "files": [
+          "includes/Webhook_Manager.php",
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_membership_expired": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_payment_reminder_sent": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_unsubscribe_request": {
+        "files": [
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_module_registered": {
+        "files": [
+          "includes/class-module-registry.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_need_common_assets": {
+        "files": [
+          "includes/admin-global-menu.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_pdf_allowed_html": {
+        "files": [
+          "includes/Signature.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_pdf_html_safe_keys": {
+        "files": [
+          "includes/Signature.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_register_module": {
+        "files": [
+          "includes/class-module-registry.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_security_thresholds": {
+        "files": [
+          "includes/Security_Monitor.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_site_stats": {
+        "files": [
+          "includes/front-shortcodes.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_social_links": {
+        "files": [
+          "includes/front-shortcodes.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_aprobado": {
+        "files": [
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_pendiente": {
+        "files": [
+          "includes/Notifications.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_webhook_retry": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_webhook_retry_backoff": {
+        "files": [
+          "includes/Webhook_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_weekly_event": {
+        "files": [
+          "includes/Memory_Report.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_wizard_legacy_shortcodes": {
+        "files": [
+          "includes/Admin_Setup_Wizard.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_wizard_system_pages": {
+        "files": [
+          "includes/Admin_Setup_Wizard.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
     "rest": [
       "convoca/v1 /admin/metrics GET"
     ],
@@ -63,91 +537,10 @@
       "convoca_stats"
     ]
   },
-  "convoca-members": {
-    "hooks": [
-      "convoca_daily_event",
-      "convoca_documento_horas",
-      "convoca_email_objetivo_voluntariado",
-      "convoca_email_providers",
-      "convoca_gamification_tracks",
-      "convoca_gateway_payment_completed",
-      "convoca_gateway_payment_failed",
-      "convoca_member_created",
-      "convoca_members_alta_document_url",
-      "convoca_members_auto_renewal_completed",
-      "convoca_members_auto_renewal_created",
-      "convoca_members_certificado_validez_anios",
-      "convoca_members_created",
-      "convoca_members_cuota_pagada",
-      "convoca_members_email_bienvenida",
-      "convoca_members_email_cambiado",
-      "convoca_members_email_confirm",
-      "convoca_members_email_credenciales",
-      "convoca_members_email_objetivo_voluntariado",
-      "convoca_members_email_recordatorio_pago",
-      "convoca_members_email_renovacion",
-      "convoca_members_email_renovacion_automatica",
-      "convoca_members_email_renovacion_completada",
-      "convoca_members_email_solicitud",
-      "convoca_members_email_verify_phone",
-      "convoca_members_estado_changed",
-      "convoca_members_hora_aprobada",
-      "convoca_members_hora_rechazada",
-      "convoca_members_hours_submitted",
-      "convoca_members_interest_areas",
-      "convoca_members_membership_expired",
-      "convoca_members_miembro_dado_de_baja",
-      "convoca_members_objetivo_completado",
-      "convoca_members_payment_reminder_sent",
-      "convoca_members_phone_verificado",
-      "convoca_members_plans",
-      "convoca_members_reactivado",
-      "convoca_members_renewal_reminder_sent",
-      "convoca_members_sensitive_meta",
-      "convoca_members_unsubscribe_request",
-      "convoca_mi_area_links",
-      "convoca_voluntario_aprobado",
-      "convoca_voluntario_aprobado_attachments",
-      "convoca_voluntario_pendiente",
-      "convoca_voluntario_revocado",
-      "convoca_weekly_event"
-    ],
-    "rest": [
-      "convoca-members/v1 /admin/members/search GET",
-      "convoca-members/v1 /alta GET",
-      "convoca-members/v1 /documentos/(?P<id>\\d+) GET",
-      "convoca-members/v1 /login GET",
-      "convoca-members/v1 /me GET",
-      "convoca-members/v1 /me/card GET",
-      "convoca-members/v1 /me/certificate GET",
-      "convoca-members/v1 /me/certificate/download GET",
-      "convoca-members/v1 /me/confirm-email GET",
-      "convoca-members/v1 /me/horas GET",
-      "convoca-members/v1 /me/inscripciones GET",
-      "convoca-members/v1 /me/pagos GET",
-      "convoca-members/v1 /me/profile GET",
-      "convoca-members/v1 /me/renovar GET",
-      "convoca-members/v1 /me/unsubscribe GET",
-      "convoca-members/v1 /me/verify-phone GET",
-      "convoca-members/v1 /member/notifications GET",
-      "convoca-members/v1 /member/notifications/read GET",
-      "convoca-members/v1 /member/notifications/read-all GET",
-      "convoca-members/v1 /proyectos GET",
-      "convoca-members/v1 /search GET"
-    ],
-    "shortcodes": [
-      "convoca_alta_socio",
-      "convoca_mi_area",
-      "convoca_mi_perfil",
-      "convoca_renovar",
-      "convoca_verificar_certificado",
-      "convoca_verificar_socio",
-      "convoca_voluntariado"
-    ]
-  },
   "convoca-enroll": {
     "hooks": [
       "convoca_after_horas_voluntario_actualizadas",
+      "convoca_asistencia_cambiada",
       "convoca_enroll_activity_reminder",
       "convoca_enroll_aportacion_label",
       "convoca_enroll_asistencia_cambiada",
@@ -171,12 +564,314 @@
       "convoca_evaluacion_completada",
       "convoca_gateway_payment_completed",
       "convoca_gateway_payment_failed",
+      "convoca_horas_voluntario_actualizadas",
       "convoca_inscripcion_cancelada",
       "convoca_inscripcion_confirmada",
+      "convoca_inscripcion_nueva",
       "convoca_inscripcion_promovida",
       "convoca_social_publish",
       "convoca_social_token_healthcheck"
     ],
+    "hooks_detail": {
+      "convoca_after_horas_voluntario_actualizadas": {
+        "files": [
+          "includes/Volunteer_Hour_Tracker.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_asistencia_cambiada": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_enroll_asistencia_cambiada"
+      },
+      "convoca_enroll_activity_reminder": {
+        "files": [
+          "includes/Activity_Reminder_Cron.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_aportacion_label": {
+        "files": [
+          "includes/Utils.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_asistencia_cambiada": {
+        "files": [
+          "includes/Motor_Inscripcion.php",
+          "includes/Volunteer_Hour_Tracker.php",
+          "includes/Webhook_Dispatcher.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_cleanup_orphan_codes": {
+        "files": [
+          "convoca-enroll.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_daily_maintenance": {
+        "files": [
+          "includes/Maintenance.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_eval_reminder": {
+        "files": [
+          "includes/Eval_Reminder_Cron.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_feedback": {
+        "files": [
+          "includes/Email_Automation.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_form_en_ficha": {
+        "files": [
+          "includes/CPT_Actividad.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_form_repetido": {
+        "files": [
+          "includes/CPT_Actividad.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_google_photos_share": {
+        "files": [
+          "includes/Email_Automation.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_cancelada": {
+        "files": [
+          "includes/Motor_Inscripcion.php",
+          "includes/Webhook_Dispatcher.php",
+          "includes/Google_Sheets.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_confirmada": {
+        "files": [
+          "includes/Motor_Inscripcion.php",
+          "includes/Webhook_Dispatcher.php",
+          "includes/Google_Sheets.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_nueva": {
+        "files": [
+          "includes/Motor_Inscripcion.php",
+          "includes/Webhook_Dispatcher.php",
+          "includes/Google_Sheets.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_inscripcion_promovida": {
+        "files": [
+          "includes/Motor_Inscripcion.php",
+          "includes/Webhook_Dispatcher.php",
+          "includes/Google_Sheets.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_late_cancel_admin_email": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_process_email_queue": {
+        "files": [
+          "includes/Email_Queue.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_process_webhook_queue": {
+        "files": [
+          "includes/Webhook_Dispatcher.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_reminder_1hora": {
+        "files": [
+          "includes/Email_Automation.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_reminder_24h": {
+        "files": [
+          "includes/Email_Automation.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_reminder_7dias": {
+        "files": [
+          "includes/Email_Automation.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_evaluacion_completada": {
+        "files": [
+          "public/class-formulario-evaluacion.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_completed": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_failed": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_horas_voluntario_actualizadas": {
+        "files": [
+          "includes/Volunteer_Hour_Tracker.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_after_horas_voluntario_actualizadas"
+      },
+      "convoca_inscripcion_cancelada": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_enroll_inscripcion_cancelada"
+      },
+      "convoca_inscripcion_confirmada": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_enroll_inscripcion_confirmada"
+      },
+      "convoca_inscripcion_nueva": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_enroll_inscripcion_nueva"
+      },
+      "convoca_inscripcion_promovida": {
+        "files": [
+          "includes/Motor_Inscripcion.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_enroll_inscripcion_promovida"
+      },
+      "convoca_social_publish": {
+        "files": [
+          "convoca-enroll.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_social_token_healthcheck": {
+        "files": [
+          "social/class-social-healthcheck.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
     "rest": [
       "convoca-enroll/v1 /checkin/flush GET",
       "convoca/v1 /media/blog/create GET",
@@ -214,6 +909,112 @@
       "convoca_payment_completed",
       "convoca_payment_failed"
     ],
+    "hooks_detail": {
+      "convoca_gateway_bank_entity": {
+        "files": [
+          "includes/Admin_Settings.php",
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_expiry_notice": {
+        "files": [
+          "convoca-gateway.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_completed": {
+        "files": [
+          "convoca-gateway.php",
+          "includes/Admin_Payments.php",
+          "includes/Payment_Handler.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_failed": {
+        "files": [
+          "includes/Payment_Handler.php",
+          "includes/Email_Notifications.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_refunded": {
+        "files": [
+          "includes/Admin_Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_pending_reminder": {
+        "files": [
+          "convoca-gateway.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_receipt_payer_name": {
+        "files": [
+          "includes/Receipt_View.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_redsys_allowed_ips": {
+        "files": [
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_resend_email": {
+        "files": [
+          "includes/Admin_Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_payment_completed": {
+        "files": [
+          "includes/Admin_Payments.php",
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_gateway_payment_completed"
+      },
+      "convoca_payment_failed": {
+        "files": [
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_gateway_payment_failed"
+      }
+    },
     "rest": [
       "convoca-gateway/v1 /notify GET"
     ],
@@ -223,9 +1024,735 @@
       "convoca_pago_ok"
     ]
   },
+  "convoca-members": {
+    "hooks": [
+      "convoca_daily_event",
+      "convoca_documento_horas",
+      "convoca_email_bienvenida",
+      "convoca_email_cambiado",
+      "convoca_email_confirm",
+      "convoca_email_objetivo_voluntariado",
+      "convoca_email_providers",
+      "convoca_email_recordatorio_pago",
+      "convoca_email_solicitud",
+      "convoca_email_verify_phone",
+      "convoca_estado_changed",
+      "convoca_gamification_tracks",
+      "convoca_gateway_payment_completed",
+      "convoca_gateway_payment_failed",
+      "convoca_hours_submitted",
+      "convoca_member_created",
+      "convoca_member_objetivo_completado",
+      "convoca_member_unsubscribe_request",
+      "convoca_members_alta_document_url",
+      "convoca_members_auto_renewal_completed",
+      "convoca_members_auto_renewal_created",
+      "convoca_members_certificado_validez_anios",
+      "convoca_members_created",
+      "convoca_members_cuota_pagada",
+      "convoca_members_email_bienvenida",
+      "convoca_members_email_cambiado",
+      "convoca_members_email_confirm",
+      "convoca_members_email_credenciales",
+      "convoca_members_email_objetivo_voluntariado",
+      "convoca_members_email_recordatorio_pago",
+      "convoca_members_email_renovacion",
+      "convoca_members_email_renovacion_automatica",
+      "convoca_members_email_renovacion_completada",
+      "convoca_members_email_solicitud",
+      "convoca_members_email_verify_phone",
+      "convoca_members_estado_changed",
+      "convoca_members_hora_aprobada",
+      "convoca_members_hora_rechazada",
+      "convoca_members_hours_submitted",
+      "convoca_members_interest_areas",
+      "convoca_members_membership_expired",
+      "convoca_members_miembro_dado_de_baja",
+      "convoca_members_objetivo_completado",
+      "convoca_members_payment_reminder_sent",
+      "convoca_members_phone_verificado",
+      "convoca_members_plans",
+      "convoca_members_reactivado",
+      "convoca_members_renewal_reminder_sent",
+      "convoca_members_sensitive_meta",
+      "convoca_members_unsubscribe_request",
+      "convoca_mi_area_links",
+      "convoca_miembro_creado",
+      "convoca_miembro_cuota_pagada",
+      "convoca_miembro_dado_de_baja",
+      "convoca_miembro_reactivado",
+      "convoca_phone_verificado",
+      "convoca_voluntario_aprobado",
+      "convoca_voluntario_aprobado_attachments",
+      "convoca_voluntario_pendiente",
+      "convoca_voluntario_revocado",
+      "convoca_weekly_event"
+    ],
+    "hooks_detail": {
+      "convoca_daily_event": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_documento_horas": {
+        "files": [
+          "includes/Texto_PDF.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_bienvenida": {
+        "files": [
+          "includes/Estados.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_bienvenida"
+      },
+      "convoca_email_cambiado": {
+        "files": [
+          "includes/Rest_API.php",
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_cambiado"
+      },
+      "convoca_email_confirm": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_confirm"
+      },
+      "convoca_email_objetivo_voluntariado": {
+        "files": [
+          "includes/Voluntariado_Manager.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_objetivo_voluntariado"
+      },
+      "convoca_email_providers": {
+        "files": [
+          "includes/Email_Verifier.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_recordatorio_pago": {
+        "files": [
+          "includes/Estados.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_recordatorio_pago"
+      },
+      "convoca_email_solicitud": {
+        "files": [
+          "includes/Process_Member.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_solicitud"
+      },
+      "convoca_email_verify_phone": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_email_verify_phone"
+      },
+      "convoca_estado_changed": {
+        "files": [
+          "includes/Estados.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_estado_changed"
+      },
+      "convoca_gamification_tracks": {
+        "files": [
+          "includes/Voluntariado_Gamification.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_completed": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_payment_failed": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_hours_submitted": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_hours_submitted"
+      },
+      "convoca_member_created": {
+        "files": [
+          "admin/class-admin-import-csv.php",
+          "public/class-form-handler.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_objetivo_completado": {
+        "files": [
+          "includes/Voluntariado_Manager.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_objetivo_completado"
+      },
+      "convoca_member_unsubscribe_request": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_unsubscribe_request"
+      },
+      "convoca_members_alta_document_url": {
+        "files": [
+          "templates/form-alta.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_auto_renewal_completed": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_auto_renewal_created": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_certificado_validez_anios": {
+        "files": [
+          "includes/Certificate_Generator.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_created": {
+        "files": [
+          "includes/Process_Member.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_cuota_pagada": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_bienvenida": {
+        "files": [
+          "includes/Estados.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_cambiado": {
+        "files": [
+          "includes/Rest_API.php",
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_confirm": {
+        "files": [
+          "includes/Rest_API.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_credenciales": {
+        "files": [
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_objetivo_voluntariado": {
+        "files": [
+          "includes/Voluntariado_Manager.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_recordatorio_pago": {
+        "files": [
+          "includes/Estados.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_renovacion": {
+        "files": [
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_renovacion_automatica": {
+        "files": [
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_renovacion_completada": {
+        "files": [
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_solicitud": {
+        "files": [
+          "includes/Process_Member.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_verify_phone": {
+        "files": [
+          "includes/Rest_API.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_estado_changed": {
+        "files": [
+          "includes/Estados.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hora_aprobada": {
+        "files": [
+          "admin/class-admin-horas.php",
+          "includes/Certificate_Generator.php",
+          "includes/Hours_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hora_rechazada": {
+        "files": [
+          "admin/class-admin-horas.php",
+          "includes/Hours_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_hours_submitted": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_interest_areas": {
+        "files": [
+          "public/class-form-voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_membership_expired": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_miembro_dado_de_baja": {
+        "files": [
+          "includes/CPT_Miembro.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_objetivo_completado": {
+        "files": [
+          "includes/Voluntariado_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_payment_reminder_sent": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_phone_verificado": {
+        "files": [
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_plans": {
+        "files": [
+          "includes/CPT_Miembro.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_reactivado": {
+        "files": [
+          "includes/Process_Member.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_renewal_reminder_sent": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_sensitive_meta": {
+        "files": [
+          "includes/Audit_Logger.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_unsubscribe_request": {
+        "files": [
+          "includes/Rest_API.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_mi_area_links": {
+        "files": [
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_miembro_creado": {
+        "files": [
+          "includes/Process_Member.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_created"
+      },
+      "convoca_miembro_cuota_pagada": {
+        "files": [
+          "includes/Payment_Listener.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_cuota_pagada"
+      },
+      "convoca_miembro_dado_de_baja": {
+        "files": [
+          "includes/CPT_Miembro.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_miembro_dado_de_baja"
+      },
+      "convoca_miembro_reactivado": {
+        "files": [
+          "includes/Process_Member.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_reactivado"
+      },
+      "convoca_phone_verificado": {
+        "files": [
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_members_phone_verificado"
+      },
+      "convoca_voluntario_aprobado": {
+        "files": [
+          "convoca-members.php",
+          "includes/Admin_Voluntariado.php",
+          "includes/PDF_Document.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_aprobado_attachments": {
+        "files": [
+          "includes/Admin_Voluntariado.php",
+          "includes/PDF_Document.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_pendiente": {
+        "files": [
+          "public/class-form-voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_revocado": {
+        "files": [
+          "includes/Admin_Voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_weekly_event": {
+        "files": [
+          "includes/Cron_Manager.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
+    "rest": [
+      "convoca-members/v1 /admin/members/search GET",
+      "convoca-members/v1 /alta GET",
+      "convoca-members/v1 /documentos/(?P<id>\\d+) GET",
+      "convoca-members/v1 /login GET",
+      "convoca-members/v1 /me GET",
+      "convoca-members/v1 /me/card GET",
+      "convoca-members/v1 /me/certificate GET",
+      "convoca-members/v1 /me/certificate/download GET",
+      "convoca-members/v1 /me/confirm-email GET",
+      "convoca-members/v1 /me/horas GET",
+      "convoca-members/v1 /me/inscripciones GET",
+      "convoca-members/v1 /me/pagos GET",
+      "convoca-members/v1 /me/profile GET",
+      "convoca-members/v1 /me/renovar GET",
+      "convoca-members/v1 /me/unsubscribe GET",
+      "convoca-members/v1 /me/verify-phone GET",
+      "convoca-members/v1 /member/notifications GET",
+      "convoca-members/v1 /member/notifications/read GET",
+      "convoca-members/v1 /member/notifications/read-all GET",
+      "convoca-members/v1 /proyectos GET",
+      "convoca-members/v1 /search GET"
+    ],
+    "shortcodes": [
+      "convoca_alta_socio",
+      "convoca_mi_area",
+      "convoca_mi_perfil",
+      "convoca_renovar",
+      "convoca_verificar_certificado",
+      "convoca_verificar_socio",
+      "convoca_voluntariado"
+    ]
+  },
+  "convoca-publisher": {
+    "hooks": [
+      "convoca_publisher_async_publish",
+      "convoca_publisher_retry_backoff",
+      "convoca_publisher_retry_failed",
+      "convoca_publisher_retry_failed_notify_email",
+      "convoca_publisher_retry_failed_posts"
+    ],
+    "hooks_detail": {
+      "convoca_publisher_async_publish": {
+        "files": [
+          "includes/class-publisher.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_retry_backoff": {
+        "files": [
+          "includes/class-retry.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_retry_failed": {
+        "files": [
+          "includes/class-retry.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_retry_failed_notify_email": {
+        "files": [
+          "includes/class-retry.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_retry_failed_posts": {
+        "files": [
+          "includes/class-scheduler.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
+    "rest": [
+      "convoca-publisher/v1 /publish/(?P<post_id>\\d+) GET",
+      "convoca-publisher/v1 /status GET",
+      "convoca-publisher/v1 /test/(?P<channel>[a-z_]+) GET"
+    ],
+    "shortcodes": []
+  },
   "convoca-shifts": {
     "hooks": [
       "convoca_after_horas_voluntario_actualizadas",
+      "convoca_horas_voluntario_actualizadas",
       "convoca_shifts_actividad_add_form_fields",
       "convoca_shifts_actividad_edit_form_fields",
       "convoca_shifts_admin_email",
@@ -240,6 +1767,143 @@
       "convoca_voluntario_aprobado",
       "convoca_voluntario_revocado"
     ],
+    "hooks_detail": {
+      "convoca_after_horas_voluntario_actualizadas": {
+        "files": [
+          "includes/Hour_Sync.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_horas_voluntario_actualizadas": {
+        "files": [
+          "includes/Hour_Sync.php"
+        ],
+        "listens": false,
+        "fires": false,
+        "deprecated": true,
+        "replaced_by": "convoca_after_horas_voluntario_actualizadas"
+      },
+      "convoca_shifts_actividad_add_form_fields": {
+        "files": [
+          "includes/cpt-turno.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_actividad_edit_form_fields": {
+        "files": [
+          "includes/cpt-turno.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_admin_email": {
+        "files": [
+          "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_confirm_signup": {
+        "files": [
+          "includes/shortcodes.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_daily_event": {
+        "files": [
+          "includes/cron.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_force_enqueue_assets": {
+        "files": [
+          "includes/blocks.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_hourly_event": {
+        "files": [
+          "includes/cron.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_no_show_email_admin": {
+        "files": [
+          "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_no_show_email_admin_subject": {
+        "files": [
+          "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_no_show_email_socio": {
+        "files": [
+          "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_no_show_email_socio_subject": {
+        "files": [
+          "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_aprobado": {
+        "files": [
+          "includes/admin-approval.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntario_revocado": {
+        "files": [
+          "includes/admin-approval.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
     "rest": [
       "convoca-shifts/v1 /turnos GET",
       "convoca-shifts/v1 /turnos/(?P<id>\\d+)/apuntarse GET",
@@ -253,41 +1917,6 @@
       "convoca_calendario",
       "convoca_proximos_turnos",
       "convoca_resumen_turnos"
-    ]
-  },
-  "convoca-publisher": {
-    "hooks": [
-      "convoca_publisher_async_publish",
-      "convoca_publisher_retry_backoff",
-      "convoca_publisher_retry_failed",
-      "convoca_publisher_retry_failed_notify_email",
-      "convoca_publisher_retry_failed_posts"
-    ],
-    "rest": [
-      "convoca-publisher/v1 /publish/(?P<post_id>\\d+) GET",
-      "convoca-publisher/v1 /status GET",
-      "convoca-publisher/v1 /test/(?P<channel>[a-z_]+) GET"
-    ],
-    "shortcodes": []
-  },
-  "convoca-assistant": {
-    "hooks": [
-      "convoca_assistant_log_cleanup",
-      "convoca_assistant_regenerate",
-      "convoca_assistant_regenerate_now"
-    ],
-    "rest": [
-      "convoca/v1 /assistant/clear-logs GET",
-      "convoca/v1 /assistant/index GET",
-      "convoca/v1 /assistant/log GET",
-      "convoca/v1 /assistant/rebuild-index GET",
-      "convoca/v1 /assistant/recent GET",
-      "convoca/v1 /assistant/search GET",
-      "convoca/v1 /assistant/stats GET",
-      "convoca/v1 /assistant/unanswered GET"
-    ],
-    "shortcodes": [
-      "convoca_assistant"
     ]
   },
   "convoca-theme": {
@@ -309,6 +1938,152 @@
       "convoca_theme_site_links",
       "convoca_theme_volunteer_email"
     ],
+    "hooks_detail": {
+      "convoca_site_stats": {
+        "files": [
+          "patterns/stats.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_social_links": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_centro_url": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_community_url": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_copyright_extra": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_cta_heading": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_cta_label": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_cta_text": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_cta_url": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_event_country": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_event_region": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_footer_replacements": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_link_labels": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_lugg_url": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_site_links": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_theme_volunteer_email": {
+        "files": [
+          "functions.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      }
+    },
     "rest": [],
     "shortcodes": []
   }

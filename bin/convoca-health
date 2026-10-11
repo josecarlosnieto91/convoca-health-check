@@ -4,16 +4,20 @@
 # Uso:
 #   convoca-health                      # ejecuta contra el WP por defecto
 #   convoca-health --path=/ruta/al/wp   # WP en otra ruta
-#   convoca-health --format=json        # salida JSON (para CI)
-#   convoca-health --ssh=andromeda      # ejecutar vía SSH en un servidor
+#   convoca-health --ssh=andromeda --path=/var/www/.../public
+#
+# Código de salida: 0 = todos los checks PASS (puede haber WARN y SKIP);
+# 1 = hay al menos un FAIL. Es el código de salida de la propia batería, no una
+# búsqueda de la palabra «FAIL» en la salida: la línea de resumen contiene
+# siempre «0 FAIL» o «N FAIL», así que un `grep -q FAIL` daba 1 siempre y el
+# código de salida dejaba de distinguir el caso bueno del malo.
 #
 # Requiere: WP-CLI en el servidor destino.
 
-set -euo pipefail
+set -uo pipefail
 
 WP_PATH="${WP_PATH:-}"
 SSH_TARGET=""
-FORMAT="text"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCRIPT="$SCRIPT_DIR/../health-check.php"
 
@@ -30,11 +34,11 @@ WP_ARGS=""
 [ -n "$WP_PATH" ] && WP_ARGS="--path=$WP_PATH"
 
 run_local() {
-  wp eval-file "$SCRIPT" $WP_ARGS "$@"
+  wp eval-file "$SCRIPT" $WP_ARGS
 }
 
 run_ssh() {
-  scp -q "$SCRIPT" "$SSH_TARGET:/tmp/convoca-health-check.php"
+  scp -q "$SCRIPT" "$SSH_TARGET:/tmp/convoca-health-check.php" || return 2
   # Esperar a que scp termine antes de wp (fish en Andromeda)
   sleep 2
   ssh "$SSH_TARGET" "sudo -n wp eval-file /tmp/convoca-health-check.php --allow-root $WP_ARGS 2>&1"
@@ -47,11 +51,7 @@ if [ -n "$SSH_TARGET" ]; then
 else
   OUTPUT="$(run_local)"
 fi
+STATUS=$?
 
-# Exit code: la batería ya sale con 1 si hay FAILs (--exit-code)
 echo "$OUTPUT"
-
-if echo "$OUTPUT" | grep -q "FAIL"; then
-  exit 1
-fi
-exit 0
+exit "$STATUS"

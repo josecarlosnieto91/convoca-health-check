@@ -21,6 +21,7 @@
 $GLOBALS['hc_pass'] = 0;
 $GLOBALS['hc_fail'] = 0;
 $GLOBALS['hc_warn'] = 0;
+$GLOBALS['hc_skip'] = 0;
 $GLOBALS['hc_results'] = [];
 // Modo local (CI sin demo): los checks de configuración del sitio (páginas,
 // credenciales, índice, tema) pasan a WARN en vez de FAIL. La lógica
@@ -82,6 +83,44 @@ function hc_warn($component, $name, $detail = '') {
     echo "  [WARN] $component :: $name" . ($detail ? " ($detail)" : '') . "\n";
     $GLOBALS['hc_results'][] = ['component' => $component, 'name' => $name, 'status' => 'WARN', 'detail' => $detail];
     $GLOBALS['hc_warn']++;
+}
+
+// No aplicable: el componente no está en este sitio, así que no se mide.
+// NO es un maquillaje de FAIL: un plugin que no está instalado no puede fallar
+// (medirlo daría un FAIL falso, y un FAIL falso invalida el veredicto entero).
+// Los SKIP se cuentan y se listan aparte en el resumen, con su motivo.
+function hc_skip($component, $name, $detail = '') {
+    echo "  [SKIP] $component :: $name" . ($detail ? " ($detail)" : '') . "\n";
+    $GLOBALS['hc_results'][] = ['component' => $component, 'name' => $name, 'status' => 'SKIP', 'detail' => $detail];
+    $GLOBALS['hc_skip']++;
+}
+
+// ¿Está activo el plugin? Un componente cuyo plugin no está activo se salta.
+function hc_plugin_active($slug) {
+    if (!function_exists('is_plugin_active')) {
+        require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+    if (is_plugin_active("$slug/$slug.php")) {
+        return true;
+    }
+    // Nombre de fichero principal distinto del slug.
+    $found = glob(WP_PLUGIN_DIR . "/$slug/*.php") ?: [];
+    foreach ($found as $file) {
+        if (is_plugin_active("$slug/" . basename($file))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Ejecuta un componente solo si su plugin está activo; si no, lo declara SKIP.
+function hc_component($label, $slug, $fn) {
+    if (!hc_plugin_active($slug)) {
+        hc_section($label);
+        hc_skip($label, 'Plugin no activo en este sitio', $slug);
+        return;
+    }
+    $fn();
 }
 
 // En modo seguro: los checks que crean posts/miembros de prueba (y pueden
@@ -304,9 +343,15 @@ function hc_gateway() {
     $settings = get_option('convoca_gateway_settings', []);
 
     hc_cfg('Gateway', 'Merchant code', !empty($settings['merchant_code']), $settings['merchant_code'] ?? '');
-    hc_cfg('Gateway', 'Entorno test', ($settings['environment'] ?? '') === 'test', $settings['environment'] ?? '?');
+    // Entorno coherente con el SITIO, no con una preferencia fija: en la demo se
+    // espera `test`, y en un sitio real (Lugg, biodevas) `production`. Antes se
+    // exigía `test` en todas partes y un sitio real en producción daba FAIL.
+    $env = $settings['environment'] ?? '?';
+    $es_demo = stripos((string) home_url(), 'demo.') !== false;
+    $esperado = $es_demo ? 'test' : 'production';
+    hc_cfg('Gateway', "Entorno coherente con el sitio (esperado: $esperado)", $env === $esperado, $env);
     $key = $settings['secret_key'] ?? '';
-    hc_cfg('Gateway', 'Clave encriptada enc:', strpos($key, 'enc:') === 0, substr($key, 0, 15) . '...');
+    hc_cfg('Gateway', 'Clave encriptada enc:', strpos($key, 'enc:') === 0, $key ? substr($key, 0, 8) . '…' : 'vacía');
 
     $scs = hc_shortcodes();
     foreach (['convoca_pago', 'convoca_pago_ok', 'convoca_pago_ko'] as $sc) {
@@ -318,11 +363,42 @@ function hc_gateway() {
     $code = wp_remote_retrieve_response_code($r);
     hc_out('Gateway', 'Webhook /notify existe', $code !== 404, "HTTP $code");
 
-    // Páginas de retorno
-    $r = wp_remote_get(home_url('/pago-ok/'), ['timeout' => 10, 'sslverify' => false]);
-    hc_cfg('Gateway', 'Página /pago-ok/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
-    $r = wp_remote_get(home_url('/pago-ko/'), ['timeout' => 10, 'sslverify' => false]);
-    hc_cfg('Gateway', 'Página /pago-ko/', wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r));
+    // Páginas de retorno: se RESUELVEN como el sitio las tenga. Comprobarlas por
+    // slug fijo (`/pago-ok/`) da FAIL falso en un sitio que las llama distinto,
+    // y el FAIL falso es peor que no medir. Orden: ajuste del plugin →
+    // página publicada con el shortcode correspondiente.
+    foreach (['ok' => 'convoca_pago_ok', 'ko' => 'convoca_pago_ko'] as $tipo => $sc) {
+        $page_id = 0;
+        foreach ([$tipo . '_page_id', $tipo . '_page'] as $k) {
+            if (!empty($settings[$k]) && is_numeric($settings[$k])) {
+                $page_id = (int) $settings[$k];
+                break;
+            }
+        }
+        $url = $page_id ? get_permalink($page_id) : '';
+        if (!$url) {
+            $found = get_posts([
+                'post_type'      => 'page',
+                'post_status'    => 'publish',
+                'posts_per_page' => 1,
+                's'              => "[$sc]",
+                'fields'         => 'ids',
+            ]);
+            foreach ($found as $pid) {
+                $p = get_post($pid);
+                if ($p && has_shortcode($p->post_content, $sc)) {
+                    $url = get_permalink($pid);
+                    break;
+                }
+            }
+        }
+        if (!$url) {
+            hc_skip('Gateway', "Página de retorno [$sc]", 'el sitio no tiene página para este shortcode');
+            continue;
+        }
+        $r = wp_remote_get($url, ['timeout' => 10, 'sslverify' => false]);
+        hc_cfg('Gateway', "Página de retorno [$sc]", wp_remote_retrieve_response_code($r) === 200, 'HTTP ' . wp_remote_retrieve_response_code($r) . ' ' . $url);
+    }
 
     // CPT pago
     hc_out('Gateway', 'CPT pago', post_type_exists('pago'), '');
@@ -430,11 +506,30 @@ function hc_assistant() {
     hc_cfg('Assistant', 'Rebuild protegido', in_array(wp_remote_retrieve_response_code($r), [401, 403]), 'HTTP ' . wp_remote_retrieve_response_code($r));
 }
 
+// El tema solo se mide si el sitio usa el tema Convoca. Un sitio que a propósito
+// usa otro tema (Lugg usa `sculpt`) no puede dar FAIL por no ser el nuestro:
+// lo que hay que demostrar ahí es la independencia del tema (N3.21), no la marca.
+function hc_theme_component() {
+    $theme = wp_get_theme();
+    $es_convoca = stripos($theme->get('Name'), 'convoca') !== false;
+    if (!$es_convoca) {
+        hc_section('Convoca Theme');
+        hc_skip('Theme', 'Tema activo no es Convoca: checks del tema no aplican', $theme->get('Name'));
+        // Lo que SÍ se puede medir en un sitio con tema de tercero: que el sitio
+        // sirva y que el contenido de los plugins se pinte con ese tema.
+        $r = wp_remote_get(home_url('/'), ['timeout' => 10, 'sslverify' => false]);
+        $code = wp_remote_retrieve_response_code($r);
+        $body = (string) wp_remote_retrieve_body($r);
+        hc_out('Theme', 'Home 200 + HTML (tema de tercero)', $code === 200 && strpos($body, '<!DOCTYPE') !== false, "tema={$theme->get('Name')} HTTP $code");
+        return;
+    }
+    hc_theme();
+}
+
 function hc_theme() {
     hc_section('Convoca Theme');
     $theme = wp_get_theme();
     hc_cfg('Theme', 'Tema activo Convoca', stripos($theme->get('Name'), 'convoca') !== false, $theme->get('Name'));
-
     // El shortcode de dark mode se eliminó en la auditoría wp.org (convoca-theme 9019288):
     // los shortcodes son territorio de plugins. El toggle vive como bloque
     // wp:html con clase dark-mode-toggle en parts/header.html.
@@ -451,6 +546,105 @@ function hc_theme() {
     $r = wp_remote_get(home_url('/'), ['timeout' => 10, 'sslverify' => false]);
     $body = wp_remote_retrieve_body($r);
     hc_cfg('Theme', 'Home 200 + HTML', wp_remote_retrieve_response_code($r) === 200 && strpos($body, '<!DOCTYPE') !== false, 'HTTP ' . wp_remote_retrieve_response_code($r));
+}
+
+// ── Contratos de hooks ──
+// Un nombre de hook es un contrato entre DOS ficheros: quien lo lanza y quien lo
+// escucha. `Utils::do_action($nuevo, $viejo, ...)` marca $viejo como deprecado y
+// avisa por PHP cada vez que queda algún oyente en el nombre viejo. Ese aviso no
+// lo ve ningún lint ni ningún test de un solo plugin: hay que cruzar los dos lados.
+// Aquí se deriva el mapa del propio código desplegado (no se escribe a mano, que
+// se quedaría desactualizado) y se comprueba que ningún fichero de un plugin
+// activo registra un oyente sobre el nombre viejo.
+function hc_hooks_contratos() {
+    hc_section('Contratos de hooks');
+
+    $dirs = [];
+    foreach ((array) get_option('active_plugins', []) as $plugin) {
+        $slug = dirname($plugin);
+        if (0 === strpos($slug, 'convoca-')) {
+            $dirs[$slug] = WP_PLUGIN_DIR . '/' . $slug;
+        }
+    }
+    if (!$dirs) {
+        hc_skip('Contratos', 'Oyentes de hooks deprecados', 'sin plugins de Convoca activos');
+        return;
+    }
+
+    $pares   = []; // viejo => nuevo
+    $oyentes = []; // hook  => [fichero:linea]
+    foreach ($dirs as $slug => $dir) {
+        foreach (hc_php_files($dir) as $file) {
+            $src = hc_strip_php_comments((string) file_get_contents($file));
+            if (preg_match_all('/Utils::\s*do_action\(\s*\'([^\']+)\'\s*,\s*\'([^\']+)\'/', $src, $m, PREG_SET_ORDER)) {
+                foreach ($m as $x) {
+                    $pares[$x[2]] = $x[1];
+                }
+            }
+            if (preg_match_all('/add_(?:action|filter)\(\s*\'([^\']+)\'/', $src, $m2, PREG_SET_ORDER)) {
+                foreach ($m2 as $x) {
+                    $oyentes[$x[1]][] = str_replace(WP_PLUGIN_DIR . '/', '', $file);
+                }
+            }
+        }
+    }
+
+    if (!$pares) {
+        hc_skip('Contratos', 'Oyentes de hooks deprecados', 'no se encontró ningún lanzador con nombre deprecado en este sitio');
+        return;
+    }
+
+    $malos = [];
+    foreach ($oyentes as $hook => $ficheros) {
+        if (isset($pares[$hook])) {
+            $malos[$hook] = $pares[$hook] . ' ← ' . implode(',', array_unique($ficheros));
+        }
+    }
+
+    hc_out(
+        'Contratos',
+        'Sin oyentes internos de hooks deprecados (' . count($pares) . ' pares revisados)',
+        empty($malos),
+        $malos ? implode(' | ', $malos) : ''
+    );
+}
+
+// Ficheros PHP de un plugin, sin vendor ni node_modules.
+function hc_php_files($dir) {
+    $out = [];
+    if (!is_dir($dir)) {
+        return $out;
+    }
+    $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS));
+    foreach ($it as $f) {
+        $path = $f->getPathname();
+        if (substr($path, -4) !== '.php') {
+            continue;
+        }
+        if (strpos($path, '/vendor/') !== false || strpos($path, '/node_modules/') !== false || strpos($path, '/tests/') !== false) {
+            continue;
+        }
+        $out[] = $path;
+    }
+    sort($out);
+    return $out;
+}
+
+// Quita comentarios del fuente antes de buscar texto: el comentario que explica
+// el defecto nombra justo lo que se quiere prohibir (regla anti-trampa 7).
+function hc_strip_php_comments($src) {
+    $out = '';
+    foreach (token_get_all($src) as $t) {
+        if (is_array($t)) {
+            if (in_array($t[0], [T_COMMENT, T_DOC_COMMENT], true)) {
+                continue;
+            }
+            $out .= $t[1];
+        } else {
+            $out .= $t;
+        }
+    }
+    return $out;
 }
 
 function hc_migrations() {
@@ -566,11 +760,25 @@ function hc_integrations() {
         $handler = new \Convoca\Gateway\Payment_Handler();
     }
 
-    // Namespaces conviven
+    // Namespaces conviven: se exigen SOLO los de los plugins que están activos.
+    // Exigirlos todos daba FAIL en un sitio que legítimamente solo tiene core.
     $ns = hc_rest_namespaces();
-    $required = ['convoca/v1', 'convoca-members/v1', 'convoca-enroll/v1', 'convoca-gateway/v1', 'convoca-shifts/v1', 'convoca-publisher/v1'];
+    $mapa = [
+        'convoca-core'      => 'convoca/v1',
+        'convoca-members'   => 'convoca-members/v1',
+        'convoca-enroll'    => 'convoca-enroll/v1',
+        'convoca-gateway'   => 'convoca-gateway/v1',
+        'convoca-shifts'    => 'convoca-shifts/v1',
+        'convoca-publisher' => 'convoca-publisher/v1',
+    ];
+    $required = [];
+    foreach ($mapa as $slug => $namespace) {
+        if (hc_plugin_active($slug)) {
+            $required[] = $namespace;
+        }
+    }
     $missing = array_diff($required, $ns);
-    hc_cfg('Integraciones', '6 namespaces REST', empty($missing), $missing ? implode(',', $missing) : implode(',', $ns));
+    hc_cfg('Integraciones', count($required) . ' namespaces REST (de plugins activos)', empty($missing), $missing ? 'faltan: ' . implode(',', $missing) : implode(',', $ns));
 
     // En modo seguro (producción): los flujos que crean datos de prueba y
     // disparan notificaciones NO se ejecutan. Se validan los namespaces y se
@@ -631,32 +839,29 @@ echo "  " . date('Y-m-d H:i:s') . "\n";
 echo "============================================\n";
 
 $start = microtime(true);
-hc_core();
-hc_members();
-hc_enroll();
-hc_gateway();
-hc_shifts();
-hc_publisher();
-hc_assistant();
-hc_theme();
-hc_migrations();
-hc_clean_code();
-hc_integrations();
+hc_component('Convoca Core', 'convoca-core', 'hc_core');
+hc_component('Convoca Members', 'convoca-members', 'hc_members');
+hc_component('Convoca Enroll', 'convoca-enroll', 'hc_enroll');
+hc_component('Convoca Gateway', 'convoca-gateway', 'hc_gateway');
+hc_component('Convoca Shifts', 'convoca-shifts', 'hc_shifts');
+hc_component('Convoca Publisher', 'convoca-publisher', 'hc_publisher');
+hc_component('Convoca Assistant', 'convoca-assistant', 'hc_assistant');
+hc_theme_component();
+hc_component('Migraciones', 'convoca-core', 'hc_migrations');
+hc_component('Higiene de código', 'convoca-core', 'hc_clean_code');
+hc_component('Integraciones', 'convoca-core', 'hc_integrations');
+hc_hooks_contratos();
 
 $elapsed = round(microtime(true) - $start, 1);
 $total = $GLOBALS['hc_pass'] + $GLOBALS['hc_fail'];
 $coverage = $total > 0 ? round(100 * $GLOBALS['hc_pass'] / $total, 1) : 0;
 
 echo "\n============================================\n";
-echo "  RESUMEN: {$GLOBALS['hc_pass']} PASS / {$GLOBALS['hc_fail']} FAIL / {$GLOBALS['hc_warn']} WARN\n";
+echo "  RESUMEN: {$GLOBALS['hc_pass']} PASS / {$GLOBALS['hc_fail']} FAIL / {$GLOBALS['hc_warn']} WARN / {$GLOBALS['hc_skip']} SKIP\n";
 echo "  Coverage: {$coverage}%  ({$elapsed}s)\n";
 echo "============================================\n";
 
-// Exit code para CI: FAIL = 1
-if (defined('HC_EXIT') && HC_EXIT && $GLOBALS['hc_fail'] > 0) {
-    exit(1);
-}
-if (!empty($_SERVER['argv']) && in_array('--exit-code', $_SERVER['argv'], true) && $GLOBALS['hc_fail'] > 0) {
-    exit(1);
-}
-exit(0);
+// Exit code: 0 solo si NO hay ningún FAIL. Se sale con 1 por defecto (sin
+// depender de --exit-code ni de HC_EXIT), y eso es lo que documenta el README.
+// Un exit code que no distingue el caso bueno del malo no es un criterio.
+exit($GLOBALS['hc_fail'] > 0 ? 1 : 0);

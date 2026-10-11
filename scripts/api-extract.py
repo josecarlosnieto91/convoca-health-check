@@ -55,6 +55,21 @@ for repo in REPOS:
             name = m.group(1)
             if name not in hooks:
                 hooks[name] = {"files": []}
+            hooks[name]["fires"] = True
+            if rel not in hooks[name]["files"]:
+                hooks[name]["files"].append(rel)
+
+        # Nombres RETIRADOS: segundo argumento de Utils::do_action($nuevo, $viejo, …).
+        # Siguen existiendo y disparándose (do_action_deprecated) mientras haya
+        # alguien escuchándolos, así que son parte de la API pública (deprecada) y
+        # tienen que seguir inventariados. Sin esto, dejar de usarlos dentro de casa
+        # los hacía desaparecer del inventario y la API quedaba infradocumentada.
+        for m in re.finditer(r"Utils::\s*(?:do_action|apply_filters)\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"](convoca_[a-z0-9_]+|conv_[a-z0-9_]+)['\"]", c):
+            name = m.group(2)
+            if name not in hooks:
+                hooks[name] = {"files": []}
+            hooks[name]["deprecated"] = True
+            hooks[name]["replaced_by"] = m.group(1)
             if rel not in hooks[name]["files"]:
                 hooks[name]["files"].append(rel)
 
@@ -107,7 +122,16 @@ for repo in REPOS:
             taxos.add(m.group(1))
 
     inventory[repo] = {
-        "hooks": {k: {"files": v["files"][:3], "listens": v.get("listens", False)} for k, v in sorted(hooks.items())},
+        "hooks": {
+            k: {
+                "files": v["files"][:3],
+                "listens": v.get("listens", False),
+                "fires": v.get("fires", False),
+                "deprecated": v.get("deprecated", False),
+                "replaced_by": v.get("replaced_by", ""),
+            }
+            for k, v in sorted(hooks.items())
+        },
         "rest": sorted(rest, key=lambda x: (x["namespace"], x["route"])),
         "shortcodes": sorted(shortcodes),
         "meta_keys": sorted(meta_keys),

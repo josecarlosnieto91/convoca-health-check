@@ -114,6 +114,14 @@ jobs:
       - name: El inventario no puede mentir (doc vs JSON)
         run: python3 health/scripts/check-inventory-doc.py health
 
+      - name: Ningún oyente interno sobre un hook retirado
+        env:
+          WS: ${{ github.workspace }}/workspace
+        run: |
+          # Cruza los dos lados del contrato (lanzador ↔ oyente) que ningún lint
+          # de un plugin suelto ve. Con el defecto puesto devuelve 1.
+          python3 health/scripts/check-hooks-listeners.py
+
   observability:
     name: Observability
     runs-on: ubuntu-latest
