@@ -428,6 +428,26 @@ function hc_shifts() {
 
     hc_out('Shifts', 'duplicar_semana', file_exists(WP_PLUGIN_DIR . '/convoca-shifts/includes/cpt-turno.php'), 'cpt-turno.php');
 
+    // Las estadísticas de voluntarios: la consulta tiene que EJECUTARSE, no solo existir.
+    // Un alias usado en el SELECT sin su JOIN no da error de PHP: da error de BASE DE DATOS
+    // (que con WP_DEBUG_DISPLAY en false no se pinta), la función devuelve vacío y la pantalla
+    // sale sin datos. Por eso se mira $wpdb->last_error, que es lo único que lo delata.
+    $fn_stats = 'Convoca\\Shifts\\convoca_shifts_preload_voluntario_stats';
+    if (function_exists($fn_stats)) {
+        global $wpdb;
+        $previo = $wpdb->last_error;
+        $wpdb->last_error = '';
+        $stats = call_user_func($fn_stats);
+        $err = $wpdb->last_error;
+        $wpdb->last_error = $previo;
+        hc_out(
+            'Shifts',
+            'Estadísticas de voluntarios se ejecutan (sin error de BD)',
+            '' === $err,
+            $err ? $err : count((array) $stats) . ' voluntario(s) con turnos'
+        );
+    }
+
     // Flujo CRUD + estados
     if (hc_skip_side_effects('Shifts')) { return; }
     $turno_id = wp_insert_post(['post_type' => 'centro_turno', 'post_status' => 'publish', 'post_title' => 'HC Turno']);
