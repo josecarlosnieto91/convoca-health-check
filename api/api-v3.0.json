@@ -906,6 +906,7 @@
       "convoca_gateway_receipt_payer_name",
       "convoca_gateway_redsys_allowed_ips",
       "convoca_gateway_resend_email",
+      "convoca_gateway_site_ips",
       "convoca_payment_completed",
       "convoca_payment_failed"
     ],
@@ -933,7 +934,7 @@
         "files": [
           "convoca-gateway.php",
           "includes/Admin_Payments.php",
-          "includes/Payment_Handler.php"
+          "includes/Email_Notifications.php"
         ],
         "listens": true,
         "fires": true,
@@ -942,8 +943,8 @@
       },
       "convoca_gateway_payment_failed": {
         "files": [
-          "includes/Payment_Handler.php",
-          "includes/Email_Notifications.php"
+          "includes/Email_Notifications.php",
+          "includes/Payment_Handler.php"
         ],
         "listens": true,
         "fires": true,
@@ -989,6 +990,15 @@
       "convoca_gateway_resend_email": {
         "files": [
           "includes/Admin_Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_site_ips": {
+        "files": [
+          "includes/Payment_Handler.php"
         ],
         "listens": false,
         "fires": true,
@@ -1309,8 +1319,8 @@
       },
       "convoca_members_email_bienvenida": {
         "files": [
-          "includes/Estados.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Estados.php"
         ],
         "listens": true,
         "fires": true,
@@ -1358,8 +1368,8 @@
       },
       "convoca_members_email_recordatorio_pago": {
         "files": [
-          "includes/Estados.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Estados.php"
         ],
         "listens": true,
         "fires": true,
@@ -1395,8 +1405,8 @@
       },
       "convoca_members_email_solicitud": {
         "files": [
-          "includes/Process_Member.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Process_Member.php"
         ],
         "listens": true,
         "fires": true,
