@@ -471,10 +471,30 @@ function hc_publisher() {
     }
     hc_out('Publisher', "Canales ($found/7)", $found === 7, '');
 
-    // Prefijo coherente
+    // Prefijo coherente. Se mira el CODIGO **y los EVENTOS PROGRAMADOS**: mirar solo el
+    // codigo dejaba pasar el defecto entero. Medido en la demo (auditoria a ciegas del
+    // 12/10/2026): seguian programados `cp_scheduled_publish`, `cp_retry_failed_posts` y
+    // `cp_retry_process`, disparandose cada pocos minutos sin hacer nada, y este check
+    // decia PASS porque el prefijo viejo solo aparecia en la base, no en los ficheros.
     $pub = file_exists("$dir/includes/class-publisher.php") ? file_get_contents("$dir/includes/class-publisher.php") : '';
     hc_out('Publisher', 'Prefijo convoca_publisher_', strpos($pub, 'convoca_publisher_async_publish') !== false, 'async hook');
-    hc_out('Publisher', 'Sin prefijo cp_', strpos($pub, 'cp_async_publish') === false, '');
+    hc_out('Publisher', 'Sin prefijo cp_ en el codigo', strpos($pub, 'cp_async_publish') === false, '');
+
+    $cp_programados = [];
+    foreach ((array) _get_cron_array() as $marca => $hooks) {
+        foreach (array_keys((array) $hooks) as $hook) {
+            if (strpos((string) $hook, 'cp_') === 0) {
+                $cp_programados[] = $hook;
+            }
+        }
+    }
+    $cp_programados = array_values(array_unique($cp_programados));
+    hc_out(
+        'Publisher',
+        'Sin eventos cp_ programados',
+        empty($cp_programados),
+        $cp_programados ? 'programados: ' . implode(', ', $cp_programados) : 'ninguno'
+    );
 
     // Tabla retry
     global $wpdb;
@@ -826,6 +846,20 @@ function hc_integrations() {
             wp_delete_post($pago_id, true);
         } else {
             hc_out('Integraciones', 'Members←Gateway activa membresía', false, is_wp_error($result) ? $result->get_error_message() : 'sin pago');
+        }
+        // El usuario de WordPress que se crea para este miembro de prueba NO se borraba: la
+        // bateria dejaba un `hc.int` en el sitio que estaba probando —una demo se llena de
+        // basura y en un sitio real seria una cuenta mas con acceso—. Se borra aqui, y solo
+        // si es el nuestro: se comprueba el correo antes de tocar nada.
+        $hc_user_id = (int) get_post_meta($member, '_convoca_user_id', true);
+        if ($hc_user_id > 0) {
+            $hc_user = get_userdata($hc_user_id);
+            if ($hc_user && 'hc.int@example.com' === $hc_user->user_email) {
+                if (!function_exists('wp_delete_user')) {
+                    require_once ABSPATH . 'wp-admin/includes/user.php';
+                }
+                wp_delete_user($hc_user_id);
+            }
         }
         wp_delete_post($member, true);
 
