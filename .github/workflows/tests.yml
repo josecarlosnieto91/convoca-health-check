@@ -42,14 +42,18 @@ jobs:
         working-directory: ${{ matrix.plugin }}
         run: |
           if [ -f composer.json ]; then
-            composer install --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -5
+            # Sin `| tail`: el pipe devolvía el exit code de tail, así que un `composer install`
+            # fallido dejaba el paso en verde y el fallo aparecía luego como «vendor/bin/phpunit:
+            # No such file or directory» (exit 127), culpando al plugin en vez de a la instalación.
+            composer install --no-interaction --prefer-dist --no-progress --no-scripts
+            echo "COMPOSER_OK: $(ls vendor/bin/phpunit 2>/dev/null || echo 'sin phpunit')"
           fi
 
       - name: Instalar dependencias de convoca-core
         working-directory: convoca-core
         run: |
           if [ -f composer.json ]; then
-            composer install --no-interaction --prefer-dist --no-progress --no-scripts 2>&1 | tail -5
+            composer install --no-interaction --prefer-dist --no-progress --no-scripts
           fi
 
       - name: Ejecutar PHPUnit unit (con el arranque que declara el repositorio)
