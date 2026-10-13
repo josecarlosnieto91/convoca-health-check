@@ -771,6 +771,13 @@ function hc_clean_code() {
             if ($content === false) {
                 continue;
             }
+            // Quien lee codigo fuente quita ANTES los comentarios, o acaba fallando contra el
+            // comentario que explica el defecto (medido: un comentario con el nombre de la
+            // asociacion puso en rojo la bateria en dos sitios). En PHP se quitan con el
+            // tokenizador; el resto de extensiones se escanean tal cual.
+            if ($ext === 'php' && function_exists('hc_strip_comments')) {
+                $content = hc_strip_comments((string) $content);
+            }
             // Las lineas marcadas con `convoca-hygiene-ignore` no cuentan: hay cadenas que
             // son funcionales (un filtro de dominios de correo, un alias publicado) y no
             // decorativas. La marca exige motivo en la misma linea.
