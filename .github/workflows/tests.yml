@@ -124,10 +124,6 @@ jobs:
           # de un plugin suelto ve. Con el defecto puesto devuelve 1.
           python3 health/scripts/check-hooks-listeners.py
 
-  observability:
-    name: Observability
-    runs-on: ubuntu-latest
-    steps:
       - name: Higiene de datos (el cliente no aparece en el producto)
         run: |
           # Sin `|| true`: si el producto lleva dentro datos de un cliente, el job tiene que caer.
@@ -137,6 +133,11 @@ jobs:
             workspace/convoca-gateway workspace/convoca-shifts workspace/convoca-publisher \
             workspace/convoca-assistant workspace/convoca-theme
 
+
+  observability:
+    name: Observability
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
