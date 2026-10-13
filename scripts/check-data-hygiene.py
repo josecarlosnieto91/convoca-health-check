@@ -67,7 +67,10 @@ CORREOS_PERMITIDOS = {
     "noreply@getconvoca.app", "demo@convoca.local", "hola@asociacion.org",
 }
 
-EXTENSIONES = (".php", ".js", ".css", ".json", ".html")
+# .txt incluido a propósito: el `readme.txt` de cada plugin es lo que se publica en el
+# directorio y lo que lee quien instala. Se colaba por ahí (lo cazó la batería del
+# ecosistema el 13/10/2026, no este guardián, que solo miraba código).
+EXTENSIONES = (".php", ".js", ".css", ".json", ".html", ".txt")
 CARPETAS_FUERA = {"/vendor/", "/node_modules/", "/tests/", "/docs/", "/.git/", "/languages/",
                   "/.github/", "/dev-tools/", "/assets/vendor/", "/playwright-report/",
                   "/test-results/"}
