@@ -569,6 +569,9 @@
       "convoca_inscripcion_confirmada",
       "convoca_inscripcion_nueva",
       "convoca_inscripcion_promovida",
+      "convoca_inscripcion_sin_js_email",
+      "convoca_inscripcion_sin_js_telefono",
+      "convoca_panel_sin_js_email",
       "convoca_social_publish",
       "convoca_social_token_healthcheck"
     ],
@@ -853,6 +856,33 @@
         "deprecated": true,
         "replaced_by": "convoca_enroll_inscripcion_promovida"
       },
+      "convoca_inscripcion_sin_js_email": {
+        "files": [
+          "templates/form-inscripcion.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_inscripcion_sin_js_telefono": {
+        "files": [
+          "templates/form-inscripcion.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_panel_sin_js_email": {
+        "files": [
+          "templates/panel-reservas.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_social_publish": {
         "files": [
           "convoca-enroll.php"
@@ -933,8 +963,8 @@
       "convoca_gateway_payment_completed": {
         "files": [
           "convoca-gateway.php",
-          "includes/Admin_Payments.php",
-          "includes/Email_Notifications.php"
+          "includes/Email_Notifications.php",
+          "includes/Payment_Handler.php"
         ],
         "listens": true,
         "fires": true,
@@ -1007,8 +1037,8 @@
       },
       "convoca_payment_completed": {
         "files": [
-          "includes/Admin_Payments.php",
-          "includes/Payment_Handler.php"
+          "includes/Payment_Handler.php",
+          "includes/Admin_Payments.php"
         ],
         "listens": false,
         "fires": false,
@@ -1036,6 +1066,8 @@
   },
   "convoca-members": {
     "hooks": [
+      "convoca_alta_sin_js_email",
+      "convoca_alta_sin_js_telefono",
       "convoca_daily_event",
       "convoca_documento_horas",
       "convoca_email_bienvenida",
@@ -1091,7 +1123,10 @@
       "convoca_miembro_cuota_pagada",
       "convoca_miembro_dado_de_baja",
       "convoca_miembro_reactivado",
+      "convoca_panel_socio_sin_js_email",
       "convoca_phone_verificado",
+      "convoca_voluntariado_sin_js_email",
+      "convoca_voluntariado_sin_js_telefono",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_aprobado_attachments",
       "convoca_voluntario_pendiente",
@@ -1099,6 +1134,24 @@
       "convoca_weekly_event"
     ],
     "hooks_detail": {
+      "convoca_alta_sin_js_email": {
+        "files": [
+          "templates/form-alta.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_alta_sin_js_telefono": {
+        "files": [
+          "templates/form-alta.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_daily_event": {
         "files": [
           "includes/Cron_Manager.php"
@@ -1606,6 +1659,15 @@
         "deprecated": true,
         "replaced_by": "convoca_members_reactivado"
       },
+      "convoca_panel_socio_sin_js_email": {
+        "files": [
+          "public/class-mi-area.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_phone_verificado": {
         "files": [
           "public/class-mi-area.php"
@@ -1614,6 +1676,24 @@
         "fires": false,
         "deprecated": true,
         "replaced_by": "convoca_members_phone_verificado"
+      },
+      "convoca_voluntariado_sin_js_email": {
+        "files": [
+          "templates/form-voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntariado_sin_js_telefono": {
+        "files": [
+          "templates/form-voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
       },
       "convoca_voluntario_aprobado": {
         "files": [
