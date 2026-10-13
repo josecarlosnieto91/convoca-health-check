@@ -64,7 +64,7 @@ DOMINIOS_PERMITIDOS = {
 # Correos que sí se admiten (los del producto y los de ejemplo).
 CORREOS_PERMITIDOS = {
     "soporte@getconvoca.app", "info@getconvoca.app", "hola@getconvoca.app",
-    "noreply@getconvoca.app", "demo@convoca.local",
+    "noreply@getconvoca.app", "demo@convoca.local", "hola@asociacion.org",
 }
 
 EXTENSIONES = (".php", ".js", ".css", ".json", ".html")
