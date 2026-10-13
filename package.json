@@ -4,7 +4,8 @@
   "description": "Batería de validación permanente del ecosistema Convoca. Un único comando valida todas las funcionalidades públicas y las integraciones entre plugins, sin depender de auditorías manuales.",
   "main": "playwright.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test e2e/ --reporter=list",
+    "test:e2e": "playwright test e2e/ --reporter=list"
   },
   "repository": {
     "type": "git",
