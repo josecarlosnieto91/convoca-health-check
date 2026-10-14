@@ -351,7 +351,27 @@ function hc_gateway() {
     $esperado = $es_demo ? 'test' : 'production';
     hc_cfg('Gateway', "Entorno coherente con el sitio (esperado: $esperado)", $env === $esperado, $env);
     $key = $settings['secret_key'] ?? '';
-    hc_cfg('Gateway', 'Clave encriptada enc:', strpos($key, 'enc:') === 0, $key ? substr($key, 0, 8) . '…' : 'vacía');
+    // La clave tiene que PODER DESCIFRARSE, no solo empezar por «enc:». Antes este check miraba el
+    // prefijo, así que daba PASS en la demo sobre una clave con longitud efectiva 0 —imposible de
+    // descifrar, pagos bloqueados— mientras el propio plugin lo avisaba en su registro. Un check que
+    // mira la FORMA y no la CAPACIDAD deja pasar justo el fallo que debería cazar: es el mismo defecto
+    // que el de los números de la documentación, en otra ropa.
+    $key_efectiva = '';
+    if ( strpos( $key, 'enc:' ) === 0 ) {
+        $key_efectiva = class_exists( '\Convoca\Gateway\Redsys_Client' )
+            ? (string) \Convoca\Gateway\Redsys_Client::secret_key()
+            : $key; // Sin el plugin del gateway cargado no se puede descifrar: no se suspende por eso.
+    }
+    hc_cfg(
+        'Gateway',
+        'Clave secreta utilizable (se descifra)',
+        '' !== $key_efectiva,
+        sprintf(
+            'longitud efectiva %d%s',
+            strlen( $key_efectiva ),
+            $key ? ', guardada ' . substr( $key, 0, 8 ) . '…' : ', sin guardar'
+        )
+    );
 
     $scs = hc_shortcodes();
     foreach (['convoca_pago', 'convoca_pago_ok', 'convoca_pago_ko'] as $sc) {
