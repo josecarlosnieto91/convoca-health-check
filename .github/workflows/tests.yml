@@ -133,6 +133,13 @@ jobs:
             workspace/convoca-gateway workspace/convoca-shifts workspace/convoca-publisher \
             workspace/convoca-assistant workspace/convoca-theme
 
+      - name: Recursos vivos (ningún fichero viaja sin que nadie lo cargue)
+        run: |
+          # Sin `|| true`: un recurso que nadie encola es código muerto y el job tiene que caer.
+          # Los casos legítimos van a EXENTOS con el motivo escrito. Los `block.json` se miran,
+          # para no dar por muerto un bloque que declara su script con `file:`.
+          python3 health/scripts/check-assets-vivos.py workspace
+
 
   observability:
     name: Observability
