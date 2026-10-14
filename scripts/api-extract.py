@@ -28,6 +28,62 @@ def scan(repo):
 
 inventory = {}
 
+# ── Constantes con nombre de hook ──
+# Los guiones programados (cron) se escriben casi siempre como constante de clase
+# (`const CRON_HOOK = 'convoca_publisher_retry_event'`), y el extractor solo miraba
+# literales: cuatro hooks públicos —justo los de cron, los que rompen en silencio al
+# renombrarlos, porque el evento queda programado sin nadie escuchando— no estaban en
+# el inventario congelado y el guardián de la API no los protegía.
+# Se resuelve con el mismo alcance que PHP: primero la constante de la clase del uso
+# (`self::CRON_HOOK` → la del fichero), luego `Clase::CONSTANTE`, y solo si el nombre
+# no es ambiguo, la global. Dos clases pueden llamar `CRON_HOOK` a cosas distintas: es
+# justo el caso que había, y resolverlo «por nombre a secas» perdía los dos.
+CONSTS_CLASS = {}   # "Clase::NOMBRE" -> valor
+CONSTS_FILE = {}    # (repo, rel) -> {NOMBRE: valor}
+CONSTS_GLOBAL = {}  # NOMBRE -> valor (solo si no es ambiguo)
+_ambig = set()
+for _repo in REPOS:
+    for _fp in scan(_repo):
+        try:
+            _c = open(_fp, encoding="utf-8", errors="replace").read()
+        except Exception:
+            continue
+        _rel = os.path.relpath(_fp, os.path.join(WS, _repo))
+        _clases = re.findall(r"\bclass\s+([A-Za-z_][A-Za-z0-9_]*)", _c)
+        _pares = [(m.group(1), m.group(2)) for m in re.finditer(r"\bconst\s+([A-Z_][A-Z0-9_]*)\s*=\s*['\"]([^'\"]+)['\"]", _c)]
+        for m in re.finditer(r"\bdefine\(\s*['\"]([A-Z_][A-Z0-9_]*)['\"]\s*,\s*['\"]([^'\"]+)['\"]", _c):
+            _pares.append((m.group(1), m.group(2)))
+        _locales = {}
+        for _n, _v in _pares:
+            if len(_clases) == 1:
+                CONSTS_CLASS[f"{_clases[0]}::{_n}"] = _v
+            if _n in _locales and _locales[_n] != _v:
+                _locales.pop(_n, None)      # dos valores en el mismo fichero: no se resuelve
+                _ambig.add(_n)
+            else:
+                _locales[_n] = _v
+            if _n in CONSTS_GLOBAL and CONSTS_GLOBAL[_n] != _v:
+                _ambig.add(_n)
+            CONSTS_GLOBAL[_n] = _v
+        CONSTS_FILE[(_repo, _rel)] = _locales
+for _n in _ambig:
+    CONSTS_GLOBAL.pop(_n, None)
+CONSTS_GLOBAL = {k: v for k, v in CONSTS_GLOBAL.items() if re.match(r"^(convoca_|conv_)", v)}
+CONSTS_CLASS = {k: v for k, v in CONSTS_CLASS.items() if re.match(r"^(convoca_|conv_)", v)}
+
+
+def resolver_constante(repo, rel, prefijo, nombre):
+    """Valor de una constante con nombre de hook, con el alcance de PHP."""
+    if prefijo and prefijo not in ("self", "static"):
+        v = CONSTS_CLASS.get(f"{prefijo}::{nombre}")
+        if v:
+            return v
+    v = CONSTS_FILE.get((repo, rel), {}).get(nombre)
+    if v and re.match(r"^(convoca_|conv_)", v):
+        return v
+    return CONSTS_GLOBAL.get(nombre)
+
+
 for repo in REPOS:
     hooks = {}     # name -> {type, files}
     rest = []
@@ -50,14 +106,37 @@ for repo in REPOS:
         rel = os.path.relpath(fp, os.path.join(WS, repo))
 
         # ── Hooks: do_action / apply_filters / do_action_deprecated ──
-        # Captura el string convoca_* inmediatamente tras la llamada (con o sin espacios)
-        for m in re.finditer(r"(?:do_action|apply_filters|do_action_deprecated|apply_filters_deprecated)\(\s*['\"](convoca_[a-z0-9_]+|conv_[a-z0-9_]+)['\"]", c):
+        # Captura el string convoca_* inmediatamente tras la llamada (con o sin espacios).
+        # El `(?!\s*\.)` es importante: `apply_filters( 'convoca_document_theme_' . $suffix )`
+        # NO es un hook, es un PREFIJO. Sin esa guarda el inventario congelaba
+        # `convoca_document_theme_` como si fuera un hook real —y cualquier familia de
+        # hooks dinámicos entra igual—, así que el guardián protegía un fantasma y dejaba
+        # fuera a los de verdad.
+        for m in re.finditer(r"(?:do_action|apply_filters|do_action_deprecated|apply_filters_deprecated)\(\s*['\"](convoca_[a-z0-9_]+|conv_[a-z0-9_]+)['\"](?!\s*\.)", c):
             name = m.group(1)
             if name not in hooks:
                 hooks[name] = {"files": []}
             hooks[name]["fires"] = True
             if rel not in hooks[name]["files"]:
                 hooks[name]["files"].append(rel)
+
+        # Hooks cuyo nombre es una CONSTANTE (no un literal): `do_action( self::CRON_HOOK )`,
+        # `wp_schedule_event( …, Scheduler::CRON_HOOK )`, `add_action( self::SPACING_HOOK, … )`.
+        for m in re.finditer(
+            r"(?:do_action|apply_filters|do_action_deprecated|apply_filters_deprecated|add_action|add_filter|wp_schedule_event|wp_schedule_single_event|wp_clear_scheduled_hook|wp_unschedule_event)\(\s*(?:([A-Za-z_][A-Za-z0-9_]*)::)?([A-Z_][A-Z0-9_]*)",
+            c,
+        ):
+            name = resolver_constante(repo, rel, m.group(1), m.group(2))
+            if not name:
+                continue
+            if name not in hooks:
+                hooks[name] = {"files": []}
+            hooks[name]["fires"] = True
+            if m.group(0).startswith(("add_action", "add_filter")):
+                hooks[name]["listens"] = True
+            if rel not in hooks[name]["files"]:
+                hooks[name]["files"].append(rel)
+
 
         # Nombres RETIRADOS: segundo argumento de Utils::do_action($nuevo, $viejo, …).
         # Siguen existiendo y disparándose (do_action_deprecated) mientras haya

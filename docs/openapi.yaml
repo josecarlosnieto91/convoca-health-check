@@ -1,5 +1,8 @@
 # Convoca REST API — OpenAPI 3.0
 # GENERADO AUTOMÁTICAMENTE. No editar a mano.
+#
+# Se regenera con: python3 scripts/build-openapi.py
+# Y el CI comprueba que no se haya quedado atrás: scripts/build-openapi.py --check
 
 openapi: 3.0.3
 info:
@@ -607,6 +610,22 @@ paths:
     get:
       tags: [convoca/v1]
       summary: "GET /convoca/v1/assistant/rebuild-index"
+      description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca/v1/assistant/recent:
+    get:
+      tags: [convoca/v1]
+      summary: "GET /convoca/v1/assistant/recent"
       description: "Endpoint del plugin convoca-assistant (fuente: includes/REST_Controller.php)."
       security:
         - cookieAuth: []

@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 202 |
+| Hooks | 205 |
 | Shortcodes | 27 |
 
 ## Shortcodes
@@ -54,7 +54,6 @@
 | `convoca_common_webhook_sslverify` | dispara | includes/Webhook_Manager.php |
 | `convoca_continue_access_codes` | escucha | convoca-core.php |
 | `convoca_document_theme` | dispara | includes/Utils.php |
-| `convoca_document_theme_` | dispara | includes/Utils.php |
 | `convoca_email_copy_enabled` | dispara | includes/Email_Copy.php |
 | `convoca_email_copy_payload` | dispara | includes/Email_Copy.php |
 | `convoca_email_copy_recipients` | dispara | includes/Email_Copy.php |
@@ -87,6 +86,7 @@
 | `convoca_pdf_allowed_html` | dispara | includes/Signature.php |
 | `convoca_pdf_html_safe_keys` | dispara | includes/Signature.php |
 | `convoca_register_module` | dispara | includes/class-module-registry.php |
+| `convoca_security_digest` | dispara y escucha | includes/Security_Monitor.php |
 | `convoca_security_thresholds` | dispara | includes/Security_Monitor.php |
 | `convoca_site_stats` | dispara | includes/front-shortcodes.php |
 | `convoca_social_links` | dispara | includes/front-shortcodes.php |
@@ -216,11 +216,11 @@
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_gateway_bank_entity` | dispara | includes/Admin_Settings.php, includes/Payment_Handler.php |
-| `convoca_gateway_expiry_notice` | escucha | convoca-gateway.php |
+| `convoca_gateway_expiry_notice` | dispara y escucha | convoca-gateway.php, includes/Link_Expiry.php |
 | `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Email_Notifications.php, includes/Payment_Handler.php |
 | `convoca_gateway_payment_failed` | dispara y escucha | includes/Email_Notifications.php, includes/Payment_Handler.php |
 | `convoca_gateway_payment_refunded` | dispara | includes/Admin_Payments.php |
-| `convoca_gateway_pending_reminder` | escucha | convoca-gateway.php |
+| `convoca_gateway_pending_reminder` | dispara y escucha | convoca-gateway.php, includes/Email_Notifications.php |
 | `convoca_gateway_receipt_payer_name` | dispara | includes/Receipt_View.php |
 | `convoca_gateway_redsys_allowed_ips` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_resend_email` | dispara | includes/Admin_Payments.php |
@@ -249,15 +249,18 @@
 | `convoca_voluntario_aprobado` | escucha | includes/admin-approval.php |
 | `convoca_voluntario_revocado` | escucha | includes/admin-approval.php |
 
-### convoca-publisher (5 hooks)
+### convoca-publisher (8 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
+| `convoca_publisher_apply_spacing` | dispara y escucha | includes/class-scheduler.php |
 | `convoca_publisher_async_publish` | escucha | includes/class-publisher.php |
 | `convoca_publisher_retry_backoff` | dispara | includes/class-retry.php |
+| `convoca_publisher_retry_event` | dispara y escucha | includes/class-retry.php |
 | `convoca_publisher_retry_failed` | dispara | includes/class-retry.php |
 | `convoca_publisher_retry_failed_notify_email` | dispara | includes/class-retry.php |
 | `convoca_publisher_retry_failed_posts` | escucha | includes/class-scheduler.php |
+| `convoca_publisher_scheduled_publish` | dispara y escucha | includes/class-scheduler.php |
 
 ### convoca-assistant (3 hooks)
 

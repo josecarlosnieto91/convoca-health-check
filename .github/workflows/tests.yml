@@ -116,6 +116,23 @@ jobs:
       - name: El inventario no puede mentir (doc vs JSON)
         run: python3 health/scripts/check-inventory-doc.py health
 
+      - name: La documentación de la API dice la verdad (doc vs código)
+        env:
+          WS: ${{ github.workspace }}/workspace
+        run: |
+          # Sin `|| true`: la tabla «Inventario congelado» declaraba 164 hooks cuando el código
+          # tenía 202, y no lo miraba nadie. El documento se corrige, no se cree.
+          python3 health/scripts/check-api-doc.py
+
+      - name: El OpenAPI no se ha quedado atrás
+        env:
+          WS: ${{ github.workspace }}/workspace
+        run: |
+          # El documento lleva en su cabecera «GENERADO AUTOMÁTICAMENTE» y el generador no existía:
+          # se escribió a mano una vez y derivó (51 rutas para 52 endpoints). Ahora se regenera y
+          # se comprueba. Sin `--` nada: el script devuelve 2 si está desfasado.
+          python3 health/scripts/build-openapi.py --check
+
       - name: Ningún oyente interno sobre un hook retirado
         env:
           WS: ${{ github.workspace }}/workspace

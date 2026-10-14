@@ -11,12 +11,16 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 164 |
+| Hooks | 205 |
 | REST endpoints | 52 |
 | Shortcodes | 27 |
-| Meta keys | 239 |
-| Opciones | 85 |
-| **Total elementos API** | **243** (hooks+REST+shortcodes) |
+| Meta keys | 248 |
+| Opciones | 88 |
+| **Total elementos API** | **284** (hooks+REST+shortcodes) |
+
+> Estos números **se comprueban**: `scripts/check-api-doc.py` los compara con el inventario real y el
+> job `api-freeze` del CI cae si no cuadran. Antes no los miraba nadie, y el documento llegó a declarar
+> 164 hooks y 243 elementos cuando la realidad era 202 y 281 (corregido en la pasada 11 del gauntlet).
 
 ## Mecanismo de verificación
 
@@ -90,6 +94,34 @@ configurado, que antes era un callejón sin salida.
 > momento de añadir el hook en `members` o `gateway` — solo cuando algo empuja a health-check. Un
 > cambio de API se comprueba a mano con `bash scripts/check-api-freeze.sh` **antes** de dar la pasada
 > por cerrada.
+
+### 2026-10-14 — el extractor aprende a leer constantes, y la documentación deja de poder mentir
+
+Motivo: el job `api-freeze` protegía un inventario **que no era el real**. Dos agujeros, los dos del
+mismo instrumento:
+
+1. **Cuatro hooks de cron no estaban inventariados** porque su nombre es una **constante de clase**
+   (`const CRON_HOOK = 'convoca_publisher_retry_event'`) y el extractor solo miraba literales. Son
+   precisamente los que más duele perder de vista: un gancho programado que se renombra sin actualizar
+   el inventario deja **el evento en cola sin nadie escuchando**, y nada lo delata.
+   Añadidos: `convoca_security_digest` (core), `convoca_publisher_retry_event`,
+   `convoca_publisher_scheduled_publish` y `convoca_publisher_apply_spacing` (publisher).
+2. **Un fantasma dentro**: `apply_filters( 'convoca_document_theme_' . $suffix )` es un **prefijo**, no un
+   hook, y estaba congelado como si lo fuera. El extractor ahora lo distingue y no lo inventaria.
+
+Y en el mismo movimiento, lo que hacía posible que esto pasara desapercibido: **nadie comprobaba los
+números que el documento declara**. `docs/api-v3.0.md` decía 164 hooks y 243 elementos cuando la
+realidad era 202 y 281. Ahora `scripts/check-api-doc.py` (job `api-freeze`, con su negativo probado)
+compara la tabla del documento con el inventario real y cae si no cuadra.
+
+| Cambio | Elemento | Dónde |
+|--------|----------|-------|
+| Añadido al inventario | `convoca_security_digest` | convoca-core |
+| Añadido al inventario | `convoca_publisher_retry_event`, `convoca_publisher_scheduled_publish`, `convoca_publisher_apply_spacing` | convoca-publisher |
+| Retirado del inventario | `convoca_document_theme_` (era un prefijo, no un hook) | convoca-core |
+| Corregido | tabla «Inventario congelado» (164→205 hooks, 243→284 elementos, 239→248 meta, 85→88 opciones) | docs/api-v3.0.md |
+
+Los cuatro añadidos son **compatibles**: existían y se disparaban, solo faltaban en la lista.
 
 ## Reglas para cambios futuros
 

@@ -54,7 +54,6 @@
       "convoca_common_webhook_sslverify",
       "convoca_continue_access_codes",
       "convoca_document_theme",
-      "convoca_document_theme_",
       "convoca_email_copy_enabled",
       "convoca_email_copy_payload",
       "convoca_email_copy_recipients",
@@ -87,6 +86,7 @@
       "convoca_pdf_allowed_html",
       "convoca_pdf_html_safe_keys",
       "convoca_register_module",
+      "convoca_security_digest",
       "convoca_security_thresholds",
       "convoca_site_stats",
       "convoca_social_links",
@@ -127,15 +127,6 @@
         "replaced_by": ""
       },
       "convoca_document_theme": {
-        "files": [
-          "includes/Utils.php"
-        ],
-        "listens": false,
-        "fires": true,
-        "deprecated": false,
-        "replaced_by": ""
-      },
-      "convoca_document_theme_": {
         "files": [
           "includes/Utils.php"
         ],
@@ -430,6 +421,15 @@
           "includes/class-module-registry.php"
         ],
         "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_security_digest": {
+        "files": [
+          "includes/Security_Monitor.php"
+        ],
+        "listens": true,
         "fires": true,
         "deprecated": false,
         "replaced_by": ""
@@ -954,10 +954,11 @@
       },
       "convoca_gateway_expiry_notice": {
         "files": [
-          "convoca-gateway.php"
+          "convoca-gateway.php",
+          "includes/Link_Expiry.php"
         ],
         "listens": true,
-        "fires": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -993,10 +994,11 @@
       },
       "convoca_gateway_pending_reminder": {
         "files": [
-          "convoca-gateway.php"
+          "convoca-gateway.php",
+          "includes/Email_Notifications.php"
         ],
         "listens": true,
-        "fires": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -1809,13 +1811,25 @@
   },
   "convoca-publisher": {
     "hooks": [
+      "convoca_publisher_apply_spacing",
       "convoca_publisher_async_publish",
       "convoca_publisher_retry_backoff",
+      "convoca_publisher_retry_event",
       "convoca_publisher_retry_failed",
       "convoca_publisher_retry_failed_notify_email",
-      "convoca_publisher_retry_failed_posts"
+      "convoca_publisher_retry_failed_posts",
+      "convoca_publisher_scheduled_publish"
     ],
     "hooks_detail": {
+      "convoca_publisher_apply_spacing": {
+        "files": [
+          "includes/class-scheduler.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_publisher_async_publish": {
         "files": [
           "includes/class-publisher.php"
@@ -1830,6 +1844,15 @@
           "includes/class-retry.php"
         ],
         "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_retry_event": {
+        "files": [
+          "includes/class-retry.php"
+        ],
+        "listens": true,
         "fires": true,
         "deprecated": false,
         "replaced_by": ""
@@ -1858,6 +1881,15 @@
         ],
         "listens": true,
         "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_scheduled_publish": {
+        "files": [
+          "includes/class-scheduler.php"
+        ],
+        "listens": true,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       }
