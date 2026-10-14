@@ -11,12 +11,12 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 205 |
+| Hooks | 206 |
 | REST endpoints | 52 |
 | Shortcodes | 27 |
 | Meta keys | 248 |
 | Opciones | 88 |
-| **Total elementos API** | **284** (hooks+REST+shortcodes) |
+| **Total elementos API** | **285** (hooks+REST+shortcodes) |
 
 > Estos números **se comprueban**: `scripts/check-api-doc.py` los compara con el inventario real y el
 > job `api-freeze` del CI cae si no cuadran. Antes no los miraba nadie, y el documento llegó a declarar
@@ -120,6 +120,7 @@ compara la tabla del documento con el inventario real y cae si no cuadra.
 | Añadido al inventario | `convoca_publisher_retry_event`, `convoca_publisher_scheduled_publish`, `convoca_publisher_apply_spacing` | convoca-publisher |
 | Retirado del inventario | `convoca_document_theme_` (era un prefijo, no un hook) | convoca-core |
 | Corregido | tabla «Inventario congelado» (164→205 hooks, 243→284 elementos, 239→248 meta, 85→88 opciones) | docs/api-v3.0.md |
+| Añadido | filtro `convoca_email_from` en el núcleo (206→**206** hooks, 284→**285** elementos): el punto único para cambiar el remitente de todos los correos. Es aditivo y lo cazó el guardián de congelación al minuto | convoca-core 2.3.26 |
 
 Los cuatro añadidos son **compatibles**: existían y se disparaban, solo faltaban en la lista.
 
