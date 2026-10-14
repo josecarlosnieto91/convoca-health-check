@@ -58,6 +58,7 @@
       "convoca_email_copy_payload",
       "convoca_email_copy_recipients",
       "convoca_email_footer_links",
+      "convoca_email_from",
       "convoca_email_panel_url",
       "convoca_enroll_asistencia_cambiada",
       "convoca_enroll_inscripcion_cancelada",
@@ -165,6 +166,15 @@
       "convoca_email_footer_links": {
         "files": [
           "includes/Email_Links.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_email_from": {
+        "files": [
+          "includes/Mailer.php"
         ],
         "listens": false,
         "fires": true,
@@ -965,8 +975,8 @@
       "convoca_gateway_payment_completed": {
         "files": [
           "convoca-gateway.php",
-          "includes/Email_Notifications.php",
-          "includes/Payment_Handler.php"
+          "includes/Payment_Handler.php",
+          "includes/Admin_Payments.php"
         ],
         "listens": true,
         "fires": true,
@@ -975,8 +985,8 @@
       },
       "convoca_gateway_payment_failed": {
         "files": [
-          "includes/Email_Notifications.php",
-          "includes/Payment_Handler.php"
+          "includes/Payment_Handler.php",
+          "includes/Email_Notifications.php"
         ],
         "listens": true,
         "fires": true,

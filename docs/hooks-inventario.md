@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 205 |
+| Hooks | 206 |
 | Shortcodes | 27 |
 
 ## Shortcodes
@@ -46,7 +46,7 @@
 
 ## Hooks por plugin
 
-### convoca-core (47 hooks)
+### convoca-core (48 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -58,6 +58,7 @@
 | `convoca_email_copy_payload` | dispara | includes/Email_Copy.php |
 | `convoca_email_copy_recipients` | dispara | includes/Email_Copy.php |
 | `convoca_email_footer_links` | dispara | includes/Email_Links.php |
+| `convoca_email_from` | dispara | includes/Mailer.php |
 | `convoca_email_panel_url` | dispara | includes/Email_Links.php |
 | `convoca_enroll_asistencia_cambiada` | escucha | includes/Webhook_Manager.php |
 | `convoca_enroll_inscripcion_cancelada` | escucha | includes/Webhook_Manager.php |
@@ -217,8 +218,8 @@
 |------|------|--------|
 | `convoca_gateway_bank_entity` | dispara | includes/Admin_Settings.php, includes/Payment_Handler.php |
 | `convoca_gateway_expiry_notice` | dispara y escucha | convoca-gateway.php, includes/Link_Expiry.php |
-| `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Email_Notifications.php, includes/Payment_Handler.php |
-| `convoca_gateway_payment_failed` | dispara y escucha | includes/Email_Notifications.php, includes/Payment_Handler.php |
+| `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Payment_Handler.php, includes/Admin_Payments.php |
+| `convoca_gateway_payment_failed` | dispara y escucha | includes/Payment_Handler.php, includes/Email_Notifications.php |
 | `convoca_gateway_payment_refunded` | dispara | includes/Admin_Payments.php |
 | `convoca_gateway_pending_reminder` | dispara y escucha | convoca-gateway.php, includes/Email_Notifications.php |
 | `convoca_gateway_receipt_payer_name` | dispara | includes/Receipt_View.php |
