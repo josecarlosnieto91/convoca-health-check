@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 199 |
+| Hooks | 202 |
 | Shortcodes | 27 |
 
 ## Shortcodes
@@ -98,7 +98,7 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (66 hooks)
+### convoca-members (68 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -122,12 +122,13 @@
 | `convoca_member_created` | dispara | admin/class-admin-import-csv.php, public/class-form-handler.php |
 | `convoca_member_objetivo_completado` | dispara (retirado) | includes/Voluntariado_Manager.php |
 | `convoca_member_unsubscribe_request` | dispara (retirado) | includes/Rest_API.php |
-| `convoca_members_alta_document_url` | dispara | templates/form-alta.php |
+| `convoca_members_alta_document_url` | dispara | includes/Identidad.php |
 | `convoca_members_auto_renewal_completed` | dispara | includes/Cron_Manager.php |
 | `convoca_members_auto_renewal_created` | dispara | includes/Cron_Manager.php |
 | `convoca_members_certificado_validez_anios` | dispara | includes/Certificate_Generator.php |
 | `convoca_members_created` | dispara | includes/Process_Member.php |
 | `convoca_members_cuota_pagada` | dispara | includes/Payment_Listener.php |
+| `convoca_members_documento_url` | dispara | includes/Identidad.php |
 | `convoca_members_email_bienvenida` | dispara y escucha | includes/Email_Manager.php, includes/Estados.php |
 | `convoca_members_email_cambiado` | dispara | includes/Rest_API.php, public/class-mi-area.php |
 | `convoca_members_email_confirm` | dispara y escucha | includes/Rest_API.php, includes/Email_Manager.php |
@@ -146,6 +147,7 @@
 | `convoca_members_interest_areas` | dispara | public/class-form-voluntariado.php |
 | `convoca_members_membership_expired` | dispara | includes/Cron_Manager.php |
 | `convoca_members_miembro_dado_de_baja` | dispara | includes/CPT_Miembro.php |
+| `convoca_members_nombre_entidad` | dispara | includes/Identidad.php |
 | `convoca_members_objetivo_completado` | dispara | includes/Voluntariado_Manager.php |
 | `convoca_members_payment_reminder_sent` | dispara | includes/Cron_Manager.php |
 | `convoca_members_phone_verificado` | dispara | public/class-mi-area.php |
@@ -209,7 +211,7 @@
 | `convoca_social_publish` | escucha | convoca-enroll.php |
 | `convoca_social_token_healthcheck` | escucha | social/class-social-healthcheck.php |
 
-### convoca-gateway (12 hooks)
+### convoca-gateway (13 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -223,6 +225,7 @@
 | `convoca_gateway_redsys_allowed_ips` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_resend_email` | dispara | includes/Admin_Payments.php |
 | `convoca_gateway_site_ips` | dispara | includes/Payment_Handler.php |
+| `convoca_gateway_volver_url` | dispara | includes/Payment_Handler.php |
 | `convoca_payment_completed` | dispara (retirado) | includes/Payment_Handler.php, includes/Admin_Payments.php |
 | `convoca_payment_failed` | dispara (retirado) | includes/Payment_Handler.php |
 

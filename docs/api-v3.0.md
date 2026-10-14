@@ -69,6 +69,28 @@ alimenta tanto el shortcode como los tokens del pie).
 que el fuente ya no tenía y la comparación con el baseline se hacía contra fantasmas. Excluido en
 `scripts/api-extract.py`.
 
+### 2026-10-14 — tres hooks aditivos de la identidad y del alta sin métodos de pago
+
+Motivo: la pasada 9 del gauntlet hizo dos cosas que añaden gancho público y no lo reflejaron en el
+inventario congelado, así que el job `api-freeze` estuvo en rojo desde entonces (lo cazó el CI de la
+pasada 10, no una lectura).
+
+| Cambio | Elemento | Dónde |
+|--------|----------|-------|
+| Añadido | `convoca_members_nombre_entidad` | convoca-members (`Identidad::nombre_entidad()`) |
+| Añadido | `convoca_members_documento_url` | convoca-members (`Identidad::enlace_documento()`) |
+| Añadido | `convoca_gateway_volver_url` | convoca-gateway (`Payment_Handler`) |
+
+Los tres son **compatibles**: nadie los consumía antes de existir. Los dos primeros sacan de la
+plantilla el nombre de la entidad y las URLs de sus documentos (que estaban hardcodeadas y con el
+cliente real dentro); el tercero da salida a la pantalla del alta cuando no hay ningún método de pago
+configurado, que antes era un callejón sin salida.
+
+> Nota para la próxima vez: este gate vive en el CI de `convoca-health-check`, así que no avisa en el
+> momento de añadir el hook en `members` o `gateway` — solo cuando algo empuja a health-check. Un
+> cambio de API se comprueba a mano con `bash scripts/check-api-freeze.sh` **antes** de dar la pasada
+> por cerrada.
+
 ## Reglas para cambios futuros
 
 1. **Añadir** un hook/endpoint/shortcode: permitido (no rompe compatibilidad),

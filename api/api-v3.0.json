@@ -937,6 +937,7 @@
       "convoca_gateway_redsys_allowed_ips",
       "convoca_gateway_resend_email",
       "convoca_gateway_site_ips",
+      "convoca_gateway_volver_url",
       "convoca_payment_completed",
       "convoca_payment_failed"
     ],
@@ -1035,6 +1036,15 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_gateway_volver_url": {
+        "files": [
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_payment_completed": {
         "files": [
           "includes/Payment_Handler.php",
@@ -1092,6 +1102,7 @@
       "convoca_members_certificado_validez_anios",
       "convoca_members_created",
       "convoca_members_cuota_pagada",
+      "convoca_members_documento_url",
       "convoca_members_email_bienvenida",
       "convoca_members_email_cambiado",
       "convoca_members_email_confirm",
@@ -1110,6 +1121,7 @@
       "convoca_members_interest_areas",
       "convoca_members_membership_expired",
       "convoca_members_miembro_dado_de_baja",
+      "convoca_members_nombre_entidad",
       "convoca_members_objetivo_completado",
       "convoca_members_payment_reminder_sent",
       "convoca_members_phone_verificado",
@@ -1318,7 +1330,7 @@
       },
       "convoca_members_alta_document_url": {
         "files": [
-          "templates/form-alta.php"
+          "includes/Identidad.php"
         ],
         "listens": false,
         "fires": true,
@@ -1364,6 +1376,15 @@
       "convoca_members_cuota_pagada": {
         "files": [
           "includes/Payment_Listener.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_documento_url": {
+        "files": [
+          "includes/Identidad.php"
         ],
         "listens": false,
         "fires": true,
@@ -1536,6 +1557,15 @@
       "convoca_members_miembro_dado_de_baja": {
         "files": [
           "includes/CPT_Miembro.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_nombre_entidad": {
+        "files": [
+          "includes/Identidad.php"
         ],
         "listens": false,
         "fires": true,
