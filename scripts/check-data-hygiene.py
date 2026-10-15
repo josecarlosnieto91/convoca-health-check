@@ -75,23 +75,30 @@ EXTENSIONES = (".php", ".js", ".css", ".json", ".html", ".txt")
 # esos ficheros viajan en el repositorio) pero incluirlos aquí saca 11 hallazgos de datos de prueba
 # legitimos (@test.com, paga.test) que hay que admitir antes en la lista de ejemplos. Medido el 15/10/2026:
 # el cambio se hizo, se midio y se revirtio para no dejar el CI en rojo a medias.
-CARPETAS_FUERA = {"/vendor/", "/node_modules/", "/tests/", "/docs/", "/.git/", "/languages/",
-                  "/.github/", "/dev-tools/", "/assets/vendor/", "/playwright-report/",
-                  "/test-results/"}
+# UNA sola lista (issue #9): había dos —esta y la del `os.walk`— con contenidos distintos, y editando
+# una no pasaba nada. La del `os.walk` era la que mandaba. `tests/` NO está: los ficheros de prueba viajan
+# en el repositorio y sus datos son tan públicos como el código, que es lo que ya hacía la batería.
+NOMBRES_FUERA = {".git", "vendor", "node_modules", "docs", "languages", ".github", "dev-tools",
+                 "playwright-report", "test-results"}
+CARPETAS_FUERA = {f"/{n}/" for n in NOMBRES_FUERA} | {"/assets/vendor/"}
 
 RX_DOMINIO = re.compile(r"https?://([a-z0-9.-]+\.[a-z]{2,})", re.I)
 # Ejemplos y marcadores de posición: no son datos de nadie.
-RX_EJEMPLO = re.compile(r"(ejemplo\.|example\.|\.test$|\.local$|correo\.com|email\.com|tu@|tucorreo|maria@|juan@|nombre@|cliente@)", re.I)
+# Ejemplos, marcadores de posición y los dominios que las RFC 2606 y 6761 reservan para pruebas
+# (`test`, `invalid`, `example`, `localhost`). Los correos entran por aquí también: `admin@test.com`
+# y `quien@paga.test` son datos de mentira, no de nadie (issue #9).
+RX_EJEMPLO = re.compile(
+    r"(ejemplo\.|example\.|\.test\b|\.invalid\b|\.example\b|\.local\b|localhost\b|"
+    r"correo\.com|email\.com|tu@|tucorreo|maria@|juan@|nombre@|cliente@|"
+    r"@(test|example|invalid)\.(com|org|net)\b)", re.I)
 RX_CORREO = re.compile(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", re.I)
 IGNORE = "convoca-hygiene-ignore"
 
 
 def ficheros(raiz: str):
     for base, dirs, nombres in os.walk(raiz):
-        # OJO (issue #9): esta lista es la que MANDA, no `CARPETAS_FUERA`. Están las dos, con contenidos
-        # distintos, y editando una no pasa nada — que es cómo apareció el defecto. Unificar las dos es
-        # parte de #16 (código duplicado).
-        dirs[:] = [d for d in dirs if d not in {".git", "vendor", "node_modules", "tests", "docs", "dev-tools"}]
+        # La misma lista que arriba, no una copia (issue #9).
+        dirs[:] = [d for d in dirs if d not in NOMBRES_FUERA]
         for n in nombres:
             if n.endswith((".min.js", ".min.css")) or n in {"package-lock.json", "composer.lock"}:
                 continue
