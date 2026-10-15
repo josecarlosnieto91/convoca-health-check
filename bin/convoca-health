@@ -38,10 +38,19 @@ run_local() {
 }
 
 run_ssh() {
-  scp -q "$SCRIPT" "$SSH_TARGET:/tmp/convoca-health-check.php" || return 2
+  # El script NO viaja solo: `lib/` va al lado, porque con `wp eval-file` los require son relativos al
+  # directorio de evaluación. Subir solo el script daba un fatal «Failed opening required /tmp/lib/…» que se
+  # leía como una caída del sitio (medido: la batería «reventaba» contra un sitio que estaba perfecto).
+  local REMOTO="/tmp/convoca-health-run"
+  ssh "$SSH_TARGET" "rm -rf $REMOTO && mkdir -p $REMOTO/lib" || return 2
+  scp -q "$SCRIPT" "$SSH_TARGET:$REMOTO/health-check.php" || return 2
+  scp -q -r "$SCRIPT_DIR/../lib/." "$SSH_TARGET:$REMOTO/lib/" || return 2
   # Esperar a que scp termine antes de wp (fish en Andromeda)
   sleep 2
-  ssh "$SSH_TARGET" "sudo -n wp eval-file /tmp/convoca-health-check.php --allow-root $WP_ARGS 2>&1"
+  ssh "$SSH_TARGET" "sudo -n wp eval-file $REMOTO/health-check.php --allow-root $WP_ARGS 2>&1"
+  local SALIDA=$?
+  ssh "$SSH_TARGET" "rm -rf $REMOTO" 2>/dev/null
+  return $SALIDA
 }
 
 echo "== Convoca Health Check =="

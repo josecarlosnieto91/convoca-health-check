@@ -1,6 +1,16 @@
 <?php
 
-require_once __DIR__ . '/lib/cobertura.php';
+$hc_lib = __DIR__ . '/lib/cobertura.php';
+if ( ! file_exists( $hc_lib ) ) {
+	// Distinguible de una caída del SITIO, que es lo que se leía antes: con `wp eval-file`, __DIR__ es el
+	// directorio de evaluación (/tmp en el modo remoto), así que un ejecutor que suba solo el script deja un
+	// fatal («Failed opening required /tmp/lib/cobertura.php») que parece que el sitio se ha roto (issue #16).
+	fwrite( STDERR, "EJECUTOR INCOMPLETO: falta {$hc_lib}\n" );
+	fwrite( STDERR, "  El script no viaja solo: su lib/ tiene que ir al lado. Usa bin/convoca-health (sube los dos)\n" );
+	fwrite( STDERR, "  o ejecútalo en local con --path=/ruta/al/wp.\n" );
+	exit( 2 );
+}
+require_once $hc_lib;
 /**
  * Convoca Health Check — batería de validación permanente.
  *
