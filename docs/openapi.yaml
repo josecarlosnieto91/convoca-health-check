@@ -62,6 +62,22 @@ paths:
           description: Sin permisos
         '404':
           description: No encontrado
+  /convoca-members/v1/activities:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/activities"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
   /convoca-members/v1/admin/members/search:
     get:
       tags: [convoca-members/v1]
