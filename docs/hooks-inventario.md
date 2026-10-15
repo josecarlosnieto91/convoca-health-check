@@ -9,8 +9,8 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 206 |
-| Shortcodes | 27 |
+| Hooks | 209 |
+| Shortcodes | 29 |
 
 ## Shortcodes
 
@@ -26,6 +26,7 @@
 | `[convoca_mi_area]` | convoca-members |
 | `[convoca_mi_perfil]` | convoca-members |
 | `[convoca_renovar]` | convoca-members |
+| `[convoca_top_voluntarios]` | convoca-members |
 | `[convoca_verificar_certificado]` | convoca-members |
 | `[convoca_verificar_socio]` | convoca-members |
 | `[convoca_voluntariado]` | convoca-members |
@@ -42,6 +43,7 @@
 | `[convoca_calendario]` | convoca-shifts |
 | `[convoca_proximos_turnos]` | convoca-shifts |
 | `[convoca_resumen_turnos]` | convoca-shifts |
+| `[convoca_suscripcion_turnos]` | convoca-shifts |
 | `[convoca_assistant]` | convoca-assistant |
 
 ## Hooks por plugin
@@ -99,7 +101,7 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (68 hooks)
+### convoca-members (70 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -129,6 +131,7 @@
 | `convoca_members_certificado_validez_anios` | dispara | includes/Certificate_Generator.php |
 | `convoca_members_created` | dispara | includes/Process_Member.php |
 | `convoca_members_cuota_pagada` | dispara | includes/Payment_Listener.php |
+| `convoca_members_dias_aviso_caducidad` | dispara | includes/CPT_Documento.php |
 | `convoca_members_documento_url` | dispara | includes/Identidad.php |
 | `convoca_members_email_bienvenida` | dispara y escucha | includes/Email_Manager.php, includes/Estados.php |
 | `convoca_members_email_cambiado` | dispara | includes/Rest_API.php, public/class-mi-area.php |
@@ -144,6 +147,7 @@
 | `convoca_members_estado_changed` | dispara y escucha | includes/Estados.php |
 | `convoca_members_hora_aprobada` | dispara y escucha | admin/class-admin-horas.php, includes/Certificate_Generator.php, includes/Hours_Manager.php |
 | `convoca_members_hora_rechazada` | dispara | admin/class-admin-horas.php, includes/Hours_Manager.php |
+| `convoca_members_horas_objetivo_defecto` | dispara | includes/Voluntariado_Manager.php |
 | `convoca_members_hours_submitted` | dispara | includes/Rest_API.php |
 | `convoca_members_interest_areas` | dispara | public/class-form-voluntariado.php |
 | `convoca_members_membership_expired` | dispara | includes/Cron_Manager.php |
@@ -180,7 +184,7 @@
 | `convoca_asistencia_cambiada` | dispara (retirado) | includes/Motor_Inscripcion.php |
 | `convoca_enroll_activity_reminder` | escucha | includes/Activity_Reminder_Cron.php |
 | `convoca_enroll_aportacion_label` | dispara | includes/Utils.php |
-| `convoca_enroll_asistencia_cambiada` | dispara y escucha | includes/Motor_Inscripcion.php, includes/Volunteer_Hour_Tracker.php, includes/Webhook_Dispatcher.php |
+| `convoca_enroll_asistencia_cambiada` | dispara y escucha | includes/Volunteer_Hour_Tracker.php, includes/Webhook_Dispatcher.php, includes/Motor_Inscripcion.php |
 | `convoca_enroll_cleanup_orphan_codes` | escucha | convoca-enroll.php |
 | `convoca_enroll_daily_maintenance` | escucha | includes/Maintenance.php |
 | `convoca_enroll_eval_reminder` | escucha | includes/Eval_Reminder_Cron.php |
@@ -188,10 +192,10 @@
 | `convoca_enroll_form_en_ficha` | dispara | includes/CPT_Actividad.php |
 | `convoca_enroll_form_repetido` | dispara | includes/CPT_Actividad.php |
 | `convoca_enroll_google_photos_share` | escucha | includes/Email_Automation.php |
-| `convoca_enroll_inscripcion_cancelada` | dispara y escucha | includes/Motor_Inscripcion.php, includes/Webhook_Dispatcher.php, includes/Google_Sheets.php |
-| `convoca_enroll_inscripcion_confirmada` | dispara y escucha | includes/Motor_Inscripcion.php, includes/Webhook_Dispatcher.php, includes/Google_Sheets.php |
-| `convoca_enroll_inscripcion_nueva` | dispara y escucha | includes/Motor_Inscripcion.php, includes/Webhook_Dispatcher.php, includes/Google_Sheets.php |
-| `convoca_enroll_inscripcion_promovida` | dispara y escucha | includes/Motor_Inscripcion.php, includes/Webhook_Dispatcher.php, includes/Google_Sheets.php |
+| `convoca_enroll_inscripcion_cancelada` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
+| `convoca_enroll_inscripcion_confirmada` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
+| `convoca_enroll_inscripcion_nueva` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
+| `convoca_enroll_inscripcion_promovida` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
 | `convoca_enroll_late_cancel_admin_email` | dispara | includes/Motor_Inscripcion.php |
 | `convoca_enroll_process_email_queue` | escucha | includes/Email_Queue.php |
 | `convoca_enroll_process_webhook_queue` | escucha | includes/Webhook_Dispatcher.php |
@@ -250,12 +254,13 @@
 | `convoca_voluntario_aprobado` | escucha | includes/admin-approval.php |
 | `convoca_voluntario_revocado` | escucha | includes/admin-approval.php |
 
-### convoca-publisher (8 hooks)
+### convoca-publisher (9 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_publisher_apply_spacing` | dispara y escucha | includes/class-scheduler.php |
 | `convoca_publisher_async_publish` | escucha | includes/class-publisher.php |
+| `convoca_publisher_redes_pro` | dispara | includes/class-plugin.php |
 | `convoca_publisher_retry_backoff` | dispara | includes/class-retry.php |
 | `convoca_publisher_retry_event` | dispara y escucha | includes/class-retry.php |
 | `convoca_publisher_retry_failed` | dispara | includes/class-retry.php |
