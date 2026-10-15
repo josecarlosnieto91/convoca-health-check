@@ -79,3 +79,19 @@ y se elimina dentro del mismo check.
 ## Licencia
 
 GPL-2.0-or-later. Ver [LICENSE](LICENSE).
+
+
+## Los catálogos de traducción (`.pot`), cómo se regeneran
+
+Los `.pot` se generan a mano una vez y luego se quedan atrás — pasó en **nueve** repos del ecosistema. El
+comando es el mismo en todos (mismos argumentos, para que no haya dos varas):
+
+```
+wp i18n make-pot . languages/<fichero>.pot --slug=<dominio> --domain=<dominio> \
+  --exclude=node_modules,vendor,tests,.git,build,dist
+```
+
+Y `scripts/check-pot-al-dia.py` vigila que no vuelvan a desfasarse: compara la versión que el `.pot` declara
+en su cabecera con la del fichero principal, y avisa si el catálogo apunta a ficheros que ya no existen
+(el del tema arrastraba 133 referencias a un `build-dir/` retirado). Corre en el vigilante diario del
+ecosistema, que tiene los clones locales a mano.
