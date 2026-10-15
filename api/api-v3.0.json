@@ -624,9 +624,9 @@
       },
       "convoca_enroll_asistencia_cambiada": {
         "files": [
-          "includes/Motor_Inscripcion.php",
           "includes/Volunteer_Hour_Tracker.php",
-          "includes/Webhook_Dispatcher.php"
+          "includes/Webhook_Dispatcher.php",
+          "includes/Motor_Inscripcion.php"
         ],
         "listens": true,
         "fires": true,
@@ -698,9 +698,9 @@
       },
       "convoca_enroll_inscripcion_cancelada": {
         "files": [
-          "includes/Motor_Inscripcion.php",
           "includes/Webhook_Dispatcher.php",
-          "includes/Google_Sheets.php"
+          "includes/Google_Sheets.php",
+          "includes/Email_Automation.php"
         ],
         "listens": true,
         "fires": true,
@@ -709,9 +709,9 @@
       },
       "convoca_enroll_inscripcion_confirmada": {
         "files": [
-          "includes/Motor_Inscripcion.php",
           "includes/Webhook_Dispatcher.php",
-          "includes/Google_Sheets.php"
+          "includes/Google_Sheets.php",
+          "includes/Email_Automation.php"
         ],
         "listens": true,
         "fires": true,
@@ -720,9 +720,9 @@
       },
       "convoca_enroll_inscripcion_nueva": {
         "files": [
-          "includes/Motor_Inscripcion.php",
           "includes/Webhook_Dispatcher.php",
-          "includes/Google_Sheets.php"
+          "includes/Google_Sheets.php",
+          "includes/Email_Automation.php"
         ],
         "listens": true,
         "fires": true,
@@ -731,9 +731,9 @@
       },
       "convoca_enroll_inscripcion_promovida": {
         "files": [
-          "includes/Motor_Inscripcion.php",
           "includes/Webhook_Dispatcher.php",
-          "includes/Google_Sheets.php"
+          "includes/Google_Sheets.php",
+          "includes/Email_Automation.php"
         ],
         "listens": true,
         "fires": true,
@@ -1114,6 +1114,7 @@
       "convoca_members_certificado_validez_anios",
       "convoca_members_created",
       "convoca_members_cuota_pagada",
+      "convoca_members_dias_aviso_caducidad",
       "convoca_members_documento_url",
       "convoca_members_email_bienvenida",
       "convoca_members_email_cambiado",
@@ -1129,6 +1130,7 @@
       "convoca_members_estado_changed",
       "convoca_members_hora_aprobada",
       "convoca_members_hora_rechazada",
+      "convoca_members_horas_objetivo_defecto",
       "convoca_members_hours_submitted",
       "convoca_members_interest_areas",
       "convoca_members_membership_expired",
@@ -1394,6 +1396,15 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_members_dias_aviso_caducidad": {
+        "files": [
+          "includes/CPT_Documento.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_members_documento_url": {
         "files": [
           "includes/Identidad.php"
@@ -1533,6 +1544,15 @@
         "files": [
           "admin/class-admin-horas.php",
           "includes/Hours_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_horas_objetivo_defecto": {
+        "files": [
+          "includes/Voluntariado_Manager.php"
         ],
         "listens": false,
         "fires": true,
@@ -1787,6 +1807,7 @@
       }
     },
     "rest": [
+      "convoca-members/v1 /activities GET",
       "convoca-members/v1 /admin/members/search GET",
       "convoca-members/v1 /alta GET",
       "convoca-members/v1 /documentos/(?P<id>\\d+) GET",
@@ -1814,6 +1835,7 @@
       "convoca_mi_area",
       "convoca_mi_perfil",
       "convoca_renovar",
+      "convoca_top_voluntarios",
       "convoca_verificar_certificado",
       "convoca_verificar_socio",
       "convoca_voluntariado"
@@ -1823,6 +1845,7 @@
     "hooks": [
       "convoca_publisher_apply_spacing",
       "convoca_publisher_async_publish",
+      "convoca_publisher_redes_pro",
       "convoca_publisher_retry_backoff",
       "convoca_publisher_retry_event",
       "convoca_publisher_retry_failed",
@@ -1846,6 +1869,15 @@
         ],
         "listens": true,
         "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_publisher_redes_pro": {
+        "files": [
+          "includes/class-plugin.php"
+        ],
+        "listens": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -2078,7 +2110,8 @@
       "convoca_boton_apuntarse",
       "convoca_calendario",
       "convoca_proximos_turnos",
-      "convoca_resumen_turnos"
+      "convoca_resumen_turnos",
+      "convoca_suscripcion_turnos"
     ]
   },
   "convoca-theme": {
