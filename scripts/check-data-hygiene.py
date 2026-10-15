@@ -71,6 +71,10 @@ CORREOS_PERMITIDOS = {
 # directorio y lo que lee quien instala. Se colaba por ahí (lo cazó la batería del
 # ecosistema el 13/10/2026, no este guardián, que solo miraba código).
 EXTENSIONES = (".php", ".js", ".css", ".json", ".html", ".txt")
+# `tests/` sigue fuera por ahora, y es el centro del issue #9: la batería sí los mira (y tiene razon:
+# esos ficheros viajan en el repositorio) pero incluirlos aquí saca 11 hallazgos de datos de prueba
+# legitimos (@test.com, paga.test) que hay que admitir antes en la lista de ejemplos. Medido el 15/10/2026:
+# el cambio se hizo, se midio y se revirtio para no dejar el CI en rojo a medias.
 CARPETAS_FUERA = {"/vendor/", "/node_modules/", "/tests/", "/docs/", "/.git/", "/languages/",
                   "/.github/", "/dev-tools/", "/assets/vendor/", "/playwright-report/",
                   "/test-results/"}
@@ -84,6 +88,9 @@ IGNORE = "convoca-hygiene-ignore"
 
 def ficheros(raiz: str):
     for base, dirs, nombres in os.walk(raiz):
+        # OJO (issue #9): esta lista es la que MANDA, no `CARPETAS_FUERA`. Están las dos, con contenidos
+        # distintos, y editando una no pasa nada — que es cómo apareció el defecto. Unificar las dos es
+        # parte de #16 (código duplicado).
         dirs[:] = [d for d in dirs if d not in {".git", "vendor", "node_modules", "tests", "docs", "dev-tools"}]
         for n in nombres:
             if n.endswith((".min.js", ".min.css")) or n in {"package-lock.json", "composer.lock"}:
