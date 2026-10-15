@@ -16,9 +16,12 @@ Qué se compara:
     normal), y las clases con namespace tampoco: `Convoca\Members\Utils` y `Convoca\Core\Utils` son dos.
 
 Qué se informa:
-  - **COLISION**: el mismo nombre en dos plugins. Es lo que falla. Se enseña si los cuerpos son iguales
-    (duplicado literal) o distintos (dos cosas distintas con el mismo nombre, que es lo peligroso).
-  - El recuento de copias literales, como información: no falla, pero se ve.
+  - **COLISION**: el mismo nombre en dos plugins. Se distingue si los cuerpos son iguales (duplicado literal,
+    que se arregla consolidando) o distintos (dos cosas distintas con el mismo nombre, que es lo peligroso).
+  - **Las dos clases de colisión fallan.** Antes sólo fallaban las de cuerpo distinto y el resumen decía «Sin
+    colisiones que revientan» con nombres repetidos delante: PHP revienta igual al redeclarar («Cannot
+    redeclare»), y con un `function_exists()` de por medio gana la primera que cargue y la segunda no se
+    ejecuta nunca, en silencio. Un instrumento que no puede fallar ante lo que dice vigilar no mide.
 
 Uso: check-colisiones.py <ruta-repo> [<ruta-repo> ...]
 Sale 1 si hay colisión; 0 si no.
@@ -89,8 +92,15 @@ def main(argv):
     distintas = {n: v for n, v in colisiones.items() if len(set(f for _, f in v)) > 1}
     colisiones_clase = {n: v for n, v in todas_clases.items() if len(v) > 1}
 
-    for n, v in sorted(distintas.items()):
-        print("COLISION  funcion " + n + "()  ->  " + ", ".join(sorted({r for r, _ in v})) + "   [cuerpos DISTINTOS]")
+    # Se informan TODAS las repeticiones, también las de cuerpo idéntico: PHP revienta igual al redeclarar, y
+    # con un `function_exists()` de por medio gana la primera que cargue y la segunda no corre nunca. La
+    # etiqueta dice cuál es el arreglo: duplicado literal → consolidar; cuerpos distintos → decidir cuál manda.
+    for n, v in sorted(colisiones.items()):
+        identico = len(set(f for _, f in v)) == 1
+        print(
+            "COLISION  funcion " + n + "()  ->  " + ", ".join(sorted({r for r, _ in v}))
+            + ("   [cuerpos IDENTICOS: duplicado literal]" if identico else "   [cuerpos DISTINTOS: dos cosas con el mismo nombre]")
+        )
     for n, v in sorted(colisiones_clase.items()):
         print("COLISION  clase " + n + "  ->  " + ", ".join(sorted(v)))
 
@@ -98,9 +108,12 @@ def main(argv):
     print("funciones globales distintas: " + str(len(todos)))
     print("nombres repetidos entre plugins: " + str(len(colisiones)) + "  (identicos: " + str(len(iguales)) + " - distintos: " + str(len(distintas)) + ")")
     print("clases sin namespace repetidas: " + str(len(colisiones_clase)))
-    hay = bool(distintas or colisiones_clase)
+    hay = bool(colisiones or colisiones_clase)
     print()
-    print("Sin colisiones que revienten." if not hay else "HAY colisiones: dos plugins no pueden declarar lo mismo.")
+    if hay:
+        print("HAY " + str(len(colisiones) + len(colisiones_clase)) + " colision(es): dos plugins no pueden declarar la misma funcion global ni la misma clase sin namespace.")
+    else:
+        print("Sin nombres repetidos: ninguna funcion global ni clase sin namespace se declara en dos plugins.")
     return 1 if hay else 0
 
 

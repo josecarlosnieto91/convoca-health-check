@@ -124,6 +124,20 @@ jobs:
           # tenía 202, y no lo miraba nadie. El documento se corrige, no se cree.
           python3 health/scripts/check-api-doc.py
 
+      - name: El contrato de colisiones se prueba solo (positivo y negativos)
+        run: python3 health/scripts/check-colisiones_test.py
+
+      - name: Dos plugins no pueden declarar la misma función global ni la misma clase
+        env:
+          WS: ${{ github.workspace }}/workspace
+        run: |
+          # Sin `|| true`: si dos plugins declaran lo mismo, este job tiene que caer. PHP revienta al
+          # redeclarar («Cannot redeclare») y, con un `function_exists()` de por medio, gana el primero que
+          # cargue y el segundo no se ejecuta nunca — en silencio. Las dos cosas son el mismo fallo.
+          python3 health/scripts/check-colisiones.py \
+            "$WS/convoca-core" "$WS/convoca-members" "$WS/convoca-enroll" "$WS/convoca-gateway" \
+            "$WS/convoca-shifts" "$WS/convoca-publisher" "$WS/convoca-assistant" "$WS/convoca-theme"
+
       - name: El OpenAPI no se ha quedado atrás
         env:
           WS: ${{ github.workspace }}/workspace
