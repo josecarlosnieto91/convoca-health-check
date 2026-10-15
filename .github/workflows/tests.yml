@@ -338,3 +338,20 @@ jobs:
           # para siempre. Si algo se rompe, el sitio de referencia es la demo
           # pública (sandbox del producto), no un sitio de cliente.
           npx playwright test e2e/ --reporter=list
+
+  cobertura:
+    name: Cobertura de la batería
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+
+      - name: El número de cobertura no puede engañar (issue #10)
+        run: |
+          # Sin `|| true` ni `| tail`: el exit code es el de la prueba. Con ellos este
+          # trabajo no podría fallar nunca, que es el defecto que vigila la prueba.
+          php scripts/prueba-cobertura.php

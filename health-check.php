@@ -1,4 +1,6 @@
 <?php
+
+require_once __DIR__ . '/lib/cobertura.php';
 /**
  * Convoca Health Check — batería de validación permanente.
  *
@@ -934,12 +936,18 @@ hc_component('Integraciones', 'convoca-core', 'hc_integrations');
 hc_hooks_contratos();
 
 $elapsed = round(microtime(true) - $start, 1);
-$total = $GLOBALS['hc_pass'] + $GLOBALS['hc_fail'];
-$coverage = $total > 0 ? round(100 * $GLOBALS['hc_pass'] / $total, 1) : 0;
+
+// La cobertura cuenta los WARN y los SKIP (issue #10): antes eran pass/(pass+fail), así que un sitio con
+// 7 SKIP y 1 WARN informaba «Coverage: 100%». Se enseñan los dos números, y primero el que no engaña.
+$hc_cob = hc_calcular_cobertura($GLOBALS['hc_pass'], $GLOBALS['hc_fail'], $GLOBALS['hc_warn'], $GLOBALS['hc_skip']);
 
 echo "\n============================================\n";
 echo "  RESUMEN: {$GLOBALS['hc_pass']} PASS / {$GLOBALS['hc_fail']} FAIL / {$GLOBALS['hc_warn']} WARN / {$GLOBALS['hc_skip']} SKIP\n";
-echo "  Coverage: {$coverage}%  ({$elapsed}s)\n";
+echo "  Cobertura: {$hc_cob['sobre_todo']}% de todo lo que había que comprobar  ({$elapsed}s)\n";
+echo "    · de lo comprobable: {$hc_cob['sobre_comprobables']}% ({$GLOBALS['hc_pass']} de {$hc_cob['comprobables']})\n";
+if (($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) > 0) {
+    echo "    · SIN comprobar: " . ($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) . " ({$GLOBALS['hc_warn']} WARN · {$GLOBALS['hc_skip']} SKIP) — no entran en la cobertura\n";
+}
 echo "============================================\n";
 
 // Exit code: 0 solo si NO hay ningún FAIL. Se sale con 1 por defecto (sin
