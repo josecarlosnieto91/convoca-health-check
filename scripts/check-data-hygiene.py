@@ -33,6 +33,10 @@ CLIENTES = [
 
 # Dominios que sí son del producto o de terceros legítimos (documentación, licencias, servicios).
 DOMINIOS_PERMITIDOS = {
+    # Plataformas cuyas páginas de credenciales enlaza el panel del publicador: son
+    # direcciones públicas de servicio (BotFather de Telegram, portal de X), no datos de nadie.
+    "t.me",
+    "developer.x.com",
     # El producto.
     "getconvoca.app", "www.getconvoca.app", "convoca.local",
     # Documentación, licencias y estándares.
