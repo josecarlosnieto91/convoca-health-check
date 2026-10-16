@@ -2,6 +2,7 @@
   "convoca-assistant": {
     "hooks": [
       "convoca_assistant_log_cleanup",
+      "convoca_assistant_min_seconds_between_rebuilds",
       "convoca_assistant_regenerate",
       "convoca_assistant_regenerate_now"
     ],
@@ -12,6 +13,15 @@
         ],
         "listens": true,
         "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_assistant_min_seconds_between_rebuilds": {
+        "files": [
+          "includes/Indexer.php"
+        ],
+        "listens": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -53,6 +63,9 @@
       "convoca_admin_appearance_url",
       "convoca_common_webhook_sslverify",
       "convoca_continue_access_codes",
+      "convoca_core_aterrizar_en_panel",
+      "convoca_core_avisos_permitidos",
+      "convoca_core_salud_excluir",
       "convoca_document_theme",
       "convoca_email_copy_enabled",
       "convoca_email_copy_payload",
@@ -124,6 +137,33 @@
         ],
         "listens": true,
         "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_core_aterrizar_en_panel": {
+        "files": [
+          "includes/Admin_Entrada.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_core_avisos_permitidos": {
+        "files": [
+          "includes/Admin_Entrada.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_core_salud_excluir": {
+        "files": [
+          "includes/Admin_Entrada.php"
+        ],
+        "listens": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -975,8 +1015,8 @@
       "convoca_gateway_payment_completed": {
         "files": [
           "convoca-gateway.php",
-          "includes/Payment_Handler.php",
-          "includes/Admin_Payments.php"
+          "includes/Admin_Payments.php",
+          "includes/Email_Notifications.php"
         ],
         "listens": true,
         "fires": true,
@@ -985,8 +1025,8 @@
       },
       "convoca_gateway_payment_failed": {
         "files": [
-          "includes/Payment_Handler.php",
-          "includes/Email_Notifications.php"
+          "includes/Email_Notifications.php",
+          "includes/Payment_Handler.php"
         ],
         "listens": true,
         "fires": true,
@@ -1059,8 +1099,8 @@
       },
       "convoca_payment_completed": {
         "files": [
-          "includes/Payment_Handler.php",
-          "includes/Admin_Payments.php"
+          "includes/Admin_Payments.php",
+          "includes/Payment_Handler.php"
         ],
         "listens": false,
         "fires": false,
@@ -1127,6 +1167,10 @@
       "convoca_members_email_renovacion_completada",
       "convoca_members_email_solicitud",
       "convoca_members_email_verify_phone",
+      "convoca_members_email_voluntariado_baja_solicitada",
+      "convoca_members_email_voluntariado_cita",
+      "convoca_members_email_voluntariado_desvinculacion",
+      "convoca_members_email_voluntariado_horas_pendientes",
       "convoca_members_estado_changed",
       "convoca_members_hora_aprobada",
       "convoca_members_hora_rechazada",
@@ -1151,6 +1195,11 @@
       "convoca_miembro_reactivado",
       "convoca_panel_socio_sin_js_email",
       "convoca_phone_verificado",
+      "convoca_voluntariado_acuerdo_aceptado",
+      "convoca_voluntariado_baja_solicitada",
+      "convoca_voluntariado_bloque_panel",
+      "convoca_voluntariado_citado",
+      "convoca_voluntariado_desvinculado",
       "convoca_voluntariado_sin_js_email",
       "convoca_voluntariado_sin_js_telefono",
       "convoca_voluntario_aprobado",
@@ -1416,8 +1465,8 @@
       },
       "convoca_members_email_bienvenida": {
         "files": [
-          "includes/Email_Manager.php",
-          "includes/Estados.php"
+          "includes/Estados.php",
+          "includes/Email_Manager.php"
         ],
         "listens": true,
         "fires": true,
@@ -1465,8 +1514,8 @@
       },
       "convoca_members_email_recordatorio_pago": {
         "files": [
-          "includes/Email_Manager.php",
-          "includes/Estados.php"
+          "includes/Estados.php",
+          "includes/Email_Manager.php"
         ],
         "listens": true,
         "fires": true,
@@ -1502,8 +1551,8 @@
       },
       "convoca_members_email_solicitud": {
         "files": [
-          "includes/Email_Manager.php",
-          "includes/Process_Member.php"
+          "includes/Process_Member.php",
+          "includes/Email_Manager.php"
         ],
         "listens": true,
         "fires": true,
@@ -1513,6 +1562,46 @@
       "convoca_members_email_verify_phone": {
         "files": [
           "includes/Rest_API.php",
+          "includes/Email_Manager.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_voluntariado_baja_solicitada": {
+        "files": [
+          "includes/Email_Manager.php",
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_voluntariado_cita": {
+        "files": [
+          "includes/Email_Manager.php",
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_voluntariado_desvinculacion": {
+        "files": [
+          "includes/Email_Manager.php",
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_members_email_voluntariado_horas_pendientes": {
+        "files": [
+          "includes/Hours_Manager.php",
           "includes/Email_Manager.php"
         ],
         "listens": true,
@@ -1532,8 +1621,8 @@
       "convoca_members_hora_aprobada": {
         "files": [
           "admin/class-admin-horas.php",
-          "includes/Certificate_Generator.php",
-          "includes/Hours_Manager.php"
+          "includes/Hours_Manager.php",
+          "includes/Voluntariado_Manager.php"
         ],
         "listens": true,
         "fires": true,
@@ -1739,6 +1828,51 @@
         "deprecated": true,
         "replaced_by": "convoca_members_phone_verificado"
       },
+      "convoca_voluntariado_acuerdo_aceptado": {
+        "files": [
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntariado_baja_solicitada": {
+        "files": [
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntariado_bloque_panel": {
+        "files": [
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntariado_citado": {
+        "files": [
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_voluntariado_desvinculado": {
+        "files": [
+          "includes/Circuito_Voluntariado.php"
+        ],
+        "listens": true,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_voluntariado_sin_js_email": {
         "files": [
           "templates/form-voluntariado.php"
@@ -1760,8 +1894,8 @@
       "convoca_voluntario_aprobado": {
         "files": [
           "convoca-members.php",
-          "includes/Admin_Voluntariado.php",
-          "includes/PDF_Document.php"
+          "includes/PDF_Document.php",
+          "includes/Admin_Voluntariado.php"
         ],
         "listens": true,
         "fires": true,
@@ -1770,8 +1904,8 @@
       },
       "convoca_voluntario_aprobado_attachments": {
         "files": [
-          "includes/Admin_Voluntariado.php",
-          "includes/PDF_Document.php"
+          "includes/PDF_Document.php",
+          "includes/Admin_Voluntariado.php"
         ],
         "listens": true,
         "fires": true,
@@ -1817,13 +1951,19 @@
       "convoca-members/v1 /me/certificate GET",
       "convoca-members/v1 /me/certificate/download GET",
       "convoca-members/v1 /me/confirm-email GET",
+      "convoca-members/v1 /me/datos GET",
       "convoca-members/v1 /me/horas GET",
       "convoca-members/v1 /me/inscripciones GET",
       "convoca-members/v1 /me/pagos GET",
+      "convoca-members/v1 /me/privacidad GET",
       "convoca-members/v1 /me/profile GET",
       "convoca-members/v1 /me/renovar GET",
+      "convoca-members/v1 /me/renovar-por-horas GET",
+      "convoca-members/v1 /me/supresion GET",
+      "convoca-members/v1 /me/turnos GET",
       "convoca-members/v1 /me/unsubscribe GET",
       "convoca-members/v1 /me/verify-phone GET",
+      "convoca-members/v1 /me/voluntariado GET",
       "convoca-members/v1 /member/notifications GET",
       "convoca-members/v1 /member/notifications/read GET",
       "convoca-members/v1 /member/notifications/read-all GET",
