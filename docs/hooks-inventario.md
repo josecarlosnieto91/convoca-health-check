@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 209 |
+| Hooks | 222 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -48,13 +48,16 @@
 
 ## Hooks por plugin
 
-### convoca-core (48 hooks)
+### convoca-core (51 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_admin_appearance_url` | dispara | includes/admin-appearance.php |
 | `convoca_common_webhook_sslverify` | dispara | includes/Webhook_Manager.php |
 | `convoca_continue_access_codes` | escucha | convoca-core.php |
+| `convoca_core_aterrizar_en_panel` | dispara | includes/Admin_Entrada.php |
+| `convoca_core_avisos_permitidos` | dispara | includes/Admin_Entrada.php |
+| `convoca_core_salud_excluir` | dispara | includes/Admin_Entrada.php |
 | `convoca_document_theme` | dispara | includes/Utils.php |
 | `convoca_email_copy_enabled` | dispara | includes/Email_Copy.php |
 | `convoca_email_copy_payload` | dispara | includes/Email_Copy.php |
@@ -101,7 +104,7 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (70 hooks)
+### convoca-members (79 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -133,19 +136,23 @@
 | `convoca_members_cuota_pagada` | dispara | includes/Payment_Listener.php |
 | `convoca_members_dias_aviso_caducidad` | dispara | includes/CPT_Documento.php |
 | `convoca_members_documento_url` | dispara | includes/Identidad.php |
-| `convoca_members_email_bienvenida` | dispara y escucha | includes/Email_Manager.php, includes/Estados.php |
+| `convoca_members_email_bienvenida` | dispara y escucha | includes/Estados.php, includes/Email_Manager.php |
 | `convoca_members_email_cambiado` | dispara | includes/Rest_API.php, public/class-mi-area.php |
 | `convoca_members_email_confirm` | dispara y escucha | includes/Rest_API.php, includes/Email_Manager.php |
 | `convoca_members_email_credenciales` | escucha | includes/Email_Manager.php |
 | `convoca_members_email_objetivo_voluntariado` | dispara y escucha | includes/Voluntariado_Manager.php, includes/Email_Manager.php |
-| `convoca_members_email_recordatorio_pago` | dispara y escucha | includes/Email_Manager.php, includes/Estados.php |
+| `convoca_members_email_recordatorio_pago` | dispara y escucha | includes/Estados.php, includes/Email_Manager.php |
 | `convoca_members_email_renovacion` | escucha | includes/Email_Manager.php |
 | `convoca_members_email_renovacion_automatica` | escucha | includes/Email_Manager.php |
 | `convoca_members_email_renovacion_completada` | escucha | includes/Email_Manager.php |
-| `convoca_members_email_solicitud` | dispara y escucha | includes/Email_Manager.php, includes/Process_Member.php |
+| `convoca_members_email_solicitud` | dispara y escucha | includes/Process_Member.php, includes/Email_Manager.php |
 | `convoca_members_email_verify_phone` | dispara y escucha | includes/Rest_API.php, includes/Email_Manager.php |
+| `convoca_members_email_voluntariado_baja_solicitada` | dispara y escucha | includes/Email_Manager.php, includes/Circuito_Voluntariado.php |
+| `convoca_members_email_voluntariado_cita` | dispara y escucha | includes/Email_Manager.php, includes/Circuito_Voluntariado.php |
+| `convoca_members_email_voluntariado_desvinculacion` | dispara y escucha | includes/Email_Manager.php, includes/Circuito_Voluntariado.php |
+| `convoca_members_email_voluntariado_horas_pendientes` | dispara y escucha | includes/Hours_Manager.php, includes/Email_Manager.php |
 | `convoca_members_estado_changed` | dispara y escucha | includes/Estados.php |
-| `convoca_members_hora_aprobada` | dispara y escucha | admin/class-admin-horas.php, includes/Certificate_Generator.php, includes/Hours_Manager.php |
+| `convoca_members_hora_aprobada` | dispara y escucha | admin/class-admin-horas.php, includes/Hours_Manager.php, includes/Voluntariado_Manager.php |
 | `convoca_members_hora_rechazada` | dispara | admin/class-admin-horas.php, includes/Hours_Manager.php |
 | `convoca_members_horas_objetivo_defecto` | dispara | includes/Voluntariado_Manager.php |
 | `convoca_members_hours_submitted` | dispara | includes/Rest_API.php |
@@ -168,10 +175,15 @@
 | `convoca_miembro_reactivado` | dispara (retirado) | includes/Process_Member.php |
 | `convoca_panel_socio_sin_js_email` | dispara | public/class-mi-area.php |
 | `convoca_phone_verificado` | dispara (retirado) | public/class-mi-area.php |
+| `convoca_voluntariado_acuerdo_aceptado` | dispara | includes/Circuito_Voluntariado.php |
+| `convoca_voluntariado_baja_solicitada` | dispara y escucha | includes/Circuito_Voluntariado.php |
+| `convoca_voluntariado_bloque_panel` | dispara | includes/Circuito_Voluntariado.php |
+| `convoca_voluntariado_citado` | dispara y escucha | includes/Circuito_Voluntariado.php |
+| `convoca_voluntariado_desvinculado` | dispara y escucha | includes/Circuito_Voluntariado.php |
 | `convoca_voluntariado_sin_js_email` | dispara | templates/form-voluntariado.php |
 | `convoca_voluntariado_sin_js_telefono` | dispara | templates/form-voluntariado.php |
-| `convoca_voluntario_aprobado` | dispara y escucha | convoca-members.php, includes/Admin_Voluntariado.php, includes/PDF_Document.php |
-| `convoca_voluntario_aprobado_attachments` | dispara y escucha | includes/Admin_Voluntariado.php, includes/PDF_Document.php |
+| `convoca_voluntario_aprobado` | dispara y escucha | convoca-members.php, includes/PDF_Document.php, includes/Admin_Voluntariado.php |
+| `convoca_voluntario_aprobado_attachments` | dispara y escucha | includes/PDF_Document.php, includes/Admin_Voluntariado.php |
 | `convoca_voluntario_pendiente` | dispara | public/class-form-voluntariado.php |
 | `convoca_voluntario_revocado` | dispara | includes/Admin_Voluntariado.php |
 | `convoca_weekly_event` | escucha | includes/Cron_Manager.php |
@@ -222,8 +234,8 @@
 |------|------|--------|
 | `convoca_gateway_bank_entity` | dispara | includes/Admin_Settings.php, includes/Payment_Handler.php |
 | `convoca_gateway_expiry_notice` | dispara y escucha | convoca-gateway.php, includes/Link_Expiry.php |
-| `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Payment_Handler.php, includes/Admin_Payments.php |
-| `convoca_gateway_payment_failed` | dispara y escucha | includes/Payment_Handler.php, includes/Email_Notifications.php |
+| `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Admin_Payments.php, includes/Email_Notifications.php |
+| `convoca_gateway_payment_failed` | dispara y escucha | includes/Email_Notifications.php, includes/Payment_Handler.php |
 | `convoca_gateway_payment_refunded` | dispara | includes/Admin_Payments.php |
 | `convoca_gateway_pending_reminder` | dispara y escucha | convoca-gateway.php, includes/Email_Notifications.php |
 | `convoca_gateway_receipt_payer_name` | dispara | includes/Receipt_View.php |
@@ -231,7 +243,7 @@
 | `convoca_gateway_resend_email` | dispara | includes/Admin_Payments.php |
 | `convoca_gateway_site_ips` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_volver_url` | dispara | includes/Payment_Handler.php |
-| `convoca_payment_completed` | dispara (retirado) | includes/Payment_Handler.php, includes/Admin_Payments.php |
+| `convoca_payment_completed` | dispara (retirado) | includes/Admin_Payments.php, includes/Payment_Handler.php |
 | `convoca_payment_failed` | dispara (retirado) | includes/Payment_Handler.php |
 
 ### convoca-shifts (15 hooks)
@@ -268,11 +280,12 @@
 | `convoca_publisher_retry_failed_posts` | escucha | includes/class-scheduler.php |
 | `convoca_publisher_scheduled_publish` | dispara y escucha | includes/class-scheduler.php |
 
-### convoca-assistant (3 hooks)
+### convoca-assistant (4 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_assistant_log_cleanup` | escucha | includes/Statistics.php |
+| `convoca_assistant_min_seconds_between_rebuilds` | dispara | includes/Indexer.php |
 | `convoca_assistant_regenerate` | escucha | includes/Indexer.php |
 | `convoca_assistant_regenerate_now` | escucha | includes/Indexer.php |
 
