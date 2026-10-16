@@ -222,6 +222,22 @@ paths:
           description: Sin permisos
         '404':
           description: No encontrado
+  /convoca-members/v1/me/datos:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/datos"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
   /convoca-members/v1/me/horas:
     get:
       tags: [convoca-members/v1]
@@ -270,6 +286,22 @@ paths:
           description: Sin permisos
         '404':
           description: No encontrado
+  /convoca-members/v1/me/privacidad:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/privacidad"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
   /convoca-members/v1/me/profile:
     get:
       tags: [convoca-members/v1]
@@ -302,6 +334,54 @@ paths:
           description: Sin permisos
         '404':
           description: No encontrado
+  /convoca-members/v1/me/renovar-por-horas:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/renovar-por-horas"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/supresion:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/supresion"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/turnos:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/turnos"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
   /convoca-members/v1/me/unsubscribe:
     get:
       tags: [convoca-members/v1]
@@ -322,6 +402,22 @@ paths:
     get:
       tags: [convoca-members/v1]
       summary: "GET /convoca-members/v1/me/verify-phone"
+      description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: No autenticado
+        '403':
+          description: Sin permisos
+        '404':
+          description: No encontrado
+  /convoca-members/v1/me/voluntariado:
+    get:
+      tags: [convoca-members/v1]
+      summary: "GET /convoca-members/v1/me/voluntariado"
       description: "Endpoint del plugin convoca-members (fuente: includes/Rest_API.php)."
       security:
         - cookieAuth: []
