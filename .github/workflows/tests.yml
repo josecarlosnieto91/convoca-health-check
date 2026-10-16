@@ -56,6 +56,13 @@ jobs:
             composer install --no-interaction --prefer-dist --no-progress --no-scripts
           fi
 
+      - name: Instalar gettext (msgfmt, del contrato de traducciones)
+        # Varios plugins traen ya un contrato de traducciones que COMPILA los .po con `msgfmt`
+        # (`CatalogoDeTraduccionTest`). Su propio CI lo instala; el del validador no lo hacía, así que
+        # aquí salían tres fallos por plugin con «sh: 1: msgfmt: not found» y el rojo parecía de los
+        # plugins estando bien medidos en su repo (16/10/2026: members, core, assistant y theme).
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext
+
       - name: Ejecutar PHPUnit unit (con el arranque que declara el repositorio)
         working-directory: ${{ matrix.plugin }}
         run: |
