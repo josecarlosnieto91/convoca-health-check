@@ -181,20 +181,67 @@ function hc_core() {
     hc_out('Core', 'Module_Registry', class_exists('Convoca\Core\Module_Registry'), '');
     hc_out('Core', 'License_Manager', class_exists('Convoca\Core\License_Manager'), '');
 
-    // Rate limiter funcional (limpiar antes)
+    // Rate limiter funcional. Mide el CONTRATO VIGENTE del núcleo (2.3.37): el tope que se pide es
+    // el de la PERSONA, y el de la CONEXIÓN es max(5*max, max+20) — así abusar desde una IP
+    // compartida no cierra la puerta a toda la sede. La llamada SIN identidad solo toca el contador
+    // de conexión, así que comprobar con ella que «el 4.º se bloquea» da rojo con el limitador
+    // funcionando bien: pasó el 16/10/2026 con core 2.3.39 en la demo, y el aviso hablaba de un
+    // fallo del limitador que no existía.
     if (class_exists('Convoca\Core\Utils')) {
         $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-        $action = 'hc_' . wp_generate_password(6, false);
-        $cache_key = 'convoca_rl_' . $action . '_' . md5($ip);
-        global $wpdb;
-        $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s", $cache_key));
-        wp_cache_delete($cache_key, 'convoca_rate_limits');
-        $r = [];
+        // Claves del núcleo para una acción: contador (y etiqueta) por identidad y por conexión.
+        $claves = static function (string $action, string $quien = '') use ($ip): array {
+            $base = array('convoca_rl_' . $action . '_ip_' . md5($ip));
+            if ('' !== $quien) {
+                $base[] = 'convoca_rl_' . $action . '_id_' . md5(strtolower(trim($quien)));
+            }
+            $todas = array();
+            foreach ($base as $c) {
+                $todas[] = $c;
+                $todas[] = str_replace('convoca_rl_', 'convoca_rl_quien_', $c);
+            }
+            return $todas;
+        };
+        $limpiar = static function (array $claves) {
+            global $wpdb;
+            foreach ($claves as $c) {
+                $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s", $c));
+                wp_cache_delete($c, 'convoca_rate_limits');
+            }
+        };
+
+        // 1) Tope por persona: 3 permitidos y el 4.º bloqueado.
+        $accion  = 'hc_' . wp_generate_password(6, false);
+        $quien   = 'health-' . wp_generate_password(6, false) . '@example.invalid';
+        $limpiar($claves($accion, $quien));
+        $persona = array();
         for ($i = 1; $i <= 4; $i++) {
-            $r[$i] = \Convoca\Core\Utils::check_rate_limit($action, 3, 60);
+            $persona[$i] = \Convoca\Core\Utils::check_rate_limit($accion, 3, 60, $quien);
         }
-        hc_out('Core', 'Rate limiter bloquea abuso', $r[1] && $r[2] && $r[3] && !$r[4], implode(',', array_map(fn($v) => $v ? 'P' : 'B', $r)));
-        $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name = %s", $cache_key));
+
+        // 2) Tope por conexión: max(5*3, 3+20) = 23, o sea que el bloqueo llega en la llamada 24.
+        $tope      = max(3 * 5, 3 + 20);
+        $accion_ip = 'hc_' . wp_generate_password(6, false);
+        $limpiar($claves($accion_ip));
+        $bloqueo = null;
+        for ($i = 1; $i <= $tope + 1; $i++) {
+            if (!\Convoca\Core\Utils::check_rate_limit($accion_ip, 3, 60)) {
+                $bloqueo = $i;
+                break;
+            }
+        }
+
+        // No dejar contadores ni etiquetas: el chequeo pasa cada día por esta instalación.
+        $limpiar($claves($accion_ip));
+        $limpiar($claves($accion, $quien));
+
+        hc_out(
+            'Core',
+            'Rate limiter bloquea abuso',
+            $persona[1] && $persona[2] && $persona[3] && !$persona[4] && $bloqueo === $tope + 1,
+            'persona ' . implode(',', array_map(static fn($v) => $v ? 'P' : 'B', $persona))
+                . ' · conexión bloquea en la ' . ($bloqueo ?? '-') . ' de ' . ($tope + 1)
+        );
 
         // Locks
         $l1 = \Convoca\Core\Utils::acquire_lock('hc_lock', 30);

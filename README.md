@@ -26,7 +26,7 @@ depender de auditorías manuales.
 ============================================
 == Convoca Core ==
   [PASS] Core :: Archivos de admin (admin-appearance.php)
-  [PASS] Core :: Rate limiter bloquea abuso (P,P,P,B)
+  [PASS] Core :: Rate limiter bloquea abuso (persona P,P,P,B · conexión bloquea en la 24 de 24)
   ...
 == Integraciones ==
   [PASS] Integraciones :: 6 namespaces REST
