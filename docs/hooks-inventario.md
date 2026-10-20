@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 236 |
+| Hooks | 240 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -48,7 +48,7 @@
 
 ## Hooks por plugin
 
-### convoca-core (56 hooks)
+### convoca-core (58 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -79,6 +79,8 @@
 | `convoca_log_purge` | escucha | convoca-core.php |
 | `convoca_log_retention_days` | dispara | includes/Logger.php |
 | `convoca_member_created` | escucha | includes/Notifications.php |
+| `convoca_member_plans` | dispara | includes/Admin_Setup_Wizard.php |
+| `convoca_member_states` | dispara | includes/admin-appearance.php |
 | `convoca_members_created` | escucha | includes/Webhook_Manager.php |
 | `convoca_members_estado_changed` | escucha | includes/Webhook_Manager.php |
 | `convoca_members_hora_aprobada` | escucha | includes/Webhook_Manager.php |
@@ -109,7 +111,7 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (80 hooks)
+### convoca-members (82 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -132,6 +134,8 @@
 | `convoca_hours_submitted` | dispara (retirado) | includes/Rest_API.php |
 | `convoca_member_created` | dispara | admin/class-admin-import-csv.php, public/class-form-handler.php |
 | `convoca_member_objetivo_completado` | dispara (retirado) | includes/Voluntariado_Manager.php |
+| `convoca_member_plans` | escucha | convoca-members.php |
+| `convoca_member_states` | escucha | convoca-members.php |
 | `convoca_member_unsubscribe_request` | dispara (retirado) | includes/Rest_API.php |
 | `convoca_members_alta_document_url` | dispara | includes/Identidad.php |
 | `convoca_members_auto_renewal_completed` | dispara | includes/Cron_Manager.php |

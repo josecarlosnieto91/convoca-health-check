@@ -87,6 +87,8 @@
       "convoca_log_purge",
       "convoca_log_retention_days",
       "convoca_member_created",
+      "convoca_member_plans",
+      "convoca_member_states",
       "convoca_members_created",
       "convoca_members_estado_changed",
       "convoca_members_hora_aprobada",
@@ -359,6 +361,24 @@
         ],
         "listens": true,
         "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_plans": {
+        "files": [
+          "includes/Admin_Setup_Wizard.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_states": {
+        "files": [
+          "includes/admin-appearance.php"
+        ],
+        "listens": false,
+        "fires": true,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -1267,6 +1287,8 @@
       "convoca_hours_submitted",
       "convoca_member_created",
       "convoca_member_objetivo_completado",
+      "convoca_member_plans",
+      "convoca_member_states",
       "convoca_member_unsubscribe_request",
       "convoca_members_alta_document_url",
       "convoca_members_auto_renewal_completed",
@@ -1502,6 +1524,24 @@
         "fires": false,
         "deprecated": true,
         "replaced_by": "convoca_members_objetivo_completado"
+      },
+      "convoca_member_plans": {
+        "files": [
+          "convoca-members.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_states": {
+        "files": [
+          "convoca-members.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
       },
       "convoca_member_unsubscribe_request": {
         "files": [
