@@ -167,13 +167,20 @@ jobs:
           python3 health/scripts/check-hooks-listeners.py
 
       - name: Higiene de datos (el cliente no aparece en el producto)
+        env:
+          # Los nombres de cliente NO están en el código del guardián: este repositorio es público y la
+          # lista de lo prohibido era el índice de clientes. Llegan por secret desde la lista local
+          # (~/.convoca/higiene-clientes.txt) con convoca-dev/sembrar-secretos-higiene.sh.
+          # Secret y no variable: en un repo público `vars` se entrega a los PR abiertos desde un fork.
+          # Sin el secret (PR de fork) el guardián avisa y sigue vigilando dominios y correos.
+          CONVOCA_HYGIENE_CLIENTES: ${{ secrets.CONVOCA_HYGIENE_CLIENTES }}
         run: |
           # Sin `|| true`: si el producto lleva dentro datos de un cliente, el job tiene que caer.
           # Las excepciones justificadas van marcadas en la línea con `convoca-hygiene-ignore: motivo`.
           python3 health/scripts/check-data-hygiene.py \
             workspace/convoca-core workspace/convoca-members workspace/convoca-enroll \
             workspace/convoca-gateway workspace/convoca-shifts workspace/convoca-publisher \
-            workspace/convoca-assistant workspace/convoca-theme
+            workspace/convoca-assistant workspace/convoca-theme health
 
       - name: Recursos vivos (ningún fichero viaja sin que nadie lo cargue)
         run: |
