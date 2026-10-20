@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 228 |
+| Hooks | 231 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -233,7 +233,7 @@
 | `convoca_social_publish` | escucha | convoca-enroll.php |
 | `convoca_social_token_healthcheck` | escucha | social/class-social-healthcheck.php |
 
-### convoca-gateway (14 hooks)
+### convoca-gateway (17 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -249,8 +249,11 @@
 | `convoca_gateway_site_ips` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_valid_origins` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_volver_url` | dispara | includes/Payment_Handler.php |
+| `convoca_payment_backend` | escucha | includes/Payments_Backend.php |
 | `convoca_payment_completed` | dispara (retirado) | includes/Admin_Payments.php, includes/Payment_Handler.php |
 | `convoca_payment_failed` | dispara (retirado) | includes/Payment_Handler.php |
+| `convoca_payment_reader` | escucha | includes/Payments_Backend.php |
+| `convoca_payment_receipt` | escucha | includes/Payments_Backend.php |
 
 ### convoca-shifts (15 hooks)
 

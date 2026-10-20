@@ -1039,8 +1039,11 @@
       "convoca_gateway_site_ips",
       "convoca_gateway_valid_origins",
       "convoca_gateway_volver_url",
+      "convoca_payment_backend",
       "convoca_payment_completed",
-      "convoca_payment_failed"
+      "convoca_payment_failed",
+      "convoca_payment_reader",
+      "convoca_payment_receipt"
     ],
     "hooks_detail": {
       "convoca_gateway_bank_entity": {
@@ -1157,6 +1160,15 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_payment_backend": {
+        "files": [
+          "includes/Payments_Backend.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_payment_completed": {
         "files": [
           "includes/Admin_Payments.php",
@@ -1175,6 +1187,24 @@
         "fires": false,
         "deprecated": true,
         "replaced_by": "convoca_gateway_payment_failed"
+      },
+      "convoca_payment_reader": {
+        "files": [
+          "includes/Payments_Backend.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_payment_receipt": {
+        "files": [
+          "includes/Payments_Backend.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
       }
     },
     "rest": [
