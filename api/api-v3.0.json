@@ -108,6 +108,7 @@
       "convoca_security_thresholds",
       "convoca_site_stats",
       "convoca_social_links",
+      "convoca_system_checks",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_pendiente",
       "convoca_webhook_retry",
@@ -551,6 +552,15 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_system_checks": {
+        "files": [
+          "includes/System_Checks.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_voluntario_aprobado": {
         "files": [
           "includes/Notifications.php"
@@ -664,7 +674,8 @@
       "convoca_inscripcion_sin_js_telefono",
       "convoca_panel_sin_js_email",
       "convoca_social_publish",
-      "convoca_social_token_healthcheck"
+      "convoca_social_token_healthcheck",
+      "convoca_system_checks"
     ],
     "hooks_detail": {
       "convoca_after_horas_voluntario_actualizadas": {
@@ -1000,6 +1011,15 @@
         "fires": false,
         "deprecated": false,
         "replaced_by": ""
+      },
+      "convoca_system_checks": {
+        "files": [
+          "convoca-enroll.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
       }
     },
     "rest": [
@@ -1043,7 +1063,8 @@
       "convoca_payment_completed",
       "convoca_payment_failed",
       "convoca_payment_reader",
-      "convoca_payment_receipt"
+      "convoca_payment_receipt",
+      "convoca_system_checks"
     ],
     "hooks_detail": {
       "convoca_gateway_bank_entity": {
@@ -1205,6 +1226,15 @@
         "fires": false,
         "deprecated": false,
         "replaced_by": ""
+      },
+      "convoca_system_checks": {
+        "files": [
+          "convoca-gateway.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
       }
     },
     "rest": [
@@ -1285,6 +1315,7 @@
       "convoca_miembro_reactivado",
       "convoca_panel_socio_sin_js_email",
       "convoca_phone_verificado",
+      "convoca_system_checks",
       "convoca_voluntariado_acuerdo_aceptado",
       "convoca_voluntariado_baja_solicitada",
       "convoca_voluntariado_bloque_panel",
@@ -1918,6 +1949,15 @@
         "deprecated": true,
         "replaced_by": "convoca_members_phone_verificado"
       },
+      "convoca_system_checks": {
+        "files": [
+          "convoca-members.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_voluntariado_acuerdo_aceptado": {
         "files": [
           "includes/Circuito_Voluntariado.php"
@@ -2188,6 +2228,7 @@
       "convoca_shifts_no_show_email_admin_subject",
       "convoca_shifts_no_show_email_socio",
       "convoca_shifts_no_show_email_socio_subject",
+      "convoca_system_checks",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_revocado"
     ],
@@ -2306,6 +2347,15 @@
         ],
         "listens": false,
         "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_system_checks": {
+        "files": [
+          "convoca-shifts.php"
+        ],
+        "listens": true,
+        "fires": false,
         "deprecated": false,
         "replaced_by": ""
       },
