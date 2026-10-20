@@ -26,10 +26,58 @@ import re
 import sys
 
 # Nombres de clientes o instalaciones reales que NUNCA deben aparecer en el producto.
-CLIENTES = [
-    "biodevas", "lugg", "damaris", "damarisholistica", "asturnas", "treelogic",
-    "ucam", "gestistock", "stockey", "juliette", "triajeset", "orion", "cassiopeia",
-]
+#
+# NO viven aquí. Este repositorio es público y la lista de lo prohibido se había convertido en
+# el índice de clientes: el guardián era él mismo una fuga (y en las instalaciones de cliente
+# el fichero que audita a uno llevaba dentro los nombres de los otros).
+#
+# De dónde se leen, por orden:
+#   1. la variable de entorno CONVOCA_HYGIENE_CLIENTES (separados por comas o saltos de línea);
+#   2. el fichero que apunte CONVOCA_HYGIENE_CLIENTES_FILE;
+#   3. ../convoca-dev/higiene-clientes.txt (repo privado, cuando el árbol está al lado);
+#   4. ~/.convoca/higiene-clientes.txt.
+#
+# Si no hay lista, se AVISA en la salida: no se calla. Sin lista se siguen vigilando los patrones
+# genéricos (dominios ajenos y correos), pero no los nombres.
+RUTAS_CLIENTES = (
+    os.path.join("..", "convoca-dev", "higiene-clientes.txt"),
+    os.path.join(os.path.expanduser("~"), ".convoca", "higiene-clientes.txt"),
+)
+
+# Nota para quien escriba la lista: no metas palabras que sean del producto ni de su mitología
+# (el nivel de gamificación «Deva» es el río asturiano, no la clave de un plan). Con la búsqueda
+# por subcadena, una palabra corta y común llena el informe de ruido.
+
+
+def _lista_desde_texto(texto: str) -> list[str]:
+    piezas = []
+    for trozo in texto.replace(",", "\n").splitlines():
+        pieza = trozo.strip().lower()
+        # Ni comentarios ni vacíos.
+        if pieza and not pieza.startswith("#"):
+            piezas.append(pieza)
+    return piezas
+
+
+def clientes_prohibidos(raiz: str = ".") -> tuple[list[str], str]:
+    """Devuelve (lista, origen). Lista vacía si no hay ninguna configurada."""
+    desde_env = os.environ.get("CONVOCA_HYGIENE_CLIENTES", "")
+    if desde_env.strip():
+        return _lista_desde_texto(desde_env), "variable CONVOCA_HYGIENE_CLIENTES"
+
+    ruta_env = os.environ.get("CONVOCA_HYGIENE_CLIENTES_FILE", "")
+    if ruta_env.strip() and os.path.isfile(ruta_env):
+        with open(ruta_env, encoding="utf-8", errors="replace") as fh:
+            return _lista_desde_texto(fh.read()), ruta_env
+
+    for relativa in RUTAS_CLIENTES:
+        # Las rutas relativas se resuelven contra la raíz que se está revisando y contra el cwd.
+        for candidata in (os.path.join(raiz, relativa), relativa):
+            if os.path.isfile(candidata):
+                with open(candidata, encoding="utf-8", errors="replace") as fh:
+                    return _lista_desde_texto(fh.read()), os.path.abspath(candidata)
+
+    return [], ""
 
 # Dominios que sí son del producto o de terceros legítimos (documentación, licencias, servicios).
 DOMINIOS_PERMITIDOS = {
@@ -96,6 +144,45 @@ RX_EJEMPLO = re.compile(
     r"correo\.com|email\.com|tu@|tucorreo|maria@|juan@|nombre@|cliente@|"
     r"@(test|example|invalid)\.(com|org|net)\b)", re.I)
 RX_CORREO = re.compile(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}", re.I)
+
+def dominio_permitido(dom: str) -> bool:
+    """¿Este dominio es de fiar (producto, estándar o servicio que el producto usa)?"""
+    d = dom.lower()
+    if d in DOMINIOS_PERMITIDOS:
+        return True
+    # Subdominios del propio producto: docs. / demo. / mg. / api.
+    if d.endswith(".getconvoca.app"):
+        return True
+    # Endpoints S3-compatibles: el vídeo del módulo de cursos se sirve desde un bucket
+    # (R2, B2, Wasabi, MinIO o AWS). La URL real la pone el cliente en Ajustes; en las
+    # pruebas se usa el endpoint de AWS, que es genérico, no de nadie.
+    if d in {"s3.amazonaws.com", "docs.aws.amazon.com"} or d.endswith(".s3.amazonaws.com"):
+        return True
+    return False
+
+
+def correo_permitido(correo: str) -> bool:
+    """¿Este correo es del producto?"""
+    c = correo.lower()
+    if c in CORREOS_PERMITIDOS:
+        return True
+    # El buzón de envío (Mailgun) y sus variantes.
+    return c.endswith("@mg.getconvoca.app") or c in {"hola@mg.getconvoca.app"}
+
+
+# API publicada que contiene el nombre de una instalación y NO se puede renombrar sin romper
+# a quien ya la usa (filtro `convoca_theme_<nombre>_url` y su alias `{<nombre>_url}`, marcados
+# como deprecated en el tema). Excepción aceptada y documentada; el inventario de la API tiene
+# que nombrarlas o documentaría una API que no existe.
+EXCEPCIONES_PRODUCTO = (
+    "convoca_theme_lugg_url",
+    "{lugg_url}",
+)
+
+
+# Frontera de un nombre de cliente: lo de al lado no puede ser una letra ni un dígito.
+# `_`, `-`, `{`, `/`, `.` sí valen como separadores (identificadores, ganchos, URLs).
+RX_CLIENTE = lambda palabra: re.compile(r"(?<![a-z0-9])" + re.escape(palabra) + r"(?![a-z0-9])", re.I)
 IGNORE = "convoca-hygiene-ignore"
 
 
@@ -118,7 +205,16 @@ def main() -> int:
     ap.add_argument("raiz", nargs="*", default=["."])
     ap.add_argument("--also", default="", help="palabras extra separadas por comas")
     args = ap.parse_args()
-    clientes = CLIENTES + [p.strip().lower() for p in args.also.split(",") if p.strip()]
+
+    configurados, origen = clientes_prohibidos(args.raiz[0] if args.raiz else ".")
+    clientes = configurados + [p.strip().lower() for p in args.also.split(",") if p.strip()]
+    if configurados:
+        print(f"   lista de clientes: {len(configurados)} nombres ({origen})")
+    else:
+        print("   AVISO: no hay lista de nombres de clientes configurada.")
+        print("          Se vigilan dominios y correos, pero NO nombres.")
+        print("          Ponla en CONVOCA_HYGIENE_CLIENTES, en CONVOCA_HYGIENE_CLIENTES_FILE")
+        print("          o en ../convoca-dev/higiene-clientes.txt.")
 
     hallazgos = []
     revisados = 0
@@ -134,17 +230,25 @@ def main() -> int:
                 if IGNORE in linea:
                     continue
                 baja = linea.lower()
+                for excepcion in EXCEPCIONES_PRODUCTO:
+                    baja = baja.replace(excepcion, "")
+                # Frontera «no alfanumérica», no `\b`: con `\b` no se cazaba lo que de verdad
+                # viaja en el código (`_biodevas_event_price`, `convoca_theme_lugg_url`,
+                # `{lugg_url}`) porque `_` es carácter de palabra y no hay frontera; medido, el
+                # guardián daba por limpio un fichero con los seis ganchos del nombre viejo.
+                # Pero la subcadena pura tampoco vale: dentro de un hash o un base64 aparece
+                # «ucam» por azar (le pasó a un fixture del asistente). `_` y `-` separan.
                 for palabra in clientes:
-                    if re.search(r"\b" + re.escape(palabra) + r"\b", baja):
+                    if RX_CLIENTE(palabra).search(baja):
                         hallazgos.append((ruta, i, "cliente", palabra, linea.strip()[:150]))
                         break
                 if RX_EJEMPLO.search(linea):
                     continue
                 for dom in RX_DOMINIO.findall(linea):
-                    if dom.lower() not in DOMINIOS_PERMITIDOS:
+                    if not dominio_permitido(dom):
                         hallazgos.append((ruta, i, "dominio", dom, linea.strip()[:150]))
                 for correo in RX_CORREO.findall(linea):
-                    if correo.lower() not in CORREOS_PERMITIDOS:
+                    if not correo_permitido(correo):
                         hallazgos.append((ruta, i, "correo", correo, linea.strip()[:150]))
 
     print(f"   ficheros revisados: {revisados}")

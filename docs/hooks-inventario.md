@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 222 |
+| Hooks | 228 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -48,7 +48,7 @@
 
 ## Hooks por plugin
 
-### convoca-core (51 hooks)
+### convoca-core (55 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -89,6 +89,10 @@
 | `convoca_members_unsubscribe_request` | escucha | includes/Notifications.php |
 | `convoca_module_registered` | dispara | includes/class-module-registry.php |
 | `convoca_need_common_assets` | dispara | includes/admin-global-menu.php |
+| `convoca_payment_backend` | dispara | includes/Payments.php |
+| `convoca_payment_created` | dispara | includes/Payments.php |
+| `convoca_payment_reader` | dispara | includes/Payments.php |
+| `convoca_payment_receipt` | dispara | includes/Payments.php |
 | `convoca_pdf_allowed_html` | dispara | includes/Signature.php |
 | `convoca_pdf_html_safe_keys` | dispara | includes/Signature.php |
 | `convoca_register_module` | dispara | includes/class-module-registry.php |
@@ -188,7 +192,7 @@
 | `convoca_voluntario_revocado` | dispara | includes/Admin_Voluntariado.php |
 | `convoca_weekly_event` | escucha | includes/Cron_Manager.php |
 
-### convoca-enroll (35 hooks)
+### convoca-enroll (36 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -203,6 +207,7 @@
 | `convoca_enroll_feedback` | escucha | includes/Email_Automation.php |
 | `convoca_enroll_form_en_ficha` | dispara | includes/CPT_Actividad.php |
 | `convoca_enroll_form_repetido` | dispara | includes/CPT_Actividad.php |
+| `convoca_enroll_ganchos_heredados` | dispara y escucha | includes/Migrator.php |
 | `convoca_enroll_google_photos_share` | escucha | includes/Email_Automation.php |
 | `convoca_enroll_inscripcion_cancelada` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
 | `convoca_enroll_inscripcion_confirmada` | dispara y escucha | includes/Webhook_Dispatcher.php, includes/Google_Sheets.php, includes/Email_Automation.php |
@@ -228,7 +233,7 @@
 | `convoca_social_publish` | escucha | convoca-enroll.php |
 | `convoca_social_token_healthcheck` | escucha | social/class-social-healthcheck.php |
 
-### convoca-gateway (13 hooks)
+### convoca-gateway (14 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -242,6 +247,7 @@
 | `convoca_gateway_redsys_allowed_ips` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_resend_email` | dispara | includes/Admin_Payments.php |
 | `convoca_gateway_site_ips` | dispara | includes/Payment_Handler.php |
+| `convoca_gateway_valid_origins` | dispara | includes/Payment_Handler.php |
 | `convoca_gateway_volver_url` | dispara | includes/Payment_Handler.php |
 | `convoca_payment_completed` | dispara (retirado) | includes/Admin_Payments.php, includes/Payment_Handler.php |
 | `convoca_payment_failed` | dispara (retirado) | includes/Payment_Handler.php |

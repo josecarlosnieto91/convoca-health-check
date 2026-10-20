@@ -97,6 +97,10 @@
       "convoca_members_unsubscribe_request",
       "convoca_module_registered",
       "convoca_need_common_assets",
+      "convoca_payment_backend",
+      "convoca_payment_created",
+      "convoca_payment_reader",
+      "convoca_payment_receipt",
       "convoca_pdf_allowed_html",
       "convoca_pdf_html_safe_keys",
       "convoca_register_module",
@@ -448,6 +452,42 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_payment_backend": {
+        "files": [
+          "includes/Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_payment_created": {
+        "files": [
+          "includes/Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_payment_reader": {
+        "files": [
+          "includes/Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_payment_receipt": {
+        "files": [
+          "includes/Payments.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_pdf_allowed_html": {
         "files": [
           "includes/Signature.php"
@@ -600,6 +640,7 @@
       "convoca_enroll_feedback",
       "convoca_enroll_form_en_ficha",
       "convoca_enroll_form_repetido",
+      "convoca_enroll_ganchos_heredados",
       "convoca_enroll_google_photos_share",
       "convoca_enroll_inscripcion_cancelada",
       "convoca_enroll_inscripcion_confirmada",
@@ -723,6 +764,15 @@
           "includes/CPT_Actividad.php"
         ],
         "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_enroll_ganchos_heredados": {
+        "files": [
+          "includes/Migrator.php"
+        ],
+        "listens": true,
         "fires": true,
         "deprecated": false,
         "replaced_by": ""
@@ -987,6 +1037,7 @@
       "convoca_gateway_redsys_allowed_ips",
       "convoca_gateway_resend_email",
       "convoca_gateway_site_ips",
+      "convoca_gateway_valid_origins",
       "convoca_gateway_volver_url",
       "convoca_payment_completed",
       "convoca_payment_failed"
@@ -1080,6 +1131,15 @@
         "replaced_by": ""
       },
       "convoca_gateway_site_ips": {
+        "files": [
+          "includes/Payment_Handler.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_gateway_valid_origins": {
         "files": [
           "includes/Payment_Handler.php"
         ],

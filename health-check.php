@@ -403,7 +403,7 @@ function hc_gateway() {
 
     hc_cfg('Gateway', 'Merchant code', !empty($settings['merchant_code']), $settings['merchant_code'] ?? '');
     // Entorno coherente con el SITIO, no con una preferencia fija: en la demo se
-    // espera `test`, y en un sitio real (Lugg, biodevas) `production`. Antes se
+    // espera `test`, y en un sitio real `production`. Antes se
     // exigía `test` en todas partes y un sitio real en producción daba FAIL.
     $env = $settings['environment'] ?? '?';
     $es_demo = stripos((string) home_url(), 'demo.') !== false;
@@ -626,7 +626,7 @@ function hc_assistant() {
 }
 
 // El tema solo se mide si el sitio usa el tema Convoca. Un sitio que a propósito
-// usa otro tema (Lugg usa `sculpt`) no puede dar FAIL por no ser el nuestro:
+// usa otro tema (una instalacion real usa `sculpt`) no puede dar FAIL por no ser el nuestro:
 // lo que hay que demostrar ahí es la independencia del tema (N3.21), no la marca.
 function hc_theme_component() {
     $theme = wp_get_theme();
@@ -791,32 +791,72 @@ function hc_migrations() {
     }
 }
 
+/**
+ * Nombres de clientes e instalaciones reales que no deben aparecer en el producto.
+ *
+ * Fuera del repositorio a proposito: este fichero se ejecuta EN instalaciones de cliente y el
+ * repositorio es publico. Fuentes, por orden:
+ *   1. CONVOCA_HYGIENE_CLIENTES (separados por comas o saltos de linea);
+ *   2. CONVOCA_HYGIENE_CLIENTES_FILE;
+ *   3. higiene-clientes.txt en la raiz del plugin o en el wp-content del sitio.
+ * Sin lista no se vigilan nombres (y el check lo dice en su detalle, no se calla).
+ *
+ * @return array<int, string>
+ */
+function hc_clientes_prohibidos() {
+    $textos = array();
+
+    $env = getenv('CONVOCA_HYGIENE_CLIENTES');
+    if (is_string($env) && '' !== trim($env)) {
+        $textos[] = $env;
+    }
+
+    $rutas = array();
+    $env_fich = getenv('CONVOCA_HYGIENE_CLIENTES_FILE');
+    if (is_string($env_fich) && '' !== trim($env_fich)) {
+        $rutas[] = $env_fich;
+    }
+    if (defined('WP_CONTENT_DIR')) {
+        $rutas[] = WP_CONTENT_DIR . '/higiene-clientes.txt';
+    }
+    $rutas[] = dirname(__FILE__) . '/higiene-clientes.txt';
+
+    foreach ($rutas as $ruta) {
+        if (is_file($ruta) && is_readable($ruta)) {
+            $leido = @file_get_contents($ruta);
+            if (is_string($leido) && '' !== trim($leido)) {
+                $textos[] = $leido;
+                break;
+            }
+        }
+    }
+
+    $lista = array();
+    foreach ($textos as $texto) {
+        foreach (preg_split('/[\r\n,]+/', $texto) as $pieza) {
+            $pieza = strtolower(trim($pieza));
+            if ('' !== $pieza && '#' !== $pieza[0]) {
+                $lista[] = $pieza;
+            }
+        }
+    }
+
+    return array_values(array_unique($lista));
+}
+
 function hc_clean_code() {
     hc_section('Higiene de código');
 
-    // Cadenas prohibidas: referencias a proyectos reales o datos de producción
-    // que no deben colarse en el código fuente. El check escanea los archivos
+    // Cadenas prohibidas: referencias a proyectos reales o datos de produccion
+    // que no deben colarse en el codigo fuente. El check escanea los archivos
     // de los plugins (no la BD — el contenido de demo se audita aparte).
-    $prohibited = array(
-        'Los Lugg',
-        'Lugones',
-        'Biodevas',
-        'Taller de Yoga',
-        'Sierra del Sueve',
-        'Finca Biodevas',
-        'biodevas.org',
-        'lugg.biodevas.org',
-        'coordinacion@biodevas.org',
-        'Centro Social Turnos',
-        // 'Turnos Centro Social' se retiro: es castellano generico (una etiqueta de
-        // tabla lo usa) y marcaba un falso positivo en cada pasada.
-        // El nombre del cliente a secas: se colaba porque la lista solo tenia el
-        // nombre compuesto, la localidad y los dominios.
-        'Lugg',
-        'lugg',
-        'Biodevas',
-        'biodevas',
-    );
+    //
+    // La lista NO vive en este fichero: health-check corre EN instalaciones de cliente,
+    // y llevar dentro los nombres de los otros clientes convierte al auditor en una fuga
+    // (y este repositorio es publico). Se lee de las mismas fuentes que el guardian de
+    // CI: variable CONVOCA_HYGIENE_CLIENTES, fichero apuntado por
+    // CONVOCA_HYGIENE_CLIENTES_FILE, o higiene-clientes.txt del sitio.
+    $prohibited = function_exists('hc_clientes_prohibidos') ? hc_clientes_prohibidos() : array();
 
     $dirs = array('convoca-core', 'convoca-members', 'convoca-enroll', 'convoca-gateway',
                   'convoca-shifts', 'convoca-publisher', 'convoca-assistant', 'convoca-theme');
@@ -867,10 +907,13 @@ function hc_clean_code() {
                 }
             }
             foreach ($prohibited as $term) {
-                // Insensible a mayusculas: 'LUGG' o 'biodevas' en minusculas tambien son la fuga.
-                // Con limites de palabra: sin ellos, 'Lugg' coincide dentro de 'pluggable'
-                // y marca un falso positivo.
-                if (preg_match('/\b' . preg_quote($term, '/') . '\b/i', $escaneable)) {
+                // Insensible a mayusculas. Frontera «no alfanumerica», no `\b`: con `\b` no se
+                // caza lo que de verdad viaja en el codigo (`_nombre_event_price`,
+                // `convoca_theme_nombre_url`) porque `_` es caracter de palabra y no hay
+                // frontera; y sin frontera ninguna, un nombre corto aparece por azar dentro de
+                // un hash. Con letras y digitos a los lados no hay hallazgo; `_`, `-`, `{`, `/`
+                // y `.` si separan.
+                if (preg_match('/(?<![A-Za-z0-9])' . preg_quote($term, '/') . '(?![A-Za-z0-9])/i', $escaneable)) {
                     $found[] = str_replace(WP_PLUGIN_DIR . '/', '', $path) . " contiene '{$term}'";
                 }
             }
