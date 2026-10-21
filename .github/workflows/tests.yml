@@ -138,6 +138,11 @@ jobs:
       - name: El contrato de colisiones se prueba solo (positivo y negativos)
         run: python3 health/scripts/check-colisiones_test.py
 
+      # Contrato del guardián de acoplamiento: el negativo de sus cuatro reglas y los casos legítimos que
+      # no debe señalar (core obligatorio, guardas tempranas, declaraciones 'class' => de Ajustes).
+      - name: Contrato del guardián de acoplamiento
+        run: python3 health/scripts/check-acoplamiento_test.py
+
       - name: Dos plugins no pueden declarar la misma función global ni la misma clase
         env:
           WS: ${{ github.workspace }}/workspace
