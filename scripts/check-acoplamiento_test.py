@@ -31,8 +31,10 @@ def analizar(ficheros: dict, plugin: str, argumentos: tuple = ("--reglas", "R1,R
             destino = raiz / nombre
             destino.parent.mkdir(parents=True, exist_ok=True)
             destino.write_text(textwrap.dedent(codigo), encoding="utf-8")
+        # `check=False` a propósito: el código de salida (0 limpio / 2 con hallazgos) es lo que se afirma.
         r = subprocess.run(
             [sys.executable, str(GUARDIAN), str(raiz), *argumentos],
+            check=False,
             capture_output=True,
             text=True,
             timeout=120,

@@ -126,8 +126,36 @@ def ficheros_php(raiz: str):
 
 def comentario(linea: str) -> bool:
     """¿La línea es un comentario (de línea o de bloque)?"""
-    t = linea.lstrip()
-    return t.startswith("*") or t.startswith("//") or t.startswith("/*") or t.startswith("#")
+    return linea.lstrip().startswith(("*", "//", "/*", "#"))
+
+
+def ignorada(lineas: list, i: int, linea: str) -> bool:
+    """¿Esta línea no se analiza? Vacía, comentario, declaración o escapada con motivo.
+
+    El escape vale en su propia línea o hasta tres antes (un motivo de dos líneas es lo normal), y nunca
+    alarga el código, que es lo que rompe el límite de longitud de PHPCS.
+    """
+    return (
+        not linea.strip()
+        or comentario(linea)
+        or saltada(linea)
+        or any(saltada(lineas[i - k]) for k in (2, 3, 4) if i - k >= 0)
+        or RX_DECLARACION.search(linea) is not None
+    )
+
+
+def esta_protegida(lineas: list, i: int, guarda_temprana: bool) -> bool:
+    """¿La llamada de esta línea tiene la comprobación de que el otro plugin existe?
+
+    Tres formas válidas, de la más estricta a la más laxa: una guarda temprana en el fichero
+    (`if ( ! Features::… ) { … continue; }`), un `class_exists` pegado, o una comprobación de módulo en el
+    bloque. Medido: en `members/Cron_Manager` la de Gateway queda 11 líneas arriba del token.
+    """
+    if guarda_temprana:
+        return True
+    if any(RX_PROTEGIDA_CERCA.search(v) for v in lineas[max(0, i - VENTANA_CERCA):i]):
+        return True
+    return any(RX_PROTEGIDA_BLOQUE.search(v) for v in lineas[max(0, i - VENTANA_BLOQUE):i])
 
 
 def saltada(linea: str) -> bool:
@@ -188,24 +216,10 @@ def main() -> int:
                 break
 
         for i, linea in enumerate(lineas, 1):
-            # El escape vale en la propia línea o en la inmediatamente anterior: en su propia línea no
-            # alarga el código, que es lo que rompe el límite de longitud de PHPCS.
-            if (
-                not linea.strip()
-                or comentario(linea)
-                or saltada(linea)
-                or any(saltada(lineas[i - k]) for k in (2, 3, 4) if i - k >= 0)
-                or RX_DECLARACION.search(linea)
-            ):
+            if ignorada(lineas, i, linea):
                 continue
 
-            cerca = lineas[max(0, i - VENTANA_CERCA):i]
-            bloque = lineas[max(0, i - VENTANA_BLOQUE):i]
-            protegida = (
-                guarda_temprana
-                or any(RX_PROTEGIDA_CERCA.search(v) for v in cerca)
-                or any(RX_PROTEGIDA_BLOQUE.search(v) for v in bloque)
-            )
+            protegida = "R2" in evaluar and esta_protegida(lineas, i, guarda_temprana)
 
             # R1 — crear o borrar roles fuera de Core.
             if "R1" in evaluar and propio not in ("convoca-core", "desconocido") and RX_ADD_ROLE.search(linea):
