@@ -409,6 +409,25 @@ function hc_gateway() {
     $es_demo = stripos((string) home_url(), 'demo.') !== false;
     $esperado = $es_demo ? 'test' : 'production';
     hc_cfg('Gateway', "Entorno coherente con el sitio (esperado: $esperado)", $env === $esperado, $env);
+    // Aviso de privacidad del formulario de pago (deber de información, art. 13 RGPD). Si nadie lo ha
+    // configurado, el formulario muestra un texto genérico con el nombre del sitio: cumple el expediente,
+    // pero el responsable del tratamiento es de cada entidad, así que se avisa. NO es un FAIL: un sitio
+    // que informa con el texto por defecto no está roto, está pendiente de revisión.
+    $priv_texto = trim((string) ($settings['privacidad_texto'] ?? ''));
+    $priv_url   = trim((string) ($settings['privacidad_url'] ?? ''));
+    if ('' === $priv_url) {
+        $priv_url = (string) get_privacy_policy_url();
+    }
+    if ('' === $priv_texto || '' === $priv_url) {
+        hc_warn(
+            'Gateway',
+            'Aviso de privacidad configurado',
+            '' === $priv_texto ? 'sin texto propio: se usa el de por defecto' : 'texto puesto pero sin enlace a la política'
+        );
+    } else {
+        hc_out('Gateway', 'Aviso de privacidad configurado', true, 'texto propio + enlace');
+    }
+
     $key = $settings['secret_key'] ?? '';
     // La clave tiene que PODER DESCIFRARSE, no solo empezar por «enc:». Antes este check miraba el
     // prefijo, así que daba PASS en la demo sobre una clave con longitud efectiva 0 —imposible de
