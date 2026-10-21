@@ -130,3 +130,21 @@ dentro del `if [ ! -f "$GUARDIAN" ]` que comprueba el guardián de higiene, así
 uno no silencia a los demás, no hay dos copias del mismo bloque, y está probado haciendo que **cada uno
 hable** cuando debe (un sandbox con una colisión, un `.pot` desfasado, un `Stable tag` descuadrado y un dato
 de cliente: los cuatro mensajes aparecen).
+
+## Qué se verifica en su lugar (sin suite de cobertura)
+
+Batería de validación del ecosistema: no es un plugin con dominio propio, así que no lleva PHPUnit con
+cobertura. Lo que se verifica es la batería misma:
+
+```bash
+./bin/convoca-health   # la batería contra un WordPress real (exit 0 = todo PASS)
+npm test               # e2e con Playwright (e2e/)
+```
+
+## Versión
+
+La versión vive en `package.json` (`version`), no en una cabecera de plugin: `bin/verificar-version.sh`
+informa «sin cabecera de versión» y sale 0. El tag `vX.Y.Z` sella esa versión, pero **ojo**: un tag
+`v*` dispara `.github/workflows/release.yml`, que construye y publica (incluido el deploy SVN a
+WordPress.org si están los secretos). Etiquetar este repositorio es una acción de release, no un
+trámite.
