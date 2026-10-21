@@ -7,9 +7,6 @@ on:
         description: 'Versión de release (ej: 3.0.0)'
         required: true
         type: string
-  push:
-    tags:
-      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -197,7 +194,8 @@ jobs:
             # Solo plugins (el theme se despliega a themes.svn.wordpress.org aparte)
             case "$slug" in convoca-theme) continue;; esac
             echo "=== Deploy: $slug ==="
-            bash scripts/svn-deploy.sh "$slug" "$f" || echo "::warning::Fallo SVN deploy de $slug"
+            # Sin `|| echo "::warning::"`: un deploy fallido tiene que tumbar el trabajo.
+            bash scripts/svn-deploy.sh "$slug" "$f"
           done
 
   publish:
