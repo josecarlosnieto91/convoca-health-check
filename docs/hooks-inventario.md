@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 240 |
+| Hooks | 244 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -48,11 +48,12 @@
 
 ## Hooks por plugin
 
-### convoca-core (58 hooks)
+### convoca-core (59 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_admin_appearance_url` | dispara | includes/admin-appearance.php |
+| `convoca_can_credit_hours` | dispara | includes/Hour_Ledger.php |
 | `convoca_common_webhook_sslverify` | dispara | includes/Webhook_Manager.php |
 | `convoca_continue_access_codes` | escucha | convoca-core.php |
 | `convoca_core_aterrizar_en_panel` | dispara | includes/Admin_Entrada.php |
@@ -111,12 +112,13 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (82 hooks)
+### convoca-members (84 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
 | `convoca_alta_sin_js_email` | dispara | templates/form-alta.php |
 | `convoca_alta_sin_js_telefono` | dispara | templates/form-alta.php |
+| `convoca_can_credit_hours` | escucha | includes/Integracion_Contratos.php |
 | `convoca_daily_event` | escucha | includes/Cron_Manager.php |
 | `convoca_documento_horas` | dispara | includes/Texto_PDF.php |
 | `convoca_email_bienvenida` | dispara (retirado) | includes/Estados.php |
@@ -184,6 +186,7 @@
 | `convoca_miembro_reactivado` | dispara (retirado) | includes/Process_Member.php |
 | `convoca_panel_socio_sin_js_email` | dispara | public/class-mi-area.php |
 | `convoca_phone_verificado` | dispara (retirado) | public/class-mi-area.php |
+| `convoca_shifts_personas_asignables` | escucha | includes/Integracion_Contratos.php |
 | `convoca_system_checks` | escucha | convoca-members.php |
 | `convoca_voluntariado_acuerdo_aceptado` | dispara | includes/Circuito_Voluntariado.php |
 | `convoca_voluntariado_baja_solicitada` | dispara y escucha | includes/Circuito_Voluntariado.php |
@@ -263,7 +266,7 @@
 | `convoca_payment_receipt` | escucha | includes/Payments_Backend.php |
 | `convoca_system_checks` | escucha | convoca-gateway.php |
 
-### convoca-shifts (16 hooks)
+### convoca-shifts (17 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -280,6 +283,7 @@
 | `convoca_shifts_no_show_email_admin_subject` | dispara | includes/No_Show_Manager.php |
 | `convoca_shifts_no_show_email_socio` | dispara | includes/No_Show_Manager.php |
 | `convoca_shifts_no_show_email_socio_subject` | dispara | includes/No_Show_Manager.php |
+| `convoca_shifts_personas_asignables` | dispara | includes/class-personas-asignables.php |
 | `convoca_system_checks` | escucha | convoca-shifts.php |
 | `convoca_voluntario_aprobado` | escucha | includes/admin-approval.php |
 | `convoca_voluntario_revocado` | escucha | includes/admin-approval.php |

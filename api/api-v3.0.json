@@ -61,6 +61,7 @@
   "convoca-core": {
     "hooks": [
       "convoca_admin_appearance_url",
+      "convoca_can_credit_hours",
       "convoca_common_webhook_sslverify",
       "convoca_continue_access_codes",
       "convoca_core_aterrizar_en_panel",
@@ -123,6 +124,15 @@
       "convoca_admin_appearance_url": {
         "files": [
           "includes/admin-appearance.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_can_credit_hours": {
+        "files": [
+          "includes/Hour_Ledger.php"
         ],
         "listens": false,
         "fires": true,
@@ -1270,6 +1280,7 @@
     "hooks": [
       "convoca_alta_sin_js_email",
       "convoca_alta_sin_js_telefono",
+      "convoca_can_credit_hours",
       "convoca_daily_event",
       "convoca_documento_horas",
       "convoca_email_bienvenida",
@@ -1337,6 +1348,7 @@
       "convoca_miembro_reactivado",
       "convoca_panel_socio_sin_js_email",
       "convoca_phone_verificado",
+      "convoca_shifts_personas_asignables",
       "convoca_system_checks",
       "convoca_voluntariado_acuerdo_aceptado",
       "convoca_voluntariado_baja_solicitada",
@@ -1367,6 +1379,15 @@
         ],
         "listens": false,
         "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_can_credit_hours": {
+        "files": [
+          "includes/Integracion_Contratos.php"
+        ],
+        "listens": true,
+        "fires": false,
         "deprecated": false,
         "replaced_by": ""
       },
@@ -1989,6 +2010,15 @@
         "deprecated": true,
         "replaced_by": "convoca_members_phone_verificado"
       },
+      "convoca_shifts_personas_asignables": {
+        "files": [
+          "includes/Integracion_Contratos.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_system_checks": {
         "files": [
           "convoca-members.php"
@@ -2268,6 +2298,7 @@
       "convoca_shifts_no_show_email_admin_subject",
       "convoca_shifts_no_show_email_socio",
       "convoca_shifts_no_show_email_socio_subject",
+      "convoca_shifts_personas_asignables",
       "convoca_system_checks",
       "convoca_voluntario_aprobado",
       "convoca_voluntario_revocado"
@@ -2384,6 +2415,15 @@
       "convoca_shifts_no_show_email_socio_subject": {
         "files": [
           "includes/No_Show_Manager.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_shifts_personas_asignables": {
+        "files": [
+          "includes/class-personas-asignables.php"
         ],
         "listens": false,
         "fires": true,

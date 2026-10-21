@@ -11,12 +11,12 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 240 |
+| Hooks | 244 |
 | REST endpoints | 59 |
 | Shortcodes | 29 |
 | Meta keys | 258 |
-| Opciones | 89 |
-| **Total elementos API** | **328** (hooks+REST+shortcodes) |
+| Opciones | 88 |
+| **Total elementos API** | **332** (hooks+REST+shortcodes) |
 
 > Estos números **se comprueban**: `scripts/check-api-doc.py` los compara con el inventario real y el
 > job `api-freeze` del CI cae si no cuadran. Antes no los miraba nadie, y el documento llegó a declarar
@@ -123,6 +123,31 @@ compara la tabla del documento con el inventario real y cae si no cuadra.
 | Añadido | filtro `convoca_email_from` en el núcleo (206→**206** hooks, 284→**285** elementos): el punto único para cambiar el remitente de todos los correos. Es aditivo y lo cazó el guardián de congelación al minuto | convoca-core 2.3.26 |
 
 Los cuatro añadidos son **compatibles**: existían y se disparaban, solo faltaban en la lista.
+
+### 2026-10-21 — el reparto entre el vocabulario (Core) y las personas (Members)
+
+Se añaden dos filtros y se retira la creación de roles de los addons. El modelo queda así:
+
+- **El vocabulario es del producto.** Los roles `socio`, `voluntario_aprobado` y `monitor_actividad`, y sus
+  capacidades, los crea y los mantiene `Convoca\Core\Capabilities`. Ningún addon crea roles ni les añade
+  capacidades: cuando lo hacían tres a la vez, `add_role()` no pisaba el rol existente y el que llegaba
+  segundo no añadía nada, así que los roles se quedaban a medias según el orden de activación.
+- **Las personas son de Convoca Members.** Quién es voluntario aprobado, quién es monitor y quién puede
+  acreditar horas lo contesta él. Antes lo averiguaba cada plugin leyendo roles por su cuenta, y por eso en
+  un sitio **sin** gestión de personas aparecían personas asignables de la nada.
+
+Los dos contratos, con **valor por defecto vacío/negativo a propósito**:
+
+| Filtro | Quién pregunta | Quién contesta | Por defecto |
+|---|---|---|---|
+| `convoca_can_credit_hours` | `Hour_Ledger` (el libro de horas) | Members, con su regla de acreditación | `false`: no se acredita |
+| `convoca_shifts_personas_asignables` | Shifts (selectores, auditoría, estadísticas) | Members, con fichas y aprobaciones | `array()`: nadie asignable |
+
+Es la regla de producto de JC (21/10/2026): **sin gestión de personas no se asignan personas ni se
+acreditan horas**, y el turno se marca realizado igual. El incumplimiento por defecto es a propósito: si
+nadie contesta, el sistema no inventa personas.
+
+Efecto en el inventario: 240 → **244 hooks** (2 dispara + 2 escucha) y 328 → **332 elementos**.
 
 ## Reglas para cambios futuros
 
