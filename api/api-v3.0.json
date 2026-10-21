@@ -88,7 +88,9 @@
       "convoca_log_purge",
       "convoca_log_retention_days",
       "convoca_member_created",
+      "convoca_member_identity",
       "convoca_member_plans",
+      "convoca_member_priority",
       "convoca_member_states",
       "convoca_members_created",
       "convoca_members_estado_changed",
@@ -374,9 +376,27 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_member_identity": {
+        "files": [
+          "includes/Member_Identity.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_member_plans": {
         "files": [
           "includes/Admin_Setup_Wizard.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_priority": {
+        "files": [
+          "includes/Member_Identity.php"
         ],
         "listens": false,
         "fires": true,
@@ -1297,8 +1317,10 @@
       "convoca_gateway_payment_failed",
       "convoca_hours_submitted",
       "convoca_member_created",
+      "convoca_member_identity",
       "convoca_member_objetivo_completado",
       "convoca_member_plans",
+      "convoca_member_priority",
       "convoca_member_states",
       "convoca_member_unsubscribe_request",
       "convoca_members_alta_document_url",
@@ -1537,6 +1559,15 @@
         "deprecated": false,
         "replaced_by": ""
       },
+      "convoca_member_identity": {
+        "files": [
+          "includes/Integracion_Contratos.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
       "convoca_member_objetivo_completado": {
         "files": [
           "includes/Voluntariado_Manager.php"
@@ -1549,6 +1580,15 @@
       "convoca_member_plans": {
         "files": [
           "convoca-members.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_member_priority": {
+        "files": [
+          "includes/Integracion_Contratos.php"
         ],
         "listens": true,
         "fires": false,

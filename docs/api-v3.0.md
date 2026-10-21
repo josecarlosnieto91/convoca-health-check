@@ -11,12 +11,12 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 244 |
+| Hooks | 248 |
 | REST endpoints | 59 |
 | Shortcodes | 29 |
 | Meta keys | 258 |
 | Opciones | 88 |
-| **Total elementos API** | **332** (hooks+REST+shortcodes) |
+| **Total elementos API** | **336** (hooks+REST+shortcodes) |
 
 > Estos números **se comprueban**: `scripts/check-api-doc.py` los compara con el inventario real y el
 > job `api-freeze` del CI cae si no cuadran. Antes no los miraba nadie, y el documento llegó a declarar
@@ -148,6 +148,27 @@ acreditan horas**, y el turno se marca realizado igual. El incumplimiento por de
 nadie contesta, el sistema no inventa personas.
 
 Efecto en el inventario: 240 → **244 hooks** (2 dispara + 2 escucha) y 328 → **332 elementos**.
+
+### 2026-10-21 — la identidad del socio también es un contrato (punto 4)
+
+Cuatro sitios de Convoca Enroll necesitaban saber si había un socio con la sesión abierta, y la prioridad
+de una inscripción vivía **dentro** de un `class_exists( '\Convoca\Members\Process_Member' )` con treinta
+líneas de lógica. Cada uno con su camino de reserva detrás: dos comportamientos que había que mantener
+sincronizados según qué estuviera instalado.
+
+Ahora el núcleo pregunta y contesta quien gestiona los socios:
+
+| Filtro | Quién pregunta | Quién contesta | Por defecto |
+|---|---|---|---|
+| `convoca_member_identity` | `Core\Member_Identity` | Members, con su sesión | `autenticado: false`, `member_id: 0`, `datos: []` |
+| `convoca_member_priority` | `Core\Member_Identity` | Members, resolviendo la ficha y su cuota | `true` (prioridad concedida) |
+
+Los dos valores por defecto son **el comportamiento de hoy sin gestión de socios**, así que el refactor no
+cambia nada en ninguna de las dos configuraciones. La respuesta de identidad se guarda durante la petición
+y no más (la sesión vive en un transient): tras un login o un logout en la misma carga se llama a
+`Member_Identity::olvidar()`.
+
+Efecto en el inventario: 244 → **248 hooks** (2 dispara + 2 escucha) y 332 → **336 elementos**.
 
 ## Reglas para cambios futuros
 
