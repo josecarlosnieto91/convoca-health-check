@@ -19,7 +19,6 @@ Salida 0 si todos los plugins pasan; 2 si a alguno le falta algo.
 from __future__ import annotations
 
 import argparse
-import glob
 import json
 import os
 import re
@@ -56,6 +55,11 @@ RX_ENQUEUE_EXTERNO = re.compile(r"wp_(?:enqueue|register)_(?:script|style)\s*\([
 FALTA = "FALTA"
 
 
+def aprobado(valor: str) -> bool:
+    """¿Este punto está bien? Lo que no aplica («no usa servicios externos») también lo está."""
+    return valor == "OK" or valor.startswith(("no ", "sin dato"))
+
+
 def ultima_wp() -> str | None:
     """Última versión estable de WordPress, según la API oficial."""
     try:
@@ -81,7 +85,7 @@ def cabecera_php(raiz: str, slug: str) -> dict:
     texto = leer(principal)
     out = {}
     for clave in CABECERAS + ("Requires Plugins",):
-        m = re.search(rf"^ \* {re.escape(clave)}:\s*(.+)$", texto, re.M)
+        m = re.search(rf"^ \* {re.escape(clave)}:\s*(.+)$", texto, re.MULTILINE)
         out[clave] = m.group(1).strip() if m else FALTA
     return out
 
@@ -91,7 +95,7 @@ def campos_readme(raiz: str) -> dict:
     texto = leer(os.path.join(raiz, "readme.txt"))
     out = {}
     for clave in ("Requires at least", "Tested up to", "Requires PHP", "Stable tag", "License"):
-        m = re.search(rf"^{re.escape(clave)}:\s*(.+)$", texto, re.M)
+        m = re.search(rf"^{re.escape(clave)}:\s*(.+)$", texto, re.MULTILINE)
         out[clave] = m.group(1).strip() if m else FALTA
     out["_texto"] = texto
     return out
@@ -195,7 +199,9 @@ def main() -> int:
     for slug in PLUGINS:
         raiz = os.path.join(args.repos, slug)
         if not os.path.isdir(raiz):
-            resultados.append({"slug": slug, "version": "?", "puntos": {"plugin": "no encontrado"}})
+            # Un plugin que no está NO aprueba: antes decía «no encontrado» y el filtro de «lo que no
+            # aplica» lo contaba como bueno. Lo cazó el negativo.
+            resultados.append({"slug": slug, "version": "?", "puntos": {"plugin": f"{FALTA} (no está en la ruta)"}})
             continue
         resultados.append(auditar(raiz, wp_ultima))
 
@@ -205,14 +211,13 @@ def main() -> int:
 
     fallos = 0
     for r in resultados:
-        malos = {k: v for k, v in r["puntos"].items() if v not in ("OK",) and not v.startswith("no ") and not v.startswith("sin dato")}
-        estado = "OK" if not malos else f"{len(malos)} punto(s) a revisar"
+        pendientes = [k for k, v in r["puntos"].items() if not aprobado(v)]
+        estado = "OK" if not pendientes else f"{len(pendientes)} punto(s) a revisar"
         print(f"== {r['slug']} ({r['version']}) → {estado}")
         for k, v in r["puntos"].items():
-            marca = "  ok  " if v == "OK" or v.startswith("no ") or v.startswith("sin dato") else "  >>  "
-            print(f"{marca}{k}: {v}")
+            print(f"{'  ok  ' if aprobado(v) else '  >>  '}{k}: {v}")
         print()
-        fallos += len(malos)
+        fallos += len(pendientes)
 
     print(f"RESULTADO: {fallos} punto(s) a revisar en {len(resultados)} plugins")
     return 0 if fallos == 0 else 2
