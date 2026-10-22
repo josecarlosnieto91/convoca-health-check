@@ -392,3 +392,8 @@ jobs:
           # Sin `|| true` ni `| tail`: el exit code es el de la prueba. Con ellos este
           # trabajo no podría fallar nunca, que es el defecto que vigila la prueba.
           php scripts/prueba-cobertura.php
+      # El check «Acceso al panel» solo vale si caza el patrón que dejó el panel de biodevas cerrado
+      # (convoca-courses 0.2.3, 22-10-2026). Esta prueba lo enfrenta a un tipo contaminado, al sano
+      # y a uno nativo: si el check se vuelve decorativo, el CI se pone rojo aquí.
+      - name: Prueba en negativo del check de capacidades
+        run: php tests/prueba-capacidades.php

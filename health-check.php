@@ -11,6 +11,11 @@ if ( ! file_exists( $hc_lib ) ) {
 	exit( 2 );
 }
 require_once $hc_lib;
+
+$hc_caps = __DIR__ . '/lib/capacidades.php';
+if ( file_exists( $hc_caps ) ) {
+	require_once $hc_caps;
+}
 /**
  * Convoca Health Check — batería de validación permanente.
  *
@@ -1049,9 +1054,47 @@ hc_component('Convoca Shifts', 'convoca-shifts', 'hc_shifts');
 hc_component('Convoca Publisher', 'convoca-publisher', 'hc_publisher');
 hc_component('Convoca Assistant', 'convoca-assistant', 'hc_assistant');
 hc_theme_component();
+
+// Acceso al panel: las capacidades POR ENTRADA de un tipo de contenido no pueden ser globales.
+//
+// Medido el 22-10-2026 en biodevas.org: con convoca-courses 0.2.3 activo, el tipo de contenido
+// declaraba 'read_post' => 'read', WordPress copiaba ese valor a $post_type_meta_caps y desde ahí
+// cualquier current_user_can('read') sin id de entrada se resolvía como do_not_allow: /wp-admin
+// respondía 403 a todo el mundo, administrador incluido. La batería de aquel día dio 27 PASS /
+// 3 FAIL (los del gateway sin claves) y no vio nada, porque ningún check miraba el mapa de
+// capacidades ni la entrada al panel. Esto cierra ese hueco.
+function hc_panel() {
+    hc_section('Acceso al panel');
+
+    // 1) Ningún tipo de contenido registrado usa una capacidad global como capacidad por entrada.
+    $tipos = get_post_types(array(), 'objects');
+    $contaminados = hc_capacidades_contaminadas($tipos);
+    hc_out('Acceso al panel', 'Ninguna capacidad por entrada es global', empty($contaminados),
+        empty($contaminados)
+            ? count($tipos) . ' tipos revisados'
+            : 'CONTAMINA EL PANEL: ' . implode(', ', array_slice($contaminados, 0, 4)));
+
+    // 2) El mapa de una capacidad global no está envenenado para quien administra.
+    $admins = get_users(array('capability' => 'manage_options', 'number' => 1));
+    if (empty($admins)) {
+        hc_skip('Acceso al panel', 'Un administrador puede entrar en el panel', 'sin usuario con manage_options que medir');
+        return;
+    }
+    $admin = $admins[0];
+
+    $mapa_read = (array) map_meta_cap('read', $admin->ID);
+    hc_out('Acceso al panel', "map_meta_cap('read') no está bloqueado", !in_array('do_not_allow', $mapa_read, true),
+        implode(',', $mapa_read));
+
+    hc_out('Acceso al panel', 'Quien administra conserva read y manage_options',
+        user_can($admin->ID, 'read') && user_can($admin->ID, 'manage_options'),
+        'read=' . (int) user_can($admin->ID, 'read') . ' manage_options=' . (int) user_can($admin->ID, 'manage_options'));
+}
+
 hc_component('Migraciones', 'convoca-core', 'hc_migrations');
 hc_component('Higiene de código', 'convoca-core', 'hc_clean_code');
 hc_component('Integraciones', 'convoca-core', 'hc_integrations');
+hc_component('Acceso al panel', 'convoca-core', 'hc_panel');
 hc_hooks_contratos();
 
 $elapsed = round(microtime(true) - $start, 1);
