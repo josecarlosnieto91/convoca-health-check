@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 248 |
+| Hooks | 249 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -114,7 +114,7 @@
 | `convoca_wizard_legacy_shortcodes` | dispara | includes/Admin_Setup_Wizard.php |
 | `convoca_wizard_system_pages` | dispara | includes/Admin_Setup_Wizard.php |
 
-### convoca-members (86 hooks)
+### convoca-members (87 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -131,6 +131,7 @@
 | `convoca_email_recordatorio_pago` | dispara (retirado) | includes/Estados.php |
 | `convoca_email_solicitud` | dispara (retirado) | includes/Process_Member.php |
 | `convoca_email_verify_phone` | dispara (retirado) | includes/Rest_API.php |
+| `convoca_es_socio_activo` | escucha | includes/Integracion_Contratos.php |
 | `convoca_estado_changed` | dispara (retirado) | includes/Estados.php |
 | `convoca_gamification_tracks` | dispara | includes/Voluntariado_Gamification.php |
 | `convoca_gateway_payment_completed` | escucha | includes/Payment_Listener.php |
@@ -251,7 +252,7 @@
 
 | Hook | Tipo | Origen |
 |------|------|--------|
-| `convoca_gateway_bank_entity` | dispara | includes/Admin_Settings.php, includes/Payment_Handler.php |
+| `convoca_gateway_bank_entity` | dispara | includes/Payment_Handler.php, includes/Admin_Settings.php |
 | `convoca_gateway_expiry_notice` | dispara y escucha | convoca-gateway.php, includes/Link_Expiry.php |
 | `convoca_gateway_payment_completed` | dispara y escucha | convoca-gateway.php, includes/Admin_Payments.php, includes/Email_Notifications.php |
 | `convoca_gateway_payment_failed` | dispara y escucha | includes/Email_Notifications.php, includes/Payment_Handler.php |

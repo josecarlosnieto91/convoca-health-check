@@ -1119,8 +1119,8 @@
     "hooks_detail": {
       "convoca_gateway_bank_entity": {
         "files": [
-          "includes/Admin_Settings.php",
-          "includes/Payment_Handler.php"
+          "includes/Payment_Handler.php",
+          "includes/Admin_Settings.php"
         ],
         "listens": false,
         "fires": true,
@@ -1311,6 +1311,7 @@
       "convoca_email_recordatorio_pago",
       "convoca_email_solicitud",
       "convoca_email_verify_phone",
+      "convoca_es_socio_activo",
       "convoca_estado_changed",
       "convoca_gamification_tracks",
       "convoca_gateway_payment_completed",
@@ -1503,6 +1504,15 @@
         "fires": false,
         "deprecated": true,
         "replaced_by": "convoca_members_email_verify_phone"
+      },
+      "convoca_es_socio_activo": {
+        "files": [
+          "includes/Integracion_Contratos.php"
+        ],
+        "listens": true,
+        "fires": false,
+        "deprecated": false,
+        "replaced_by": ""
       },
       "convoca_estado_changed": {
         "files": [

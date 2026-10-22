@@ -11,12 +11,12 @@ hooks, REST endpoints, shortcodes) requiere actualizar el baseline
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 248 |
+| Hooks | 249 |
 | REST endpoints | 59 |
 | Shortcodes | 29 |
 | Meta keys | 258 |
 | Opciones | 88 |
-| **Total elementos API** | **336** (hooks+REST+shortcodes) |
+| **Total elementos API** | **337** (hooks+REST+shortcodes) |
 
 > Estos números **se comprueban**: `scripts/check-api-doc.py` los compara con el inventario real y el
 > job `api-freeze` del CI cae si no cuadran. Antes no los miraba nadie, y el documento llegó a declarar
