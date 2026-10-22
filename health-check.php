@@ -1057,7 +1057,7 @@ hc_theme_component();
 
 // Acceso al panel: las capacidades POR ENTRADA de un tipo de contenido no pueden ser globales.
 //
-// Medido el 22-10-2026 en biodevas.org: con convoca-courses 0.2.3 activo, el tipo de contenido
+// Medido el 22-10-2026 en un sitio en producción: con convoca-courses 0.2.3 activo, el tipo de contenido
 // declaraba 'read_post' => 'read', WordPress copiaba ese valor a $post_type_meta_caps y desde ahí
 // cualquier current_user_can('read') sin id de entrada se resolvía como do_not_allow: /wp-admin
 // respondía 403 a todo el mundo, administrador incluido. La batería de aquel día dio 27 PASS /
