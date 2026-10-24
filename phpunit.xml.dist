@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap-unit.php"
+         colors="true"
+         cacheResult="false">
+  <testsuites>
+    <testsuite name="unit">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+  </testsuites>
+  <!--
+    Se mide `lib/`: la lógica pura, que es la que se puede probar sin un WordPress vivo.
+
+    `health-check.php` (1.118 líneas) queda FUERA a propósito: se auto-ejecuta al incluirse y termina con `exit()`,
+    así que no hay forma de medirlo con unit tests sin doblar medio WordPress. Su verificación es ejecutarlo contra un
+    sitio real (`wp eval-file`), que es como se usa y como lo usa el propio repo. Meterlo aquí daría un porcentaje
+    sobre código que ninguna prueba puede tocar: un número que no mide nada.
+  -->
+  <source>
+    <include>
+      <directory>lib</directory>
+    </include>
+  </source>
+</phpunit>

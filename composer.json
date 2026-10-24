@@ -1,0 +1,12 @@
+{
+    "name": "convoca/convoca-health-check",
+    "description": "Bateria de validacion del ecosistema Convoca (herramienta CLI).",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "scripts": {
+        "test": "phpunit -c phpunit.xml.dist"
+    }
+}

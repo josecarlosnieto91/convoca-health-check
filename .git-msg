@@ -1,0 +1,21 @@
+test(cobertura): el numero de la bateria y las capacidades que cierran el panel
+
+Fase 0: el repo no tenia runner ni medicion. Montados PHPUnit 10, `phpunit.xml.dist` y el workflow de Cobertura.
+
+Se mide `lib/` (logica pura, 21 statements, **100 %**). `health-check.php` (1.118 lineas) queda fuera a proposito y
+esta escrito por que: se auto-ejecuta al incluirse y termina con `exit()`, asi que solo se verifica ejecutandolo
+contra un sitio real (`wp eval-file`), que es como se usa.
+
+`CoberturaTest` (6 pruebas) fija el caso del issue #10: 7 SKIP y 1 WARN **no** pueden dar 100 %. Se devuelven dos
+numeros y el que se ensena primero es el honesto.
+
+`CapacidadesTest` (8 pruebas) fija el check que nacio del 403 global del 22-10: `read_post => 'read'` contamina el
+mapa y cierra el panel a todo el mundo, administrador incluido. Y fija lo contrario: los tipos nativos de WordPress
+usan sus propias meta caps y **no** se marcan (la primera version del check los daba por contaminados; el fallo era
+del check).
+
+Verificacion en negativo, dos mutaciones:
+- meter `read_post`/`edit_post`/`delete_post` en la lista de globales -> cae test_los_nativos_no_se_marcan;
+- contar solo lo comprobable -> cae test_los_skip_y_los_warn_no_se_esconden.
+
+Suelo 99,5.
