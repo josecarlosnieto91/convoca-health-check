@@ -297,8 +297,8 @@
       },
       "convoca_gateway_payment_failed": {
         "files": [
-          "includes/Webhook_Manager.php",
-          "includes/Notifications.php"
+          "includes/Notifications.php",
+          "includes/Webhook_Manager.php"
         ],
         "listens": true,
         "fires": false,
@@ -460,8 +460,8 @@
       },
       "convoca_members_hours_submitted": {
         "files": [
-          "includes/Webhook_Manager.php",
-          "includes/Notifications.php"
+          "includes/Notifications.php",
+          "includes/Webhook_Manager.php"
         ],
         "listens": true,
         "fires": false,
@@ -1150,8 +1150,8 @@
       "convoca_gateway_payment_completed": {
         "files": [
           "convoca-gateway.php",
-          "includes/Admin_Payments.php",
-          "includes/Email_Notifications.php"
+          "includes/Email_Notifications.php",
+          "includes/Admin_Payments.php"
         ],
         "listens": true,
         "fires": true,
@@ -1727,8 +1727,8 @@
       },
       "convoca_members_email_confirm": {
         "files": [
-          "includes/Rest_API.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Rest_API.php"
         ],
         "listens": true,
         "fires": true,
@@ -1793,8 +1793,8 @@
       },
       "convoca_members_email_solicitud": {
         "files": [
-          "includes/Process_Member.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Process_Member.php"
         ],
         "listens": true,
         "fires": true,
@@ -1803,8 +1803,8 @@
       },
       "convoca_members_email_verify_phone": {
         "files": [
-          "includes/Rest_API.php",
-          "includes/Email_Manager.php"
+          "includes/Email_Manager.php",
+          "includes/Rest_API.php"
         ],
         "listens": true,
         "fires": true,
