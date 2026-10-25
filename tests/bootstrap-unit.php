@@ -19,6 +19,8 @@ require_once dirname( __DIR__ ) . '/lib/capacidades.php';
 // Doble de integración del núcleo (historial de migraciones): en su propio fichero porque declara namespace.
 require_once __DIR__ . '/stubs/class-migration-history.php';
 require_once __DIR__ . '/stubs/class-logger-license.php';
+require_once __DIR__ . '/stubs/class-utils.php';
+require_once __DIR__ . '/stubs/class-core-vacias.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', '/tmp/wp/' );
@@ -223,5 +225,79 @@ if ( ! function_exists( 'wp_remote_get' ) ) {
 	 */
 	function wp_remote_retrieve_response_code( $r ) {
 		return (int) ( $r['response']['code'] ?? 0 );
+	}
+}
+
+if ( ! function_exists( 'wp_generate_password' ) ) {
+	/**
+	 * Contraseña aleatoria: aquí, un identificador único para que las claves no choquen entre casos.
+	 *
+	 * @param int  $len          Longitud.
+	 * @param bool $especiales   Especiales.
+	 * @param bool $extra        Extra.
+	 * @return string
+	 */
+	function wp_generate_password( $len = 12, $especiales = true, $extra = false ) {
+		unset( $len, $especiales, $extra );
+		return substr( uniqid( '', true ), -8 );
+	}
+}
+
+if ( ! function_exists( 'wp_cache_delete' ) ) {
+	/**
+	 * Borra de la caché (se apunta).
+	 *
+	 * @param string $clave Clave.
+	 * @param string $grupo Grupo.
+	 * @return bool
+	 */
+	function wp_cache_delete( $clave, $grupo = '' ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['cache_borrada'][] = array( 'clave' => $clave, 'grupo' => $grupo );
+		return true;
+	}
+}
+
+if ( ! class_exists( 'wpdb' ) ) {
+	/**
+	 * Base de datos de mentira: apunta las consultas.
+	 */
+	class wpdb {
+
+		/**
+		 * Tabla de opciones.
+		 *
+		 * @var string
+		 */
+		public string $options = 'wp_options';
+
+		/**
+		 * Consultas ejecutadas.
+		 *
+		 * @var array
+		 */
+		public array $consultas = array();
+
+		/**
+		 * Prepara una consulta.
+		 *
+		 * @param string $sql    Consulta.
+		 * @param mixed  ...$args Argumentos.
+		 * @return string
+		 */
+		public function prepare( $sql, ...$args ) {
+			return $sql . ' /* ' . implode( ',', array_map( 'strval', $args ) ) . ' */';
+		}
+
+		/**
+		 * Ejecuta y apunta.
+		 *
+		 * @param string $sql Consulta.
+		 * @return int
+		 */
+		public function query( $sql ) {
+			$this->consultas[] = $sql;
+			return 1;
+		}
 	}
 }
