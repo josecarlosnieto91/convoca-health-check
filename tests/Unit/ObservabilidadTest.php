@@ -210,6 +210,53 @@ final class ObservabilidadTest extends TestCase {
 	}
 
 	/**
+	 * Las licencias se informan: estado y valores escalares.
+	 *
+	 * Un valor compuesto (array u objeto) NO se pinta: el panel es para leer de un vistazo, no para volcar
+	 * estructuras.
+	 */
+	public function test_las_licencias_se_informan(): void {
+		\Convoca\Core\License_Manager::$estado   = 'Activa hasta 2027-01-01';
+		\Convoca\Core\License_Manager::$licencia = array(
+			'clave'   => 'ABC-123',
+			'valida'  => true,
+			'detalle' => array( 'no', 'se', 'pinta' ),
+		);
+
+		ob_start();
+		$problemas = hco_licencias();
+		$salida    = (string) ob_get_clean();
+
+		$this->assertSame( 0, $problemas, 'una licencia se informa, no es un problema' );
+		$this->assertStringContainsString( 'Estado: Activa hasta 2027-01-01', $salida );
+		$this->assertStringContainsString( 'clave: ABC-123', $salida );
+		$this->assertStringContainsString( 'valida: true', $salida, 'un booleano se lee como tal, no como «1»' );
+		$this->assertStringNotContainsString( 'detalle', $salida, 'los valores compuestos no se vuelcan' );
+	}
+
+	/**
+	 * Un `debug.log` de más de 10 MB es un problema: en un sitio con espacio limitado, se lo come.
+	 *
+	 * Se crea DISPERSO (`ftruncate` sobre un fichero vacío): ocupa 11 MB de tamaño lógico sin escribir 11 MB en
+	 * disco, que es lo que hace que esta prueba se pueda permitir el caso.
+	 */
+	public function test_un_debug_log_de_mas_de_diez_megas_es_un_problema(): void {
+		$this->apuntar_wp_content( $this->contenido );
+		$log = $this->contenido . '/debug.log';
+
+		$manejador = fopen( $log, 'wb' );
+		ftruncate( $manejador, 11 * 1024 * 1024 );
+		fclose( $manejador );
+
+		ob_start();
+		$problemas = hco_errores();
+		$salida    = (string) ob_get_clean();
+
+		$this->assertSame( 1, $problemas, 'once megas de registro ya no es normal' );
+		$this->assertStringContainsString( 'supera 10 MB', $salida );
+	}
+
+	/**
 	 * La memoria se informa (no es un problema, pero tiene que salir).
 	 */
 	public function test_la_memoria_se_informa(): void {
