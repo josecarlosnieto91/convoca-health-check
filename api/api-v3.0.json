@@ -87,6 +87,7 @@
       "convoca_log_level",
       "convoca_log_purge",
       "convoca_log_retention_days",
+      "convoca_logger_rate_limit_max",
       "convoca_member_created",
       "convoca_member_identity",
       "convoca_member_plans",
@@ -359,6 +360,15 @@
         "replaced_by": ""
       },
       "convoca_log_retention_days": {
+        "files": [
+          "includes/Logger.php"
+        ],
+        "listens": false,
+        "fires": true,
+        "deprecated": false,
+        "replaced_by": ""
+      },
+      "convoca_logger_rate_limit_max": {
         "files": [
           "includes/Logger.php"
         ],
