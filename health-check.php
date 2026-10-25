@@ -914,21 +914,26 @@ function hc_clean_code() {
             if ($content === false) {
                 continue;
             }
-            // Quien lee codigo fuente quita ANTES los comentarios, o acaba fallando contra el
-            // comentario que explica el defecto (medido: un comentario con el nombre de la
-            // asociacion puso en rojo la bateria en dos sitios). En PHP se quitan con el
-            // tokenizador; el resto de extensiones se escanean tal cual.
-            if ($ext === 'php' && function_exists('hc_strip_php_comments')) {
-                $content = hc_strip_php_comments((string) $content);
-            }
-            // Las lineas marcadas con `convoca-hygiene-ignore` no cuentan: hay cadenas que
-            // son funcionales (un filtro de dominios de correo, un alias publicado) y no
-            // decorativas. La marca exige motivo en la misma linea.
+            // ORDEN IMPORTANTE: primero se quitan las lineas EXENTAS y despues los comentarios.
+            // Al reves no funciona y no se nota: la marca `convoca-hygiene-ignore` vive en un
+            // COMENTARIO, asi que quitar los comentarios primero la borra y la exencion no exime
+            // nada. Se descubrio probandolo (hc#23): el fichero exento seguia dando FAIL.
+            //
+            // Las lineas marcadas no cuentan porque hay cadenas que son funcionales (un filtro de
+            // dominios de correo, un alias publicado) y no decorativas. La marca exige motivo en la
+            // misma linea.
             $escaneable = '';
             foreach (explode("\n", (string) $content) as $linea) {
                 if (strpos($linea, 'convoca-hygiene-ignore') === false) {
                     $escaneable .= $linea . "\n";
                 }
+            }
+            // Y ahora si, los comentarios: quien lee codigo fuente los quita, o acaba fallando
+            // contra el comentario que explica el defecto (medido: un comentario con el nombre de
+            // la asociacion puso en rojo la bateria en dos sitios). En PHP se quitan con el
+            // tokenizador; el resto de extensiones se escanean tal cual.
+            if ($ext === 'php' && function_exists('hc_strip_php_comments')) {
+                $escaneable = hc_strip_php_comments($escaneable);
             }
             foreach ($prohibited as $term) {
                 // Insensible a mayusculas. Frontera «no alfanumerica», no `\b`: con `\b` no se
