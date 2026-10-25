@@ -75,6 +75,23 @@ class Utils {
 	}
 
 	/**
+	 * Lanza un hook. Se APUNTA la llamada: el efecto (quién escucha) es del producto, y aquí no está, así que
+	 * fingirlo sería medir el doble en vez de la herramienta.
+	 *
+	 * @param string $nuevo  Nombre nuevo.
+	 * @param string $viejo  Nombre viejo (deprecado).
+	 * @param mixed  ...$args Argumentos.
+	 * @return void
+	 */
+	public static function do_action( string $nuevo, string $viejo = '', ...$args ): void {
+		$GLOBALS['hc_test']['hooks_lanzados'][] = array(
+			'nuevo' => $nuevo,
+			'viejo' => $viejo,
+			'args'  => $args,
+		);
+	}
+
+	/**
 	 * Toma un lock.
 	 *
 	 * @param string $nombre Nombre.

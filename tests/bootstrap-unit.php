@@ -23,6 +23,7 @@ require_once __DIR__ . '/stubs/class-utils.php';
 require_once __DIR__ . '/stubs/class-core-vacias.php';
 require_once __DIR__ . '/stubs/funciones-shifts.php';
 require_once __DIR__ . '/stubs/class-redsys-client.php';
+require_once __DIR__ . '/stubs/class-payment-handler.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', '/tmp/wp/' );
@@ -376,11 +377,18 @@ if ( ! function_exists( 'wp_insert_post' ) ) {
 
 		$id = (int) ( $GLOBALS['hc_test']['siguiente_id'] ?? 1000 ) + 1;
 		$GLOBALS['hc_test']['siguiente_id'] = $id;
+		$tipo = (string) ( $args['post_type'] ?? 'post' );
 		$GLOBALS['hc_test']['posts'][ $id ] = array(
-			'post_type'   => (string) ( $args['post_type'] ?? 'post' ),
+			'post_type'   => $tipo,
 			'post_title'  => (string) ( $args['post_title'] ?? '' ),
 			'post_status' => (string) ( $args['post_status'] ?? 'draft' ),
 		);
+
+		// Meta que el PRODUCTO pone al crear el contenido (p. ej. el usuario vinculado a un socio). Sin esto no
+		// se puede probar que la herramienta borra lo que el producto creó.
+		foreach ( (array) ( $GLOBALS['hc_test']['meta_auto'][ $tipo ] ?? array() ) as $clave => $valor ) {
+			$GLOBALS['hc_test']['meta'][ $id ][ $clave ] = (string) $valor;
+		}
 
 		return $id;
 	}
@@ -682,5 +690,154 @@ if ( ! function_exists( 'get_stylesheet_directory' ) ) {
 	function get_stylesheet_directory() {
 		hc_test_store();
 		return (string) ( $GLOBALS['hc_test']['dir_tema'] ?? WP_CONTENT_DIR . '/themes/convoca' );
+	}
+}
+
+if ( ! function_exists( 'get_post_types' ) ) {
+	/**
+	 * Tipos de contenido registrados (los fija la prueba como objetos con sus capacidades).
+	 *
+	 * @param array  $args Argumentos.
+	 * @param string $salida Formato de salida.
+	 * @return array
+	 */
+	function get_post_types( $args = array(), $salida = 'names' ) {
+		hc_test_store();
+		unset( $args );
+		$tipos = (array) ( $GLOBALS['hc_test']['post_types_objetos'] ?? array() );
+		return 'objects' === $salida ? $tipos : array_keys( $tipos );
+	}
+}
+
+if ( ! function_exists( 'get_users' ) ) {
+	/**
+	 * Usuarios que cumplen el filtro.
+	 *
+	 * @param array $args Argumentos.
+	 * @return array
+	 */
+	function get_users( $args = array() ) {
+		hc_test_store();
+		unset( $args );
+		return (array) ( $GLOBALS['hc_test']['usuarios'] ?? array() );
+	}
+}
+
+if ( ! function_exists( 'map_meta_cap' ) ) {
+	/**
+	 * Mapa de capacidades.
+	 *
+	 * @param string $cap Capacidad.
+	 * @param int    $id  Usuario.
+	 * @return array
+	 */
+	function map_meta_cap( $cap, $id = 0 ) {
+		hc_test_store();
+		unset( $id );
+		return (array) ( $GLOBALS['hc_test']['mapa_caps'][ (string) $cap ] ?? array( $cap ) );
+	}
+}
+
+if ( ! function_exists( 'user_can' ) ) {
+	/**
+	 * ¿Puede el usuario?
+	 *
+	 * @param int    $id  Usuario.
+	 * @param string $cap Capacidad.
+	 * @return bool
+	 */
+	function user_can( $id, $cap ) {
+		hc_test_store();
+		unset( $id );
+		return (bool) ( $GLOBALS['hc_test']['puede'][ (string) $cap ] ?? true );
+	}
+}
+
+if ( ! function_exists( 'get_userdata' ) ) {
+	/**
+	 * Usuario por id.
+	 *
+	 * @param int $id Id.
+	 * @return object|false
+	 */
+	function get_userdata( $id ) {
+		hc_test_store();
+		$usuario = $GLOBALS['hc_test']['usuarios_wp'][ (int) $id ] ?? null;
+		return null === $usuario ? false : (object) $usuario;
+	}
+}
+
+if ( ! function_exists( 'wp_delete_user' ) ) {
+	/**
+	 * Borra un usuario (se apunta cuál).
+	 *
+	 * @param int $id Id.
+	 * @return bool
+	 */
+	function wp_delete_user( $id ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['usuarios_borrados'][] = (int) $id;
+		return true;
+	}
+}
+
+if ( ! class_exists( 'WP_Error' ) ) {
+	/**
+	 * Error de WordPress.
+	 */
+	class WP_Error {
+
+		/**
+		 * Código.
+		 *
+		 * @var string
+		 */
+		private string $codigo;
+
+		/**
+		 * Mensaje.
+		 *
+		 * @var string
+		 */
+		private string $mensaje;
+
+		/**
+		 * Constructor.
+		 *
+		 * @param string $codigo  Código.
+		 * @param string $mensaje Mensaje.
+		 */
+		public function __construct( $codigo = '', $mensaje = '' ) {
+			$this->codigo  = (string) $codigo;
+			$this->mensaje = (string) $mensaje;
+		}
+
+		/**
+		 * Código del error.
+		 *
+		 * @return string
+		 */
+		public function get_error_code() {
+			return $this->codigo;
+		}
+
+		/**
+		 * Mensaje del error.
+		 *
+		 * @return string
+		 */
+		public function get_error_message() {
+			return $this->mensaje;
+		}
+	}
+
+	/**
+	 * ¿Es un error de WordPress?
+	 *
+	 * @param mixed $cosa Cosa.
+	 * @return bool
+	 */
+	function is_wp_error( $cosa ) {
+		return $cosa instanceof WP_Error;
 	}
 }

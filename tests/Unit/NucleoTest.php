@@ -46,6 +46,10 @@ final class NucleoTest extends TestCase {
 		$GLOBALS['hc_warn']    = 0;
 		$GLOBALS['hc_skip']    = 0;
 		$GLOBALS['hc_results'] = array();
+		// `hc_local` y `hc_safe` son estado GLOBAL y `hc_cfg()` cambia FAIL por WARN en modo local: si otra
+		// prueba los deja puestos, este caso mide con la indulgencia del otro (se vio con orden aleatorio).
+		$GLOBALS['hc_local']   = false;
+		$GLOBALS['hc_safe']    = false;
 
 		// El almacén se crea ANTES de escribir en él: si no, el array nace sin las claves base y `home_url()`
 		// avisa de «undefined array key».
