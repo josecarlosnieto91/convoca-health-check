@@ -21,6 +21,8 @@ require_once __DIR__ . '/stubs/class-migration-history.php';
 require_once __DIR__ . '/stubs/class-logger-license.php';
 require_once __DIR__ . '/stubs/class-utils.php';
 require_once __DIR__ . '/stubs/class-core-vacias.php';
+require_once __DIR__ . '/stubs/funciones-shifts.php';
+require_once __DIR__ . '/stubs/class-redsys-client.php';
 
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', '/tmp/wp/' );
@@ -279,6 +281,13 @@ if ( ! class_exists( 'wpdb' ) ) {
 		public array $consultas = array();
 
 		/**
+		 * Último error de la base de datos (WordPress lo rellena; el health check lo mira).
+		 *
+		 * @var string
+		 */
+		public string $last_error = '';
+
+		/**
 		 * Prepara una consulta.
 		 *
 		 * @param string $sql    Consulta.
@@ -473,5 +482,81 @@ if ( ! function_exists( 'wp_remote_retrieve_body' ) ) {
 	 */
 	function wp_remote_retrieve_body( $r ) {
 		return (string) ( $r['body'] ?? '' );
+	}
+}
+
+if ( ! function_exists( 'get_privacy_policy_url' ) ) {
+	/**
+	 * URL de la política de privacidad del sitio.
+	 *
+	 * @return string
+	 */
+	function get_privacy_policy_url() {
+		hc_test_store();
+		return (string) ( $GLOBALS['hc_test']['privacidad_url'] ?? 'https://sitio.example.test/privacidad/' );
+	}
+}
+
+if ( ! function_exists( 'wp_remote_post' ) ) {
+	/**
+	 * POST HTTP apuntado, sin red.
+	 *
+	 * @param string $url  URL.
+	 * @param array  $args Argumentos.
+	 * @return array
+	 */
+	function wp_remote_post( $url, $args = array() ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['http_post'][] = array( 'url' => $url, 'args' => $args );
+		return (array) ( $GLOBALS['hc_test']['respuesta_post'] ?? array( 'response' => array( 'code' => 400 ) ) );
+	}
+}
+
+if ( ! function_exists( 'get_posts' ) ) {
+	/**
+	 * Búsqueda de contenido (devuelve los ids que fija la prueba).
+	 *
+	 * @param array $args Argumentos.
+	 * @return array
+	 */
+	function get_posts( $args = array() ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['buscados'][] = $args;
+		return (array) ( $GLOBALS['hc_test']['posts_encontrados'] ?? array() );
+	}
+}
+
+if ( ! function_exists( 'get_post' ) ) {
+	/**
+	 * Contenido por id.
+	 *
+	 * @param int $id Id.
+	 * @return object|null
+	 */
+	function get_post( $id ) {
+		hc_test_store();
+		if ( ! isset( $GLOBALS['hc_test']['posts'][ (int) $id ] ) ) {
+			return null;
+		}
+		$post = $GLOBALS['hc_test']['posts'][ (int) $id ];
+		return (object) array(
+			'ID'           => (int) $id,
+			'post_type'    => $post['post_type'],
+			'post_title'   => $post['post_title'],
+			'post_content' => (string) ( $GLOBALS['hc_test']['contenido'][ (int) $id ] ?? '' ),
+		);
+	}
+}
+
+if ( ! function_exists( 'has_shortcode' ) ) {
+	/**
+	 * ¿El contenido lleva ese shortcode?
+	 *
+	 * @param string $contenido Contenido.
+	 * @param string $tag       Shortcode.
+	 * @return bool
+	 */
+	function has_shortcode( $contenido, $tag ) {
+		return false !== strpos( (string) $contenido, '[' . $tag );
 	}
 }
