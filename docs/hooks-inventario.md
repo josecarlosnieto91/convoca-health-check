@@ -9,7 +9,7 @@
 
 | Recurso | Cantidad |
 |---------|----------|
-| Hooks | 249 |
+| Hooks | 250 |
 | Shortcodes | 29 |
 
 ## Shortcodes
@@ -48,7 +48,7 @@
 
 ## Hooks por plugin
 
-### convoca-core (61 hooks)
+### convoca-core (62 hooks)
 
 | Hook | Tipo | Origen |
 |------|------|--------|
@@ -79,6 +79,7 @@
 | `convoca_log_level` | dispara | includes/Logger.php |
 | `convoca_log_purge` | escucha | convoca-core.php |
 | `convoca_log_retention_days` | dispara | includes/Logger.php |
+| `convoca_logger_rate_limit_max` | dispara | includes/Logger.php |
 | `convoca_member_created` | escucha | includes/Notifications.php |
 | `convoca_member_identity` | dispara | includes/Member_Identity.php |
 | `convoca_member_plans` | dispara | includes/Admin_Setup_Wizard.php |
