@@ -301,3 +301,177 @@ if ( ! class_exists( 'wpdb' ) ) {
 		}
 	}
 }
+
+/* ── WordPress: contenido, meta, transitorios y HTTP ─────────────── */
+
+if ( ! function_exists( 'post_type_exists' ) ) {
+	/**
+	 * ¿Existe el tipo de contenido?
+	 *
+	 * @param string $tipo Tipo.
+	 * @return bool
+	 */
+	function post_type_exists( $tipo ) {
+		hc_test_store();
+		return in_array( (string) $tipo, (array) ( $GLOBALS['hc_test']['post_types'] ?? array() ), true );
+	}
+}
+
+if ( ! function_exists( 'taxonomy_exists' ) ) {
+	/**
+	 * ¿Existe la taxonomía?
+	 *
+	 * @param string $tax Taxonomía.
+	 * @return bool
+	 */
+	function taxonomy_exists( $tax ) {
+		hc_test_store();
+		return in_array( (string) $tax, (array) ( $GLOBALS['hc_test']['taxonomias'] ?? array() ), true );
+	}
+}
+
+if ( ! function_exists( 'wp_insert_post' ) ) {
+	/**
+	 * Inserta contenido y devuelve su id (0 si se fuerza el fallo).
+	 *
+	 * @param array $args Argumentos.
+	 * @return int
+	 */
+	function wp_insert_post( $args = array() ) {
+		hc_test_store();
+
+		if ( ! empty( $GLOBALS['hc_test']['insert_falla'] ) ) {
+			return 0;
+		}
+
+		$id = (int) ( $GLOBALS['hc_test']['siguiente_id'] ?? 1000 ) + 1;
+		$GLOBALS['hc_test']['siguiente_id'] = $id;
+		$GLOBALS['hc_test']['posts'][ $id ] = array(
+			'post_type'   => (string) ( $args['post_type'] ?? 'post' ),
+			'post_title'  => (string) ( $args['post_title'] ?? '' ),
+			'post_status' => (string) ( $args['post_status'] ?? 'draft' ),
+		);
+
+		return $id;
+	}
+
+	/**
+	 * Borra contenido (se apunta qué se borró).
+	 *
+	 * @param int  $id    Id.
+	 * @param bool $fuerza Fuerza.
+	 * @return bool
+	 */
+	function wp_delete_post( $id, $fuerza = false ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['borrados'][] = array( 'id' => (int) $id, 'fuerza' => (bool) $fuerza );
+		unset( $GLOBALS['hc_test']['posts'][ (int) $id ] );
+		return true;
+	}
+
+	/**
+	 * Tipo de contenido de un id.
+	 *
+	 * @param int $id Id.
+	 * @return string|false
+	 */
+	function get_post_type( $id ) {
+		hc_test_store();
+		return $GLOBALS['hc_test']['posts'][ (int) $id ]['post_type'] ?? false;
+	}
+
+	/**
+	 * Enlace permanente de un id.
+	 *
+	 * @param int $id Id.
+	 * @return string|false
+	 */
+	function get_permalink( $id ) {
+		hc_test_store();
+		if ( ! isset( $GLOBALS['hc_test']['posts'][ (int) $id ] ) ) {
+			return false;
+		}
+		return 'https://sitio.example.test/?p=' . (int) $id;
+	}
+}
+
+if ( ! function_exists( 'update_post_meta' ) ) {
+	/**
+	 * Guarda meta (los escalares se leen como texto, como la base).
+	 *
+	 * @param int    $id    Id.
+	 * @param string $clave Clave.
+	 * @param mixed  $valor Valor.
+	 * @return bool
+	 */
+	function update_post_meta( $id, $clave, $valor ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['meta'][ (int) $id ][ (string) $clave ] = is_scalar( $valor ) ? (string) $valor : $valor;
+		return true;
+	}
+
+	/**
+	 * Lee meta.
+	 *
+	 * @param int    $id    Id.
+	 * @param string $clave Clave.
+	 * @param bool   $unico Único.
+	 * @return mixed
+	 */
+	function get_post_meta( $id, $clave = '', $unico = false ) {
+		hc_test_store();
+		$valor = $GLOBALS['hc_test']['meta'][ (int) $id ][ (string) $clave ] ?? '';
+		return $unico ? $valor : array( $valor );
+	}
+}
+
+if ( ! function_exists( 'set_transient' ) ) {
+	/**
+	 * Guarda un transitorio.
+	 *
+	 * @param string $clave Clave.
+	 * @param mixed  $valor Valor.
+	 * @param int    $ttl   Segundos.
+	 * @return bool
+	 */
+	function set_transient( $clave, $valor, $ttl = 0 ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['transients'][ (string) $clave ] = $valor;
+		return true;
+	}
+
+	/**
+	 * Lee un transitorio.
+	 *
+	 * @param string $clave Clave.
+	 * @return mixed
+	 */
+	function get_transient( $clave ) {
+		hc_test_store();
+		return $GLOBALS['hc_test']['transients'][ (string) $clave ] ?? false;
+	}
+
+	/**
+	 * Borra un transitorio.
+	 *
+	 * @param string $clave Clave.
+	 * @return bool
+	 */
+	function delete_transient( $clave ) {
+		hc_test_store();
+		unset( $GLOBALS['hc_test']['transients'][ (string) $clave ] );
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_remote_retrieve_body' ) ) {
+	/**
+	 * Cuerpo de la respuesta.
+	 *
+	 * @param array $r Respuesta.
+	 * @return string
+	 */
+	function wp_remote_retrieve_body( $r ) {
+		return (string) ( $r['body'] ?? '' );
+	}
+}
