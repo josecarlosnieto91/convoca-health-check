@@ -59,7 +59,10 @@ final class ObservabilidadTest extends TestCase {
 		if ( file_exists( $log ) ) {
 			unlink( $log );
 		}
-		if ( is_dir( $this->contenido ) ) {
+
+		// Solo se borra si es el directorio TEMPORAL del caso: cuando el panel usa `WP_CONTENT_DIR`, ese
+		// directorio es compartido con otras pruebas y no se toca.
+		if ( is_dir( $this->contenido ) && \WP_CONTENT_DIR !== $this->contenido ) {
 			rmdir( $this->contenido );
 		}
 		$GLOBALS['hc_test'] = null;

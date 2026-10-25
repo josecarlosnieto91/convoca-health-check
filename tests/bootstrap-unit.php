@@ -274,6 +274,13 @@ if ( ! class_exists( 'wpdb' ) ) {
 		public string $options = 'wp_options';
 
 		/**
+		 * Prefijo de las tablas (WordPress lo declara; sin él, leer `$wpdb->prefix` avisa).
+		 *
+		 * @var string
+		 */
+		public string $prefix = 'wp_';
+
+		/**
 		 * Consultas ejecutadas.
 		 *
 		 * @var array
@@ -296,6 +303,20 @@ if ( ! class_exists( 'wpdb' ) ) {
 		 */
 		public function prepare( $sql, ...$args ) {
 			return $sql . ' /* ' . implode( ',', array_map( 'strval', $args ) ) . ' */';
+		}
+
+		/**
+		 * Valor de una consulta (lo fija la prueba).
+		 *
+		 * @param string $sql Consulta.
+		 * @return string|null
+		 */
+		public function get_var( $sql = '' ) {
+			$this->consultas[] = (string) $sql;
+			if ( isset( $GLOBALS['hc_test']['get_var'] ) ) {
+				return $GLOBALS['hc_test']['get_var'];
+			}
+			return null;
 		}
 
 		/**
@@ -508,6 +529,15 @@ if ( ! function_exists( 'wp_remote_post' ) ) {
 	function wp_remote_post( $url, $args = array() ) {
 		hc_test_store();
 		$GLOBALS['hc_test']['http_post'][] = array( 'url' => $url, 'args' => $args );
+
+		// La misma función sirve a varias rutas (búsqueda, rebuild, webhook): la prueba puede dar una respuesta
+		// distinta por fragmento de URL. Sin esto, el `200` de la búsqueda haría pasar por «protegido» al rebuild.
+		foreach ( (array) ( $GLOBALS['hc_test']['respuesta_post_por_url'] ?? array() ) as $aguja => $respuesta ) {
+			if ( false !== strpos( (string) $url, (string) $aguja ) ) {
+				return (array) $respuesta;
+			}
+		}
+
 		return (array) ( $GLOBALS['hc_test']['respuesta_post'] ?? array( 'response' => array( 'code' => 400 ) ) );
 	}
 }
@@ -558,5 +588,99 @@ if ( ! function_exists( 'has_shortcode' ) ) {
 	 */
 	function has_shortcode( $contenido, $tag ) {
 		return false !== strpos( (string) $contenido, '[' . $tag );
+	}
+}
+
+if ( ! function_exists( 'wp_next_scheduled' ) ) {
+	/**
+	 * Cuándo está programado un evento (lo fija la prueba).
+	 *
+	 * @param string $hook Gancho.
+	 * @param array  $args Argumentos.
+	 * @return int|false
+	 */
+	function wp_next_scheduled( $hook, $args = array() ) {
+		hc_test_store();
+		$programados = (array) ( $GLOBALS['hc_test']['programados'] ?? array() );
+		return $programados[ (string) $hook ] ?? false;
+	}
+
+	/**
+	 * Desprograma un evento (se apunta).
+	 *
+	 * @param int    $marca Marca de tiempo.
+	 * @param string $hook  Gancho.
+	 * @param array  $args  Argumentos.
+	 * @return bool
+	 */
+	function wp_unschedule_event( $marca, $hook, $args = array() ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['desprogramados'][] = array( 'hook' => (string) $hook, 'marca' => $marca );
+		return true;
+	}
+}
+
+if ( ! function_exists( 'wp_upload_dir' ) ) {
+	/**
+	 * Directorio de subidas.
+	 *
+	 * @return array
+	 */
+	function wp_upload_dir() {
+		hc_test_store();
+		return (array) ( $GLOBALS['hc_test']['uploads'] ?? array( 'basedir' => WP_CONTENT_DIR . '/uploads' ) );
+	}
+}
+
+if ( ! function_exists( 'wp_get_theme' ) ) {
+	/**
+	 * Tema activo.
+	 *
+	 * @param string $slug Slug.
+	 * @return object
+	 */
+	function wp_get_theme( $slug = '' ) {
+		hc_test_store();
+		$nombre = (string) ( $GLOBALS['hc_test']['tema'] ?? 'Convoca' );
+		unset( $slug );
+		return new class( $nombre ) {
+			/**
+			 * Nombre del tema.
+			 *
+			 * @var string
+			 */
+			private string $nombre;
+
+			/**
+			 * Constructor.
+			 *
+			 * @param string $nombre Nombre.
+			 */
+			public function __construct( string $nombre ) {
+				$this->nombre = $nombre;
+			}
+
+			/**
+			 * Un campo del tema.
+			 *
+			 * @param string $campo Campo.
+			 * @return string
+			 */
+			public function get( $campo ) {
+				return 'Name' === $campo ? $this->nombre : '';
+			}
+		};
+	}
+}
+
+if ( ! function_exists( 'get_stylesheet_directory' ) ) {
+	/**
+	 * Directorio del tema activo.
+	 *
+	 * @return string
+	 */
+	function get_stylesheet_directory() {
+		hc_test_store();
+		return (string) ( $GLOBALS['hc_test']['dir_tema'] ?? WP_CONTENT_DIR . '/themes/convoca' );
 	}
 }
