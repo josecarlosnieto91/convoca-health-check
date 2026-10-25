@@ -16,6 +16,10 @@
 require_once dirname( __DIR__ ) . '/lib/cobertura.php';
 require_once dirname( __DIR__ ) . '/lib/capacidades.php';
 
+// Doble de integración del núcleo (historial de migraciones): en su propio fichero porque declara namespace.
+require_once __DIR__ . '/stubs/class-migration-history.php';
+require_once __DIR__ . '/stubs/class-logger-license.php';
+
 if ( ! defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH', '/tmp/wp/' );
 }
@@ -166,5 +170,58 @@ if ( ! function_exists( 'rest_get_server' ) ) {
 				return $this->rutas;
 			}
 		};
+	}
+}
+
+if ( ! defined( 'WP_CONTENT_DIR' ) ) {
+	define( 'WP_CONTENT_DIR', sys_get_temp_dir() . '/hc-wp-content' );
+}
+
+if ( ! function_exists( 'esc_html' ) ) {
+	/**
+	 * Escapa HTML.
+	 *
+	 * @param string $texto Texto.
+	 * @return string
+	 */
+	function esc_html( $texto ) {
+		return htmlspecialchars( (string) $texto, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( '_get_cron_array' ) ) {
+	/**
+	 * Cron del sitio (lo fija la prueba).
+	 *
+	 * @return array
+	 */
+	function _get_cron_array() {
+		hc_test_store();
+		return (array) ( $GLOBALS['hc_test']['cron'] ?? array() );
+	}
+}
+
+if ( ! function_exists( 'wp_remote_get' ) ) {
+	/**
+	 * GET HTTP apuntado, sin red.
+	 *
+	 * @param string $url  URL.
+	 * @param array  $args Argumentos.
+	 * @return array
+	 */
+	function wp_remote_get( $url, $args = array() ) {
+		hc_test_store();
+		$GLOBALS['hc_test']['http'][] = array( 'url' => $url, 'args' => $args );
+		return (array) ( $GLOBALS['hc_test']['respuesta_http'] ?? array( 'response' => array( 'code' => 200 ) ) );
+	}
+
+	/**
+	 * Código de respuesta.
+	 *
+	 * @param array $r Respuesta.
+	 * @return int
+	 */
+	function wp_remote_retrieve_response_code( $r ) {
+		return (int) ( $r['response']['code'] ?? 0 );
 	}
 }
