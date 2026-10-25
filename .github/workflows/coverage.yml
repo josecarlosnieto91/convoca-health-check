@@ -34,7 +34,11 @@ jobs:
       - name: Pruebas con cobertura
         run: |
           mkdir -p build
-          vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover build/coverage.xml --coverage-text
+          # `pcov.directory` se fija al repo a proposito: con un `<source>` que mezcla <directory> y <file>,
+          # pcov solo instrumenta el directorio y los ficheros sueltos de la raiz salen al 0 %. Medido: sin
+          # esto, `health-check.php` daba 0/603 pese a que sus funciones se ejecutan en las pruebas.
+          php -d pcov.directory="$PWD" vendor/bin/phpunit -c phpunit.xml.dist \
+            --coverage-clover build/coverage.xml --coverage-text
 
       - name: Leer la cobertura y aplicar el suelo
         run: |

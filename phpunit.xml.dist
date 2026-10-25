@@ -10,16 +10,19 @@
     </testsuite>
   </testsuites>
   <!--
-    Se mide `lib/`: la lógica pura, que es la que se puede probar sin un WordPress vivo.
+    Se mide TODO el código de la herramienta: `lib/`, `health-check.php` y `observability.php`.
 
-    `health-check.php` (1.118 líneas) queda FUERA a propósito: se auto-ejecuta al incluirse y termina con `exit()`,
-    así que no hay forma de medirlo con unit tests sin doblar medio WordPress. Su verificación es ejecutarlo contra un
-    sitio real (`wp eval-file`), que es como se usa y como lo usa el propio repo. Meterlo aquí daría un porcentaje
-    sobre código que ninguna prueba puede tocar: un número que no mide nada.
+    Antes se medía solo `lib/` (78 sentencias) con la justificación de que `health-check.php` «se auto-ejecuta y
+    termina en `exit()`, así que no hay forma de medirlo sin doblar medio WordPress». Lo primero era cierto y lo
+    segundo no: el fichero se podía cargar como biblioteca. Se sacó el MAIN detrás de una guarda
+    (`CONVOCA_HC_LIBRARY`) y sus 27 funciones se prueban desde `tests/Unit/`. Un 99,5 % sobre 78 sentencias no
+    decía nada del instrumento; el número honesto es el de ahora, sobre ~1.200.
   -->
   <source>
     <include>
       <directory>lib</directory>
+      <file>health-check.php</file>
+      <file>observability.php</file>
     </include>
   </source>
 </phpunit>

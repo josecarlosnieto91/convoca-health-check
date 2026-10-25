@@ -1038,23 +1038,6 @@ function hc_integrations() {
     }
 }
 
-// ── MAIN ──
-echo "============================================\n";
-echo "  CONVOCA HEALTH CHECK\n";
-echo "  " . home_url() . "\n";
-echo "  " . date('Y-m-d H:i:s') . "\n";
-echo "============================================\n";
-
-$start = microtime(true);
-hc_component('Convoca Core', 'convoca-core', 'hc_core');
-hc_component('Convoca Members', 'convoca-members', 'hc_members');
-hc_component('Convoca Enroll', 'convoca-enroll', 'hc_enroll');
-hc_component('Convoca Gateway', 'convoca-gateway', 'hc_gateway');
-hc_component('Convoca Shifts', 'convoca-shifts', 'hc_shifts');
-hc_component('Convoca Publisher', 'convoca-publisher', 'hc_publisher');
-hc_component('Convoca Assistant', 'convoca-assistant', 'hc_assistant');
-hc_theme_component();
-
 // Acceso al panel: las capacidades POR ENTRADA de un tipo de contenido no pueden ser globales.
 //
 // Medido el 22-10-2026 en un sitio en producción: con convoca-courses 0.2.3 activo, el tipo de contenido
@@ -1091,28 +1074,52 @@ function hc_panel() {
         'read=' . (int) user_can($admin->ID, 'read') . ' manage_options=' . (int) user_can($admin->ID, 'manage_options'));
 }
 
-hc_component('Migraciones', 'convoca-core', 'hc_migrations');
-hc_component('Higiene de código', 'convoca-core', 'hc_clean_code');
-hc_component('Integraciones', 'convoca-core', 'hc_integrations');
-hc_component('Acceso al panel', 'convoca-core', 'hc_panel');
-hc_hooks_contratos();
+// ── MAIN ──
+//
+// Se salta al cargar el fichero como BIBLIOTECA (`CONVOCA_HC_LIBRARY`), que es como lo hace la suite: sin
+// esto, incluir el fichero ejecuta la batería entera y termina en `exit()`, así que sus 27 funciones no se podían
+// probar y el repo se había quedado midiendo solo `lib/` (78 sentencias de 1.200).
+if ( ! defined( 'CONVOCA_HC_LIBRARY' ) ) {
+	echo "============================================\n";
+	echo "  CONVOCA HEALTH CHECK\n";
+	echo "  " . home_url() . "\n";
+	echo "  " . date('Y-m-d H:i:s') . "\n";
+	echo "============================================\n";
 
-$elapsed = round(microtime(true) - $start, 1);
+	$start = microtime(true);
+	hc_component('Convoca Core', 'convoca-core', 'hc_core');
+	hc_component('Convoca Members', 'convoca-members', 'hc_members');
+	hc_component('Convoca Enroll', 'convoca-enroll', 'hc_enroll');
+	hc_component('Convoca Gateway', 'convoca-gateway', 'hc_gateway');
+	hc_component('Convoca Shifts', 'convoca-shifts', 'hc_shifts');
+	hc_component('Convoca Publisher', 'convoca-publisher', 'hc_publisher');
+	hc_component('Convoca Assistant', 'convoca-assistant', 'hc_assistant');
+	hc_theme_component();
 
-// La cobertura cuenta los WARN y los SKIP (issue #10): antes eran pass/(pass+fail), así que un sitio con
-// 7 SKIP y 1 WARN informaba «Coverage: 100%». Se enseñan los dos números, y primero el que no engaña.
-$hc_cob = hc_calcular_cobertura($GLOBALS['hc_pass'], $GLOBALS['hc_fail'], $GLOBALS['hc_warn'], $GLOBALS['hc_skip']);
 
-echo "\n============================================\n";
-echo "  RESUMEN: {$GLOBALS['hc_pass']} PASS / {$GLOBALS['hc_fail']} FAIL / {$GLOBALS['hc_warn']} WARN / {$GLOBALS['hc_skip']} SKIP\n";
-echo "  Cobertura: {$hc_cob['sobre_todo']}% de todo lo que había que comprobar  ({$elapsed}s)\n";
-echo "    · de lo comprobable: {$hc_cob['sobre_comprobables']}% ({$GLOBALS['hc_pass']} de {$hc_cob['comprobables']})\n";
-if (($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) > 0) {
-    echo "    · SIN comprobar: " . ($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) . " ({$GLOBALS['hc_warn']} WARN · {$GLOBALS['hc_skip']} SKIP) — no entran en la cobertura\n";
+	hc_component('Migraciones', 'convoca-core', 'hc_migrations');
+	hc_component('Higiene de código', 'convoca-core', 'hc_clean_code');
+	hc_component('Integraciones', 'convoca-core', 'hc_integrations');
+	hc_component('Acceso al panel', 'convoca-core', 'hc_panel');
+	hc_hooks_contratos();
+
+	$elapsed = round(microtime(true) - $start, 1);
+
+	// La cobertura cuenta los WARN y los SKIP (issue #10): antes eran pass/(pass+fail), así que un sitio con
+	// 7 SKIP y 1 WARN informaba «Coverage: 100%». Se enseñan los dos números, y primero el que no engaña.
+	$hc_cob = hc_calcular_cobertura($GLOBALS['hc_pass'], $GLOBALS['hc_fail'], $GLOBALS['hc_warn'], $GLOBALS['hc_skip']);
+
+	echo "\n============================================\n";
+	echo "  RESUMEN: {$GLOBALS['hc_pass']} PASS / {$GLOBALS['hc_fail']} FAIL / {$GLOBALS['hc_warn']} WARN / {$GLOBALS['hc_skip']} SKIP\n";
+	echo "  Cobertura: {$hc_cob['sobre_todo']}% de todo lo que había que comprobar  ({$elapsed}s)\n";
+	echo "    · de lo comprobable: {$hc_cob['sobre_comprobables']}% ({$GLOBALS['hc_pass']} de {$hc_cob['comprobables']})\n";
+	if (($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) > 0) {
+	    echo "    · SIN comprobar: " . ($GLOBALS['hc_warn'] + $GLOBALS['hc_skip']) . " ({$GLOBALS['hc_warn']} WARN · {$GLOBALS['hc_skip']} SKIP) — no entran en la cobertura\n";
+	}
+	echo "============================================\n";
+
+	// Exit code: 0 solo si NO hay ningún FAIL. Se sale con 1 por defecto (sin
+	// depender de --exit-code ni de HC_EXIT), y eso es lo que documenta el README.
+	// Un exit code que no distingue el caso bueno del malo no es un criterio.
+	exit($GLOBALS['hc_fail'] > 0 ? 1 : 0);
 }
-echo "============================================\n";
-
-// Exit code: 0 solo si NO hay ningún FAIL. Se sale con 1 por defecto (sin
-// depender de --exit-code ni de HC_EXIT), y eso es lo que documenta el README.
-// Un exit code que no distingue el caso bueno del malo no es un criterio.
-exit($GLOBALS['hc_fail'] > 0 ? 1 : 0);
