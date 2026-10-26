@@ -1,0 +1,25 @@
+{
+  "repo": "convoca-theme",
+  "measured_at": "2026-10-26T17:42:18",
+  "version": "2.9.42",
+  "commit": "a9a17c6",
+  "dirty_files": 0,
+  "loc_php": 3215,
+  "php_files": 17,
+  "test_files": 18,
+  "coverage_floor": 76.0,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 18,
+  "phpstan_level8_top": "7x Parameter #1 $post_id of function convoca_get_event_meta expects int, int|false given. | 1x Function convoca_resource_hints() has parameter $urls with no value type specified in iterable type array. | 1x Function convoca_resource_hints() return type has no value type specified in iterable type array.",
+  "composer_audit_prod": null,
+  "complexity": {
+    "cc_over_10": 1,
+    "cc_over_15": 1,
+    "cc_total_over_10": 2,
+    "nesting_over_4": 0,
+    "nesting_over_6": 0,
+    "cc_files": 17
+  }
+}

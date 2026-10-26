@@ -1,0 +1,25 @@
+{
+  "repo": "convoca-publisher",
+  "measured_at": "2026-10-26T17:41:44",
+  "version": "1.22.13",
+  "commit": "efd563d",
+  "dirty_files": 0,
+  "loc_php": 9270,
+  "php_files": 30,
+  "test_files": 46,
+  "coverage_floor": 77.5,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 63,
+  "phpstan_level8_top": "6x Call to an undefined method object::get_id(). | 5x Parameter #2 $args of function wp_remote_post expects array{method?: string, timeout?: float, redirection?: int, httpversion?: string, user-agent?: string, reje | 5x Access to an undefined property object::$post_id.",
+  "composer_audit_prod": 0,
+  "complexity": {
+    "cc_over_10": 12,
+    "cc_over_15": 8,
+    "cc_total_over_10": 20,
+    "nesting_over_4": 1,
+    "nesting_over_6": 0,
+    "cc_files": 29
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "repo": "convoca-courses",
+  "measured_at": "2026-10-26T17:42:31",
+  "version": "0.3.3",
+  "commit": "32323c0",
+  "dirty_files": 0,
+  "loc_php": 12882,
+  "php_files": 66,
+  "test_files": 49,
+  "coverage_floor": 70.4,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 20,
+  "phpstan_level8_top": "7x Parameter #2 $atts of function shortcode_atts expects array, array<string, string>|string given. | 5x Parameter #3 $detail of static method Convoca\\Courses\\Handlers::redirect_back() expects string, int|string given. | 2x Parameter #1 $code of static method Convoca\\Courses\\Handlers::exam_error_key() expects string, int|string given.",
+  "composer_audit_prod": 0,
+  "complexity": {
+    "cc_over_10": 5,
+    "cc_over_15": 5,
+    "cc_total_over_10": 10,
+    "nesting_over_4": 0,
+    "nesting_over_6": 0,
+    "cc_files": 66
+  }
+}

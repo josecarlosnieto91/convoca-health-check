@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-shifts",
+  "measured_at": "2026-10-26T17:41:11",
+  "version": "2.5.35",
+  "commit": "3b63159",
+  "dirty_files": 0,
+  "loc_php": 8519,
+  "php_files": 29,
+  "test_files": 52,
+  "coverage_floor": 72.3,
+  "phpstan_config": "phpstan.neon.dist",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 199,
+  "phpstan_level8_top": "14x Access to an undefined property object::$ID. | 12x Parameter #1 $post_id of function get_post_meta expects int, int|false given. | 6x Access to an undefined property object::$display_name.",
+  "composer_audit_prod": null,
+  "complexity": {
+    "cc_over_10": 9,
+    "cc_over_15": 11,
+    "nesting_over_4": 3,
+    "nesting_over_6": 1,
+    "cc_files": 29
+  }
+}

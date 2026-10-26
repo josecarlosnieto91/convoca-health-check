@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-gateway",
+  "measured_at": "2026-10-26T17:40:43",
+  "version": "2.13.23",
+  "commit": "a00e4c1",
+  "dirty_files": 0,
+  "loc_php": 9745,
+  "php_files": 23,
+  "test_files": 54,
+  "coverage_floor": 74.1,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 107,
+  "phpstan_level8_top": "4x Access to an undefined property object::$ID. | 2x Parameter #1 $text of function esc_attr expects string, string|false given. | 2x Property WP_List_Table::$items (array<int|string, mixed>) does not accept array<int|WP_Post>|null.",
+  "composer_audit_prod": null,
+  "complexity": {
+    "cc_over_10": 17,
+    "cc_over_15": 10,
+    "nesting_over_4": 1,
+    "nesting_over_6": 0,
+    "cc_files": 23
+  }
+}

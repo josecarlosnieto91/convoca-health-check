@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-members",
+  "measured_at": "2026-10-26T17:39:43",
+  "version": "2.9.19",
+  "commit": "7397ec7",
+  "dirty_files": 0,
+  "loc_php": 25141,
+  "php_files": 58,
+  "test_files": 147,
+  "coverage_floor": 57.9,
+  "phpstan_config": "phpstan.neon.dist",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 282,
+  "phpstan_level8_top": "45x Cannot access property $ID on int|WP_Post. | 10x Argument of an invalid type array<int|WP_Post>|null supplied for foreach, only iterables are supported. | 5x Cannot access property $post_title on int|WP_Post.",
+  "composer_audit_prod": 0,
+  "complexity": {
+    "cc_over_10": 32,
+    "cc_over_15": 27,
+    "nesting_over_4": 0,
+    "nesting_over_6": 0,
+    "cc_files": 58
+  }
+}

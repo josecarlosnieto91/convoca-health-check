@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-mu-plugins",
+  "measured_at": "2026-10-26T17:42:32",
+  "version": "1.1.0",
+  "commit": "7dfa29e",
+  "dirty_files": 0,
+  "loc_php": 337,
+  "php_files": 8,
+  "test_files": 4,
+  "coverage_floor": 97.9,
+  "phpstan_config": null,
+  "phpstan_level": null,
+  "phpstan_current_errors": null,
+  "phpstan_level8_errors": null,
+  "phpstan_level8_top": null,
+  "composer_audit_prod": null,
+  "complexity": {
+    "cc_over_10": null,
+    "cc_over_15": null,
+    "nesting_over_4": null,
+    "nesting_over_6": null,
+    "cc_files": null
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-core",
+  "measured_at": "2026-10-26T17:38:50",
+  "version": "2.3.50",
+  "commit": "8bc546f",
+  "dirty_files": 0,
+  "loc_php": 14392,
+  "php_files": 45,
+  "test_files": 74,
+  "coverage_floor": 71.0,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 193,
+  "phpstan_level8_top": "6x Parameter #1 $stream of function fclose expects resource, resource|false given. | 4x Parameter #3 $subject of function preg_replace expects array<float|int|string>|string, string|null given. | 4x Parameter #2 $args of function wp_remote_post expects array{method?: string, timeout?: float, redirection?: int, httpversion?: string, user-agent?: string, reje",
+  "composer_audit_prod": 0,
+  "complexity": {
+    "cc_over_10": 26,
+    "cc_over_15": 9,
+    "nesting_over_4": 1,
+    "nesting_over_6": 0,
+    "cc_files": 45
+  }
+}

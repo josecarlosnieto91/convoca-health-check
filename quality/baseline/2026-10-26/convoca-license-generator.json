@@ -1,0 +1,25 @@
+{
+  "repo": "convoca-license-generator",
+  "measured_at": "2026-10-26T17:42:08",
+  "version": "1.0.2",
+  "commit": "395e7d1",
+  "dirty_files": 0,
+  "loc_php": 362,
+  "php_files": 3,
+  "test_files": 3,
+  "coverage_floor": 96.3,
+  "phpstan_config": "phpstan.neon.dist",
+  "phpstan_level": "0",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 15,
+  "phpstan_level8_top": "2x Cannot call method add_order_note() on WC_Order|WC_Order_Refund|true. | 1x Method Convoca\\LicenseGen\\Plugin::get_api_request_args() has parameter $body with no value type specified in iterable type array. | 1x Method Convoca\\LicenseGen\\Plugin::get_api_request_args() has parameter $extra_headers with no value type specified in iterable type array.",
+  "composer_audit_prod": null,
+  "complexity": {
+    "cc_over_10": 0,
+    "cc_over_15": 0,
+    "cc_total_over_10": 0,
+    "nesting_over_4": 0,
+    "nesting_over_6": 0,
+    "cc_files": 3
+  }
+}

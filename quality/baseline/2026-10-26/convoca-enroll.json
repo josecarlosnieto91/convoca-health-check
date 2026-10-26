@@ -1,0 +1,24 @@
+{
+  "repo": "convoca-enroll",
+  "measured_at": "2026-10-26T17:40:25",
+  "version": "2.7.69",
+  "commit": "e35ddd2",
+  "dirty_files": 0,
+  "loc_php": 22969,
+  "php_files": 73,
+  "test_files": 137,
+  "coverage_floor": 80.3,
+  "phpstan_config": "phpstan.neon",
+  "phpstan_level": "5",
+  "phpstan_current_errors": 0,
+  "phpstan_level8_errors": 357,
+  "phpstan_level8_top": "7x Cannot access property $post_title on WP_Post|null. | 6x Cannot access property $ID on int|WP_Post. | 5x Parameter #2 $timestamp of function wp_date expects int|null, int|false given.",
+  "composer_audit_prod": 0,
+  "complexity": {
+    "cc_over_10": 25,
+    "cc_over_15": 18,
+    "nesting_over_4": 5,
+    "nesting_over_6": 0,
+    "cc_files": 73
+  }
+}

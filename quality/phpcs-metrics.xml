@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  Vara de métricas de complejidad para el ecosistema Convoca.
+  No sustituye al estándar del repo (.phpcs.xml.dist): mide SOLO dos cosas.
+  Se usa pasando este fichero como standard de phpcs y el informe en JSON.
+  Umbrales: aviso >10 (warning) y bloqueo >15 (error); anidamiento >4 / >6.
+-->
+<ruleset name="ConvocaMetrics">
+  <description>Complejidad ciclomática y anidamiento para Convoca (F0 del goal de calidad).</description>
+  <rule ref="Generic.Metrics.CyclomaticComplexity">
+    <properties>
+      <property name="complexity" value="10"/>
+      <property name="absoluteComplexity" value="15"/>
+    </properties>
+  </rule>
+  <rule ref="Generic.Metrics.NestingLevel">
+    <properties>
+      <property name="nestingLevel" value="4"/>
+      <property name="absoluteNestingLevel" value="6"/>
+    </properties>
+  </rule>
+</ruleset>
