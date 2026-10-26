@@ -82,6 +82,13 @@ def main(rutas: list[str]) -> int:
 
         tag = stable_tag(raiz)
         if not tag:
+            # No es lo mismo un repo SIN readme que un readme que se olvida del Stable tag. Un tema
+            # (convoca-brand) y los mu-plugins no llevan readme.txt: avisar ahí es ruido que se aprende a
+            # ignorar, y con el ruido se ignoró también el desfase de verdad. El readme obligatorio lo
+            # vigila check-wporg-requisitos.py; aquí solo se juzga la COINCIDENCIA.
+            if not os.path.exists(os.path.join(raiz, "readme.txt")):
+                print(f"  --  {nombre}: sin readme.txt, no hay Stable tag que cuadrar")
+                continue
             print(f"FALLO {nombre}: el readme.txt no trae `Stable tag` (version {version} en {origen})")
             fallos += 1
             continue
