@@ -4,6 +4,19 @@
 
 Prueba hecha en un WordPress 7.1 limpio (PHP 8.5, MariaDB 11.4, contenedores efímeros en `127.0.0.1:8123`).
 
+### Los 7, juntos, en el mismo WordPress limpio
+
+Después de core y enroll, se instalaron y activaron **uno a uno desde su ZIP de release** members 2.9.19,
+gateway 2.13.23, shifts 2.5.35, publisher 1.22.13 y assistant 0.2.23, con los anteriores ya activos.
+
+- Estado final: **7/7 activos**, home **HTTP 200** tras cada instalación.
+- Avisos de plugin en `debug.log`: **ninguno**. Solo INFO de las migraciones (`CST/Upgrade`, `Turnos/Upgrade`,
+  `DB version updated`) y del indexador del asistente. Los únicos warnings son la falta de salida HTTPS del
+  contenedor hacia wordpress.org.
+- **Veredicto: D1 cumplido en los 7** con la salvedad del aviso de textdomain de enroll observado en el primer
+  arranque (issue #52): no se reprodujo al desactivar y reactivar, así que queda como intermitente de primer
+  arranque, no como fallo permanente.
+
 ### Core
 
 - Asset: `convoca-core-2.3.50.zip` del **release**, 5.685 KB, **493 ficheros**, **381 bajo `vendor/`**,
