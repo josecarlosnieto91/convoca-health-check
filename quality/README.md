@@ -8,7 +8,23 @@ Artefactos del goal `~/.hermes/goals/convoca-terminado-y-seguridad.md`.
 |---|---|
 | `measure-quality.sh` | Mide un repo o la lista por defecto y escribe JSON + `RESUMEN.md` en `--out`. |
 | `phpcs-metrics.xml` | Vara única de complejidad: ciclomática 10/15 y anidamiento 4/6. |
-| `baseline/YYYY-MM-DD/` | Línea base fechada: un JSON por repo, `summary.json`, `RESUMEN.md` e informe. |
+| `install-scanners.sh` | Instala PHPMD, PHPmetrics y gitleaks con versión fijada y sha; verifica en cada pasada. |
+| `run-sonar.sh` | Analiza repos con el Sonar local y guarda medidas, gate y vulnerabilidades. |
+| `semgrep.sh` + `semgrep/convoca.yml` | 8 reglas propias (SQL, XSS, LFI, SSRF, unserialize, json, roles, `@`). |
+| `gitleaks.sh` + `gitleaks.toml` | Secretos en árbol e historial, con allowlist justificada. |
+| `metrics.sh` + `phpmd.xml` | PHPMD (complejidad, NPath, longitud) y PHPmetrics (MI, LCOM). |
+| `ci-gate.sh` | Puerta de CI con **ratchet**: falla solo si un número sube respecto a `.quality/baseline.json`. |
+| `baseline/YYYY-MM-DD/` | Línea base fechada: un JSON por repo, `summary.json`, `RESUMEN.md` e informes. |
+
+La puerta de CI se publica como workflow reutilizable en `.github/workflows/quality.yml`; cada repo la llama:
+
+```yaml
+  calidad:
+    uses: josecarlosnieto91/convoca-health-check/.github/workflows/quality.yml@main
+```
+
+y aporta su `.quality/baseline.json` (`phpstan_errors`, `phpmd_total`, `semgrep_errors`,
+`composer_advisories`, `secretos`). Los cinco números solo pueden bajar.
 
 ## Uso
 
