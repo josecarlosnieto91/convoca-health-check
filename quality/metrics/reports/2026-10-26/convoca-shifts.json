@@ -1,0 +1,94 @@
+{
+  "repo": "convoca-shifts",
+  "phpmd_total": 91,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 22,
+    "ExcessiveMethodLength": 44,
+    "ExcessiveParameterList": 4,
+    "NPathComplexity": 21
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Auditoria_Horas.php",
+      55,
+      "The method render_page() has 61 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Convoca_Shifts_Upgrade_Manager.php",
+      85,
+      "The method upgrade_to_2_5_3_hour_ledger_links() has 53 lines of code. Current threshold is set to 50. Avoid really long "
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Hour_Sync.php",
+      40,
+      "The method sync_hours_to_volunteer_global() has a Cyclomatic Complexity of 25. The configured cyclomatic complexity thre"
+    ],
+    [
+      "NPathComplexity",
+      "includes/Hour_Sync.php",
+      40,
+      "The method sync_hours_to_volunteer_global() has an NPath complexity of 24516. The configured NPath complexity threshold "
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Hour_Sync.php",
+      40,
+      "The method sync_hours_to_volunteer_global() has 128 lines of code. Current threshold is set to 50. Avoid really long met"
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/admin-estadisticas.php",
+      36,
+      "The function convoca_shifts_estadisticas_page() has a Cyclomatic Complexity of 23. The configured cyclomatic complexity "
+    ],
+    [
+      "NPathComplexity",
+      "includes/admin-estadisticas.php",
+      36,
+      "The function convoca_shifts_estadisticas_page() has an NPath complexity of 49600. The configured NPath complexity thresh"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/admin-estadisticas.php",
+      36,
+      "The function convoca_shifts_estadisticas_page() has 177 lines of code. Current threshold is set to 50. Avoid really long"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/admin-estadisticas.php",
+      217,
+      "The function convoca_shifts_preload_voluntario_stats() has 67 lines of code. Current threshold is set to 50. Avoid reall"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/admin-estadisticas.php",
+      334,
+      "The function convoca_shifts_exportar_stats_csv_handler() has 53 lines of code. Current threshold is set to 50. Avoid rea"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/admin-settings.php",
+      88,
+      "The function convoca_shifts_settings_page() has 126 lines of code. Current threshold is set to 50. Avoid really long met"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/admin-settings.php",
+      218,
+      "The function convoca_shifts_render_status_tab() has 53 lines of code. Current threshold is set to 50. Avoid really long "
+    ]
+  ],
+  "classes": 114,
+  "mi_mean": 68.6,
+  "mi_min": 29.96,
+  "mi_below_65": 10,
+  "lcom_gt_2": 20,
+  "ccn_max": 33,
+  "ccn_gt_10": 5,
+  "ccn_gt_15": 5,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

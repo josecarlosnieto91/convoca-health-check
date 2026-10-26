@@ -1,0 +1,75 @@
+{
+  "repo": "convoca-theme",
+  "phpmd_total": 9,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 2,
+    "ExcessiveMethodLength": 5,
+    "NPathComplexity": 2
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "functions.php",
+      169,
+      "The function convoca_register_block_styles() has 73 lines of code. Current threshold is set to 50. Avoid really long met"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "functions.php",
+      419,
+      "The function convoca_help_page_html() has 75 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "functions.php",
+      632,
+      "The function convoca_theme_render_block() has a Cyclomatic Complexity of 14. The configured cyclomatic complexity thresh"
+    ],
+    [
+      "NPathComplexity",
+      "functions.php",
+      632,
+      "The function convoca_theme_render_block() has an NPath complexity of 1120. The configured NPath complexity threshold is "
+    ],
+    [
+      "ExcessiveMethodLength",
+      "functions.php",
+      632,
+      "The function convoca_theme_render_block() has 137 lines of code. Current threshold is set to 50. Avoid really long metho"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "functions.php",
+      1194,
+      "The function convoca_theme_lang_switcher_styles() has 62 lines of code. Current threshold is set to 50. Avoid really lon"
+    ],
+    [
+      "CyclomaticComplexity",
+      "functions.php",
+      1388,
+      "The function convoca_event_schema() has a Cyclomatic Complexity of 14. The configured cyclomatic complexity threshold is"
+    ],
+    [
+      "NPathComplexity",
+      "functions.php",
+      1388,
+      "The function convoca_event_schema() has an NPath complexity of 3456. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "functions.php",
+      1388,
+      "The function convoca_event_schema() has 101 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ]
+  ],
+  "classes": 43,
+  "mi_mean": null,
+  "mi_min": null,
+  "mi_below_65": 0,
+  "lcom_gt_2": 0,
+  "ccn_max": null,
+  "ccn_gt_10": 0,
+  "ccn_gt_15": 0,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

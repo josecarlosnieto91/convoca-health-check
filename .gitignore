@@ -7,3 +7,10 @@ __pycache__/
 *.pyc
 vendor/
 build/
+
+# Secretos de Sonar (F1)
+quality/sonar/.env
+
+# Salidas de escáneres: se regeneran con los scripts; los JSON sí se versionan.
+quality/**/*.log
+quality/**/*.err

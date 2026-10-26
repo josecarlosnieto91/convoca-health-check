@@ -1,0 +1,16 @@
+{
+  "repo": "convoca-mu-plugins",
+  "phpmd_total": 0,
+  "phpmd_by_rule": {},
+  "phpmd_top": [],
+  "classes": 4,
+  "mi_mean": null,
+  "mi_min": null,
+  "mi_below_65": 0,
+  "lcom_gt_2": 0,
+  "ccn_max": null,
+  "ccn_gt_10": 0,
+  "ccn_gt_15": 0,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

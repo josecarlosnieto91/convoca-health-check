@@ -1,0 +1,95 @@
+{
+  "repo": "convoca-enroll",
+  "phpmd_total": 204,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 47,
+    "ExcessiveClassLength": 3,
+    "ExcessiveMethodLength": 102,
+    "ExcessiveParameterList": 10,
+    "NPathComplexity": 42
+  },
+  "phpmd_top": [
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-actividades.php",
+      158,
+      "The method render_editor() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-actividades.php",
+      158,
+      "The method render_editor() has an NPath complexity of 3072. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-actividades.php",
+      158,
+      "The method render_editor() has 128 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-actividades.php",
+      290,
+      "The method handle_save_admin() has 67 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-actividades.php",
+      394,
+      "The method handle_duplicate() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-actividades.php",
+      394,
+      "The method handle_duplicate() has an NPath complexity of 720. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-actividades.php",
+      394,
+      "The method handle_duplicate() has 59 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-checkin.php",
+      36,
+      "The method render() has a Cyclomatic Complexity of 30. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-checkin.php",
+      36,
+      "The method render() has an NPath complexity of 1565568. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-checkin.php",
+      36,
+      "The method render() has 234 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-evaluacion-fields.php",
+      42,
+      "The method render_meta_box() has 55 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-evaluacion-fields.php",
+      98,
+      "The method save_meta_box() has an NPath complexity of 288. The configured NPath complexity threshold is 200."
+    ]
+  ],
+  "classes": 75,
+  "mi_mean": 57.0,
+  "mi_min": 16.54,
+  "mi_below_65": 48,
+  "lcom_gt_2": 54,
+  "ccn_max": 62,
+  "ccn_gt_10": 35,
+  "ccn_gt_15": 17,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

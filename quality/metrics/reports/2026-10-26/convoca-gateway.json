@@ -1,0 +1,96 @@
+{
+  "repo": "convoca-gateway",
+  "phpmd_total": 90,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 22,
+    "ExcessiveClassLength": 1,
+    "ExcessiveMethodLength": 39,
+    "ExcessiveParameterList": 5,
+    "NPathComplexity": 22,
+    "TooManyMethods": 1
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-generador.php",
+      75,
+      "The method render_page() has 182 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-generador.php",
+      258,
+      "The method process_generation() has an NPath complexity of 216. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-generador.php",
+      258,
+      "The method process_generation() has 60 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Links.php",
+      282,
+      "The method render_page() has 72 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Links.php",
+      389,
+      "The method render_edit() has 103 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Admin_Links.php",
+      496,
+      "The method handle_save() has a Cyclomatic Complexity of 15. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin_Links.php",
+      496,
+      "The method handle_save() has an NPath complexity of 6912. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Links.php",
+      496,
+      "The method handle_save() has 84 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Payments.php",
+      152,
+      "The method extra_tablenav() has 52 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Payments.php",
+      205,
+      "The method prepare_items() has 72 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Admin_Payments.php",
+      425,
+      "The method render_detail() has a Cyclomatic Complexity of 25. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin_Payments.php",
+      425,
+      "The method render_detail() has an NPath complexity of 1679616. The configured NPath complexity threshold is 200."
+    ]
+  ],
+  "classes": 26,
+  "mi_mean": 56.0,
+  "mi_min": 23.12,
+  "mi_below_65": 13,
+  "lcom_gt_2": 19,
+  "ccn_max": 48,
+  "ccn_gt_10": 11,
+  "ccn_gt_15": 8,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

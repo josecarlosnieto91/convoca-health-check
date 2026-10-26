@@ -1,0 +1,668 @@
+{
+    "version": "3.0.0",
+    "package": "phpmd",
+    "timestamp": "2026-10-26T17:34:48+00:00",
+    "files": [
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Admin.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Admin.php",
+            "violations": [
+                {
+                    "beginLine": 32,
+                    "endLine": 113,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Admin",
+                    "method": "register_menu",
+                    "description": "The method register_menu() has 82 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Bm25.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Bm25.php",
+            "violations": [
+                {
+                    "beginLine": 60,
+                    "endLine": 130,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Bm25",
+                    "method": "rank",
+                    "description": "The method rank() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 60,
+                    "endLine": 130,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Bm25",
+                    "method": "rank",
+                    "description": "The method rank() has an NPath complexity of 792. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 60,
+                    "endLine": 130,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Bm25",
+                    "method": "rank",
+                    "description": "The method rank() has 71 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 156,
+                    "endLine": 223,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Bm25",
+                    "method": "corpus_stats",
+                    "description": "The method corpus_stats() has 68 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Export_Import.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Export_Import.php",
+            "violations": [
+                {
+                    "beginLine": 83,
+                    "endLine": 155,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "handle_import",
+                    "description": "The method handle_import() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 83,
+                    "endLine": 155,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "handle_import",
+                    "description": "The method handle_import() has an NPath complexity of 1728. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 83,
+                    "endLine": 155,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "handle_import",
+                    "description": "The method handle_import() has 73 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 194,
+                    "endLine": 253,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "export_knowledge",
+                    "description": "The method export_knowledge() has 60 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 280,
+                    "endLine": 352,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "import_knowledge",
+                    "description": "The method import_knowledge() has a Cyclomatic Complexity of 23. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 280,
+                    "endLine": 352,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "import_knowledge",
+                    "description": "The method import_knowledge() has an NPath complexity of 4761. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 280,
+                    "endLine": 352,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Export_Import",
+                    "method": "import_knowledge",
+                    "description": "The method import_knowledge() has 73 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Fusion.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Fusion.php",
+            "violations": [
+                {
+                    "beginLine": 49,
+                    "endLine": 94,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Fusion",
+                    "method": "rrf",
+                    "description": "The method rrf() has a Cyclomatic Complexity of 11. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Graph_Builder.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Graph_Builder.php",
+            "violations": [
+                {
+                    "beginLine": 25,
+                    "endLine": 90,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Graph_Builder",
+                    "method": "build",
+                    "description": "The method build() has 66 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Indexer.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Indexer.php",
+            "violations": [
+                {
+                    "beginLine": 150,
+                    "endLine": 289,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Indexer",
+                    "method": "regenerate",
+                    "description": "The method regenerate() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 150,
+                    "endLine": 289,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Indexer",
+                    "method": "regenerate",
+                    "description": "The method regenerate() has an NPath complexity of 1536. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 150,
+                    "endLine": 289,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Indexer",
+                    "method": "regenerate",
+                    "description": "The method regenerate() has 140 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Installer.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Installer.php",
+            "violations": [
+                {
+                    "beginLine": 31,
+                    "endLine": 94,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Installer",
+                    "method": "default_settings",
+                    "description": "The method default_settings() has 64 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 99,
+                    "endLine": 238,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Installer",
+                    "method": "default_stop_words",
+                    "description": "The method default_stop_words() has 140 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Knowledge_Base.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Knowledge_Base.php",
+            "violations": [
+                {
+                    "beginLine": 157,
+                    "endLine": 207,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Knowledge_Base",
+                    "method": "register_taxonomies",
+                    "description": "The method register_taxonomies() has 51 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 216,
+                    "endLine": 269,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Knowledge_Base",
+                    "method": "register_meta",
+                    "description": "The method register_meta() has 54 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/REST_Controller.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/REST_Controller.php",
+            "violations": [
+                {
+                    "beginLine": 36,
+                    "endLine": 136,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "REST_Controller",
+                    "method": "register_routes",
+                    "description": "The method register_routes() has 101 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Reranker.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Reranker.php",
+            "violations": [
+                {
+                    "beginLine": 57,
+                    "endLine": 96,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Reranker",
+                    "method": "rerank",
+                    "description": "The method rerank has 6 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 107,
+                    "endLine": 155,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Reranker",
+                    "method": "heuristic",
+                    "description": "The method heuristic() has a Cyclomatic Complexity of 15. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 107,
+                    "endLine": 155,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Reranker",
+                    "method": "heuristic",
+                    "description": "The method heuristic() has an NPath complexity of 280. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Searcher.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Searcher.php",
+            "violations": [
+                {
+                    "beginLine": 44,
+                    "endLine": 94,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "search",
+                    "description": "The method search() has 51 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 111,
+                    "endLine": 138,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "search_fusion",
+                    "description": "The method search_fusion has 7 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 152,
+                    "endLine": 227,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "rank_composite",
+                    "description": "The method rank_composite() has a Cyclomatic Complexity of 20. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 152,
+                    "endLine": 227,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "rank_composite",
+                    "description": "The method rank_composite() has an NPath complexity of 1364. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 152,
+                    "endLine": 227,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "rank_composite",
+                    "description": "The method rank_composite() has 76 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 152,
+                    "endLine": 227,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "rank_composite",
+                    "description": "The method rank_composite has 7 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 255,
+                    "endLine": 358,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "calculate_score",
+                    "description": "The method calculate_score() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 255,
+                    "endLine": 358,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "calculate_score",
+                    "description": "The method calculate_score() has 104 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 255,
+                    "endLine": 358,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "calculate_score",
+                    "description": "The method calculate_score has 6 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 494,
+                    "endLine": 517,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Searcher",
+                    "method": "coverage_score",
+                    "description": "The method coverage_score has 7 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Settings.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Settings.php",
+            "violations": [
+                {
+                    "beginLine": 93,
+                    "endLine": 216,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Settings",
+                    "method": "sanitize",
+                    "description": "The method sanitize() has a Cyclomatic Complexity of 61. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 93,
+                    "endLine": 216,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Settings",
+                    "method": "sanitize",
+                    "description": "The method sanitize() has 124 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Starter_Pack.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Starter_Pack.php",
+            "violations": [
+                {
+                    "beginLine": 42,
+                    "endLine": 101,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Starter_Pack",
+                    "method": "contenido",
+                    "description": "The method contenido() has 60 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Statistics.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Statistics.php",
+            "violations": [
+                {
+                    "beginLine": 58,
+                    "endLine": 101,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Statistics",
+                    "method": "log",
+                    "description": "The method log has 8 parameters. Consider reducing the number of parameters to 4 or less.",
+                    "rule": "ExcessiveParameterList",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessiveparameterlist",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 109,
+                    "endLine": 174,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Statistics",
+                    "method": "get_stats",
+                    "description": "The method get_stats() has 66 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Widget.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/Widget.php",
+            "violations": [
+                {
+                    "beginLine": 35,
+                    "endLine": 183,
+                    "package": "Convoca\\Assistant",
+                    "function": null,
+                    "class": "Widget",
+                    "method": "enqueue_assets",
+                    "description": "The method enqueue_assets() has 149 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/providers\/Posts_Provider.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/providers\/Posts_Provider.php",
+            "violations": [
+                {
+                    "beginLine": 121,
+                    "endLine": 178,
+                    "package": "Convoca\\Assistant\\Providers",
+                    "function": null,
+                    "class": "Posts_Provider",
+                    "method": "get_relations",
+                    "description": "The method get_relations() has 58 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        },
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/providers\/WooCommerce_Provider.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-assistant\/includes\/providers\/WooCommerce_Provider.php",
+            "violations": [
+                {
+                    "beginLine": 130,
+                    "endLine": 194,
+                    "package": "Convoca\\Assistant\\Providers",
+                    "function": null,
+                    "class": "WooCommerce_Provider",
+                    "method": "get_relations",
+                    "description": "The method get_relations() has 65 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,96 @@
+{
+  "repo": "convoca-core",
+  "phpmd_total": 119,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 25,
+    "ExcessiveClassLength": 2,
+    "ExcessiveMethodLength": 56,
+    "ExcessiveParameterList": 7,
+    "NPathComplexity": 28,
+    "TooManyMethods": 1
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveParameterList",
+      "includes/Admin/Andamiaje_Admin.php",
+      121,
+      "The method registrar_subpagina has 6 parameters. Consider reducing the number of parameters to 4 or less."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Admin/Andamiaje_Admin.php",
+      161,
+      "The method redirigir_editor_propio() has a Cyclomatic Complexity of 15. The configured cyclomatic complexity threshold i"
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin/Andamiaje_Admin.php",
+      161,
+      "The method redirigir_editor_propio() has an NPath complexity of 648. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin/Andamiaje_Admin.php",
+      210,
+      "The method redirigir_pantallas_crudas() has an NPath complexity of 288. The configured NPath complexity threshold is 200"
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Analytics.php",
+      75,
+      "The method get_member_stats() has 66 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Analytics.php",
+      147,
+      "The method get_inscription_stats() has 55 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Admin_Analytics.php",
+      208,
+      "The method get_payment_stats() has a Cyclomatic Complexity of 11. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin_Analytics.php",
+      208,
+      "The method get_payment_stats() has an NPath complexity of 336. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Analytics.php",
+      208,
+      "The method get_payment_stats() has 120 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin_Analytics.php",
+      360,
+      "The method get_trends() has 62 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Admin_Analytics.php",
+      453,
+      "The method render_chart() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Admin_Analytics.php",
+      453,
+      "The method render_chart() has an NPath complexity of 324. The configured NPath complexity threshold is 200."
+    ]
+  ],
+  "classes": 81,
+  "mi_mean": 71.0,
+  "mi_min": 25.99,
+  "mi_below_65": 15,
+  "lcom_gt_2": 34,
+  "ccn_max": 33,
+  "ccn_gt_10": 19,
+  "ccn_gt_15": 9,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

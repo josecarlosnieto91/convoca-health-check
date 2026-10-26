@@ -1,0 +1,164 @@
+rules:
+  # ── Inyección SQL: superglobal → $wpdb ─────────────────────────────────────────────
+  - id: convoca-sql-sin-preparar
+    languages: [php]
+    mode: taint
+    severity: ERROR
+    message: >-
+      Entrada de usuario llega a una consulta de $wpdb sin pasar por prepare().
+      Usa $wpdb->prepare() o una lista blanca cerrada.
+    metadata:
+      category: security
+      cwe: "CWE-89: SQL Injection"
+    pattern-sources:
+      - pattern: $_GET[...]
+      - pattern: $_POST[...]
+      - pattern: $_REQUEST[...]
+      - pattern: $_COOKIE[...]
+    pattern-sanitizers:
+      - pattern: $WPDB->prepare(...)
+      - pattern: intval(...)
+      - pattern: absint(...)
+      - pattern: sanitize_key(...)
+    pattern-sinks:
+      - pattern: $WPDB->query(...)
+      - pattern: $WPDB->get_results(...)
+      - pattern: $WPDB->get_row(...)
+      - pattern: $WPDB->get_var(...)
+      - pattern: $WPDB->get_col(...)
+
+  # ── XSS: salida directa de una superglobal o de una variable asignada de ella ──────
+  # Se deja en patrones de secuencia, no en taint: el taint de PHP marca como contaminado
+  # el retorno de $wpdb->get_results()/get_posts() cuando la consulta lleva un $_GET y
+  # produce decenas de falsos positivos en listados del panel (medido: 44 en 6 repos,
+  # todos sobre variables que vienen de la base de datos, no de la petición).
+  - id: convoca-salida-sin-escapar
+    languages: [php]
+    severity: ERROR
+    message: >-
+      Entrada de usuario llega a la salida sin escapar. Usa esc_html(), esc_attr(),
+      esc_url() o wp_kses() según el contexto.
+    metadata:
+      category: security
+      cwe: "CWE-79: Cross-site Scripting"
+    pattern-either:
+      - pattern: echo $_GET[...];
+      - pattern: echo $_POST[...];
+      - pattern: echo $_REQUEST[...];
+      - pattern: print $_GET[...];
+      - pattern: print $_POST[...];
+      - pattern: printf($_GET[...], ...);
+      - pattern: printf($_POST[...], ...);
+      - pattern: |
+          $V = $_GET[...];
+          ...
+          echo $V;
+      - pattern: |
+          $V = $_POST[...];
+          ...
+          echo $V;
+      - pattern: |
+          $V = $_REQUEST[...];
+          ...
+          echo $V;
+
+  # ── LFI: superglobal → include/require o lectura de fichero ────────────────────────
+  - id: convoca-fichero-desde-entrada
+    languages: [php]
+    mode: taint
+    severity: ERROR
+    message: >-
+      La ruta de un fichero viene de entrada de usuario. Normaliza con una lista blanca
+      y realpath() antes de incluir o leer.
+    metadata:
+      category: security
+      cwe: "CWE-98: File Inclusion"
+    pattern-sources:
+      - pattern: $_GET[...]
+      - pattern: $_POST[...]
+      - pattern: $_REQUEST[...]
+      - pattern: $_COOKIE[...]
+    pattern-sanitizers:
+      - pattern: basename(...)
+      - pattern: realpath(...)
+      - pattern: sanitize_file_name(...)
+      # Resolvedores de ruta con lista blanca: comprueban token, propietario y que el
+      # realpath quede dentro del directorio permitido (ver members#48). Si se añade otro,
+      # se suma aquí con su guarda escrita.
+      - pattern: $OBJ->ruta_por_ficha(...)
+      - pattern: self::ruta_por_ficha(...)
+      - pattern: static::ruta_por_ficha(...)
+    pattern-sinks:
+      - pattern: include ...
+      - pattern: include_once ...
+      - pattern: require ...
+      - pattern: require_once ...
+      - pattern: file_get_contents(...)
+      - pattern: fopen(...)
+
+  # ── SSRF: superglobal → petición HTTP kelvin ──────────────────────────────────────
+  - id: convoca-ssrf
+    languages: [php]
+    mode: taint
+    severity: ERROR
+    message: >-
+      URL controlada por el usuario en una petición saliente. Valida el host contra una
+      lista blanca; wp_http_validate_url() no basta para redes internas.
+    metadata:
+      category: security
+      cwe: "CWE-918: Server-Side Request Forgery"
+    pattern-sources:
+      - pattern: $_GET[...]
+      - pattern: $_POST[...]
+      - pattern: $_REQUEST[...]
+    pattern-sinks:
+      - pattern: wp_remote_get(...)
+      - pattern: wp_remote_post(...)
+      - pattern: wp_remote_request(...)
+      - pattern: wp_safe_remote_get(...)
+      - pattern: wp_safe_remote_post(...)
+
+  # ── Deserialización de datos externos ─────────────────────────────────────────────
+  - id: convoca-unserialize
+    languages: [php]
+    severity: WARNING
+    message: >-
+      unserialize() sobre datos que pueden venir de fuera permite object injection.
+      Usa json_decode() o restringe la entrada con allowed_classes.
+    metadata:
+      category: security
+      cwe: "CWE-502: Deserialization of Untrusted Data"
+    pattern: unserialize(...)
+
+  # ── json_decode indexado sin comprobar null ───────────────────────────────────────
+  - id: convoca-json-sin-comprobar
+    languages: [php]
+    severity: WARNING
+    message: >-
+      Se indexa el resultado de json_decode() sin comprobar que no sea null. Si el JSON
+      es inválido, la lectura falla en silencio.
+    metadata:
+      category: correctness
+    pattern: json_decode(...)[...]
+
+  # ── Creación de roles fuera de core (política del producto) ───────────────────────
+  - id: convoca-add-role
+    languages: [php]
+    severity: WARNING
+    message: >-
+      add_role() en un plugin que no es core: los roles son vocabulario del producto y
+      los define core una sola vez. Revisar (se excluye core al ejecutar).
+    metadata:
+      category: policy
+    pattern: add_role(...)
+
+  # ── Silenciador de errores ────────────────────────────────────────────────────────
+  - id: convoca-arroba-silenciador
+    languages: [php]
+    severity: WARNING
+    message: >-
+      El operador @ oculta el error. Comprueba el retorno y registra el fallo con el
+      Logger en vez de silenciarlo.
+    metadata:
+      category: correctness
+    pattern: "@$FUNC(...)"

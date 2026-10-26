@@ -1,0 +1,95 @@
+{
+  "repo": "convoca-courses",
+  "phpmd_total": 51,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 14,
+    "ExcessiveMethodLength": 17,
+    "ExcessiveParameterList": 4,
+    "NPathComplexity": 15,
+    "TooManyMethods": 1
+  },
+  "phpmd_top": [
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-examen.php",
+      159,
+      "The method save() has a Cyclomatic Complexity of 17. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-examen.php",
+      159,
+      "The method save() has an NPath complexity of 49152. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-examen.php",
+      211,
+      "The method handle_question_save() has a Cyclomatic Complexity of 17. The configured cyclomatic complexity threshold is 1"
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-examen.php",
+      211,
+      "The method handle_question_save() has an NPath complexity of 65536. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-fields.php",
+      226,
+      "The method save_course() has a Cyclomatic Complexity of 15. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-fields.php",
+      226,
+      "The method save_course() has an NPath complexity of 16384. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Attempts.php",
+      69,
+      "The method open() has an NPath complexity of 384. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Attempts.php",
+      69,
+      "The method open() has 86 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Attempts.php",
+      166,
+      "The method submit() has an NPath complexity of 288. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Attempts.php",
+      166,
+      "The method submit() has 104 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Attempts.php",
+      577,
+      "The method decode() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/CPT_Curso.php",
+      79,
+      "The method meta() has 104 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ]
+  ],
+  "classes": 55,
+  "mi_mean": 83.3,
+  "mi_min": 39.86,
+  "mi_below_65": 6,
+  "lcom_gt_2": 42,
+  "ccn_max": 23,
+  "ccn_gt_10": 10,
+  "ccn_gt_15": 4,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

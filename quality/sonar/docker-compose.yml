@@ -1,0 +1,47 @@
+# SonarQube Community Build + PostgreSQL para el ecosistema Convoca.
+# La contraseña se lee de .env (gitignored) y vive en `pass show convoca/sonar-db`.
+# La imagen se fija por digest tras la primera descarga (ver README).
+services:
+  db:
+    image: docker.io/library/postgres@sha256:266d3c257594e195b309ae9d1805e54c788f1d7b375f56bf6c367aac6c917e7b
+    container_name: convoca-sonar-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: ${SONAR_DB_PASSWORD:?falta SONAR_DB_PASSWORD en .env}
+      POSTGRES_DB: sonar
+    volumes:
+      - sonar_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sonar -d sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  sonar:
+    image: docker.io/library/sonarqube@sha256:0b3408443fb6a311253de27941b10977c9b977fd53be2265947bfe14161308b8
+    container_name: convoca-sonar
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:9000:9000"
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: ${SONAR_DB_PASSWORD}
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: "true"
+      SONAR_WEB_JAVAOPTS: "-Xmx1g -Xms256m"
+      SONAR_CE_JAVAOPTS: "-Xmx1g -Xms256m"
+      SONAR_SEARCH_JAVAOPTS: "-Xmx1g -Xms256m"
+    volumes:
+      - sonar_data:/opt/sonarqube/data
+      - sonar_extensions:/opt/sonarqube/extensions
+      - sonar_logs:/opt/sonarqube/logs
+
+volumes:
+  sonar_db:
+  sonar_data:
+  sonar_extensions:
+  sonar_logs:

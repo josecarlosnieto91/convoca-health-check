@@ -1,0 +1,94 @@
+{
+  "repo": "convoca-assistant",
+  "phpmd_total": 43,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 9,
+    "ExcessiveMethodLength": 22,
+    "ExcessiveParameterList": 6,
+    "NPathComplexity": 6
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "includes/Admin.php",
+      32,
+      "The method register_menu() has 82 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Bm25.php",
+      60,
+      "The method rank() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Bm25.php",
+      60,
+      "The method rank() has an NPath complexity of 792. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Bm25.php",
+      60,
+      "The method rank() has 71 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Bm25.php",
+      156,
+      "The method corpus_stats() has 68 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Export_Import.php",
+      83,
+      "The method handle_import() has a Cyclomatic Complexity of 13. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Export_Import.php",
+      83,
+      "The method handle_import() has an NPath complexity of 1728. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Export_Import.php",
+      83,
+      "The method handle_import() has 73 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Export_Import.php",
+      194,
+      "The method export_knowledge() has 60 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "includes/Export_Import.php",
+      280,
+      "The method import_knowledge() has a Cyclomatic Complexity of 23. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "includes/Export_Import.php",
+      280,
+      "The method import_knowledge() has an NPath complexity of 4761. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "includes/Export_Import.php",
+      280,
+      "The method import_knowledge() has 73 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ]
+  ],
+  "classes": 33,
+  "mi_mean": 74.2,
+  "mi_min": 44.21,
+  "mi_below_65": 5,
+  "lcom_gt_2": 21,
+  "ccn_max": 61,
+  "ccn_gt_10": 9,
+  "ccn_gt_15": 6,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

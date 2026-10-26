@@ -1,0 +1,96 @@
+{
+  "repo": "convoca-members",
+  "phpmd_total": 234,
+  "phpmd_by_rule": {
+    "CyclomaticComplexity": 54,
+    "ExcessiveClassLength": 4,
+    "ExcessiveMethodLength": 112,
+    "ExcessiveParameterList": 10,
+    "NPathComplexity": 51,
+    "TooManyMethods": 3
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-dashboard.php",
+      60,
+      "The method render_widget() has 60 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-dashboard.php",
+      136,
+      "The method get_stats() has 106 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-dashboard.php",
+      246,
+      "The method get_alerts() has 65 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-dashboard.php",
+      342,
+      "The method widget_styles() has 63 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-horas.php",
+      129,
+      "The method handle_save_admin() has a Cyclomatic Complexity of 15. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-horas.php",
+      129,
+      "The method handle_save_admin() has an NPath complexity of 1800. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-horas.php",
+      129,
+      "The method handle_save_admin() has 70 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-horas.php",
+      200,
+      "The method render_editor_page() has a Cyclomatic Complexity of 17. The configured cyclomatic complexity threshold is 10."
+    ],
+    [
+      "NPathComplexity",
+      "admin/class-admin-horas.php",
+      200,
+      "The method render_editor_page() has an NPath complexity of 65536. The configured NPath complexity threshold is 200."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-horas.php",
+      200,
+      "The method render_editor_page() has 152 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "ExcessiveMethodLength",
+      "admin/class-admin-horas.php",
+      353,
+      "The method render_page() has 63 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ],
+    [
+      "CyclomaticComplexity",
+      "admin/class-admin-horas.php",
+      417,
+      "The method handle_export_csv() has a Cyclomatic Complexity of 12. The configured cyclomatic complexity threshold is 10."
+    ]
+  ],
+  "classes": 76,
+  "mi_mean": 62.4,
+  "mi_min": 17.58,
+  "mi_below_65": 40,
+  "lcom_gt_2": 55,
+  "ccn_max": 56,
+  "ccn_gt_10": 32,
+  "ccn_gt_15": 21,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

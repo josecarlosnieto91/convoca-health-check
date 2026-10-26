@@ -1,0 +1,130 @@
+{
+    "version": "3.0.0",
+    "package": "phpmd",
+    "timestamp": "2026-10-26T17:34:49+00:00",
+    "files": [
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-theme\/functions.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-theme\/functions.php",
+            "violations": [
+                {
+                    "beginLine": 169,
+                    "endLine": 241,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_register_block_styles",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_register_block_styles() has 73 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 419,
+                    "endLine": 493,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_help_page_html",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_help_page_html() has 75 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 632,
+                    "endLine": 768,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_theme_render_block",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_theme_render_block() has a Cyclomatic Complexity of 14. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 632,
+                    "endLine": 768,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_theme_render_block",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_theme_render_block() has an NPath complexity of 1120. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 632,
+                    "endLine": 768,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_theme_render_block",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_theme_render_block() has 137 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 1194,
+                    "endLine": 1255,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_theme_lang_switcher_styles",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_theme_lang_switcher_styles() has 62 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 1388,
+                    "endLine": 1488,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_event_schema",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_event_schema() has a Cyclomatic Complexity of 14. The configured cyclomatic complexity threshold is 10.",
+                    "rule": "CyclomaticComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#cyclomaticcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 1388,
+                    "endLine": 1488,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_event_schema",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_event_schema() has an NPath complexity of 3456. The configured NPath complexity threshold is 200.",
+                    "rule": "NPathComplexity",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#npathcomplexity",
+                    "priority": 3
+                },
+                {
+                    "beginLine": 1388,
+                    "endLine": 1488,
+                    "package": "Convoca\\Theme\\Convoca-theme",
+                    "function": "convoca_event_schema",
+                    "class": null,
+                    "method": null,
+                    "description": "The function convoca_event_schema() has 101 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        }
+    ]
+}

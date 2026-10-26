@@ -1,0 +1,25 @@
+{
+  "repo": "convoca-license-generator",
+  "phpmd_total": 1,
+  "phpmd_by_rule": {
+    "ExcessiveMethodLength": 1
+  },
+  "phpmd_top": [
+    [
+      "ExcessiveMethodLength",
+      "convoca-license-generator.php",
+      130,
+      "The method on_order_completed() has 88 lines of code. Current threshold is set to 50. Avoid really long methods."
+    ]
+  ],
+  "classes": 6,
+  "mi_mean": 83.0,
+  "mi_min": 66.84,
+  "mi_below_65": 0,
+  "lcom_gt_2": 1,
+  "ccn_max": 9,
+  "ccn_gt_10": 0,
+  "ccn_gt_15": 0,
+  "funcs_ccn_gt_15": 0,
+  "funcs_gt_15_top": []
+}

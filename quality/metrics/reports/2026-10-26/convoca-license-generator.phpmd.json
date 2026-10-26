@@ -1,0 +1,26 @@
+{
+    "version": "3.0.0",
+    "package": "phpmd",
+    "timestamp": "2026-10-26T17:34:48+00:00",
+    "files": [
+        {
+            "file": "\/home\/josecnr91\/repos\/convoca-license-generator\/convoca-license-generator.php",
+            "relativePath": "\/home\/josecnr91\/repos\/convoca-license-generator\/convoca-license-generator.php",
+            "violations": [
+                {
+                    "beginLine": 130,
+                    "endLine": 217,
+                    "package": "Convoca\\LicenseGen",
+                    "function": null,
+                    "class": "Plugin",
+                    "method": "on_order_completed",
+                    "description": "The method on_order_completed() has 88 lines of code. Current threshold is set to 50. Avoid really long methods.",
+                    "rule": "ExcessiveMethodLength",
+                    "ruleSet": "Code Size Rules",
+                    "externalInfoUrl": "https:\/\/phpmd.org\/rules\/codesize.html#excessivemethodlength",
+                    "priority": 3
+                }
+            ]
+        }
+    ]
+}

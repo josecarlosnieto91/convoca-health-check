@@ -1,0 +1,19 @@
+# Allowlist de gitleaks para el ecosistema Convoca.
+# Cada entrada lleva su motivo: una allowlist sin motivo es una venda.
+title = "Convoca"
+
+[allowlist]
+description = "Falsos positivos medidos y justificados (F2, 26/10/2026)."
+# Contraseña del WordPress efímero que levanta el CI para la demo: no es un secreto real,
+# el contenedor se destruye al terminar el job y no toca ningún sitio.
+regexes = [
+  '''NoEsUnSecreto123''',
+  # Clave de comercio de PRUEBAS de Redsys, publicada por Redsys en su documentación
+  # y usada en los tests unitarios del gateway.
+  '''sq7HjrUOBfKmC576ILgskD5srU870gJ7''',
+]
+# Los fixtures de test y los scripts de verificación local no son superficie de producción.
+paths = [
+  '''tests/''',
+  '''dev-tools/''',
+]
