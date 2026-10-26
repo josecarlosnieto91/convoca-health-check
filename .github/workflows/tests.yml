@@ -143,6 +143,15 @@ jobs:
       - name: Contrato del guardián de acoplamiento
         run: python3 health/scripts/check-acoplamiento_test.py
 
+      # El guardián del Stable tag distingue «readme sin tag» (un olvido, rc=1) de «repo sin readme» (un tema
+      # o un mu-plugin, no aplica, rc=0). Los confundía, y el 26/10/2026 marcó en rojo tres repos que no
+      # tenían nada que cuadrar.
+      - name: Contrato del guardián del Stable tag
+        run: python3 health/scripts/check-stable-tag_test.py
+
+      - name: Contrato del guardián de higiene de datos
+        run: python3 health/scripts/check-data-hygiene_test.py
+
       - name: Dos plugins no pueden declarar la misma función global ni la misma clase
         env:
           WS: ${{ github.workspace }}/workspace
