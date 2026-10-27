@@ -72,3 +72,73 @@ retorno. El orden de ataque es: `argument.type` y `return.type` primero (riesgo 
 - Los tres identificadores de riesgo (`argument.type`, `return.type`, `assign.propertyType`) a cero.
 - Los `property.nonObject` resueltos con un stub propio tipado o documentados como artefacto del oficial.
 - PHPStan nivel 8 sin baseline en el comando del CI (la baseline puede quedarse como fichero vacío).
+
+## Cierre — 27/10/2026: los siete a cero
+
+Burn-down completo. **1.279 → 0** errores de nivel 8, y **sin baseline en ninguno de los siete**: el fichero
+`phpstan-baseline.neon` se ha eliminado y su `includes:` retirado de la config, así que cualquier error nuevo
+rompe el CI desde el primer commit.
+
+| Repo | Inicial | Final | Commit de cierre | PHPMD (base) | Tests |
+|---|---:|---:|---|---:|---:|
+| core | 193 | **0** | `56b2689` | 119 (=) | 656 |
+| members | 282 | **0** | `c662849` | 233 (base 234) | 1.083 |
+| enroll | 357 | **0** | `7ffb4ca` | 205 (base 204 → 205, justificado) | 934 |
+| gateway | 107 | **0** | `fe4b511` | 90 (=) | 491 |
+| shifts | 199 | **0** | `255be53` | 91 (=) | 447 |
+| publisher | 63 | **0** | `3928e07` | 82 (=) | 476 |
+| assistant | 78 | **0** | `bd72a5b` | 43 (=) | 279 |
+
+En los siete: `make lint` en rc=0, la suite completa en verde y **CI en `success`** (PHPStan, PHPCS, PCP,
+PHPUnit 8.2/8.3, acoplamiento entre plugins, higiene de datos e integración con WordPress real).
+
+### Qué se arregló (no era cosmético)
+
+Las correcciones con impacto en ejecución, por orden de gravedad:
+
+- **Firmas de Redsys calculadas sobre `false`** (gateway): sin clave derivada, el HMAC se calculaba con cadena
+  vacía y salía una firma que *parecía* válida. Ahora se registra el error y `sign()` devuelve vacío.
+- **Cuerpos de `wp_remote_post()` con `wp_json_encode()` sin comprobar** (publisher ×5, core, gateway, enroll):
+  un `false` enviaba una petición sin cuerpo.
+- **`get_the_ID()`/`get_post()` normalizados a `int`** (shifts, enroll, members): se pasaban `int|false` a
+  `get_post_meta()` y `wp_get_post_terms()`.
+- **`WP_Error` de taxonomías leído con `[0]`** (shifts, enroll): `empty()` no cubre un `WP_Error`; era un fatal.
+- **`$query->posts` nullable** recorrido con `foreach` y asignado a `WP_List_Table::$items` (members, enroll,
+  shifts, core).
+- **Exportadores CSV/PDF** que recorrían `posts` con posibles IDs sueltos (gateway).
+- **`get_userdata()` `false`** leído como objeto (members, enroll).
+- **`ob_get_clean()`** en métodos que declaran `string` (core, members, gateway).
+- **`preg_replace`/`preg_split`/`glob`** con `null`/`false` hacia funciones que exigen cadena o iterable.
+
+### Las dos veces que la puerta dijo no
+
+La puerta de calidad rechazó dos tandas por PHPMD y **se resolvió con código, no subiendo la base**:
+`Admin_Backup::construir_zip()` en core (se extrajo `temp_stream()`) y `PDF_Exporter::export()` en gateway (se
+extrajo `pagos_de()`). En core, la comprobación de `WP_Post` se sustituyó por la precondición documentada de
+`page_state()` para no añadir una rama.
+
+**Única subida, justificada:** `convoca-enroll` 204 → **205** porque `Admin_Settings` pasa a 1045 líneas al
+documentar los tipos de sus ocho pestañas. No se borró la documentación para maquillar la métrica: el motivo
+está escrito en `.quality/baseline.json` y la separación de las pestañas queda en **convoca-enroll#53**.
+
+### Cómo se hizo (repetible)
+
+1. Listado completo con `--error-format=json` y la config del CI **sin** baseline.
+2. Tanda 1: tipado (void nativo donde no hay retorno, `mixed` en parámetros sin tipo, docblocks en iterables).
+3. Tanda 2: los errores con nombre (`argument.type`, `return.type`, `property.nonObject`, `offsetAccess`),
+   uno a uno, leyendo el código.
+4. `make lint`, `make test` y PHPMD **antes** de commitear; `phpcbf` para la alineación de docblocks.
+5. Baseline regenerada por repo; cuando llega a 0, **se elimina el fichero** y se retira el `includes:`.
+6. CI en verde y espera real al run, no al `push`.
+7. Trampa aprendida: hay que **limpiar la caché de resultados de PHPStan** (`clear-result-cache`) antes de cada
+   medición; con caché caliente aparecen `class.notFound` fantasma y desaparecen errores reales.
+8. Trampa aprendida: los dobles de los tests no son `WP_Post`/`WP_User` reales. Las guardas con `instanceof`
+   rompen la suite (member y Google Photos): donde el doble tiene la misma forma, se comprueba la propiedad
+   (`isset`) o `is_object()`.
+
+### Lo que sigue fuera de F6
+
+- **F4 comercial** (compra en Redsys TEST, emisión, PRO desbloqueado, actualización y revocación): bloqueo de
+  negocio, requiere un pedido y una licencia reales.
+- Defectos abiertos: **publisher#14** (8 vs 7 redes), **enroll#52** (textdomain intermitente al primer
+  arranque), **assistant#23** (CORS), **enroll#53** (separar las pestañas de ajustes).
