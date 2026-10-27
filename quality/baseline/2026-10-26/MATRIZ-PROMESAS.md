@@ -34,21 +34,33 @@ probar** (hay código, no hay prueba funcional mía), **no lo encuentro** (defec
 | Gateway | «sin comisiones externas» | Redsys cobra comisión al comercio | **promesa a matizar** |
 | Shifts | calendario, check-in, estadísticas, sincronización | admin/rest/cpt | probado en suites |
 | Shifts | gamificación | **no aparece en el código de shifts** (sí en members) | **no lo encuentro** |
-| Publisher | **8 redes** | 3 gratis + 4 PRO = **7** clases de canal | **no se cumple** → publisher#14 |
+| Publisher | **8 redes** | 3 gratis (Facebook **+ Instagram**, X, LinkedIn) + 4 PRO (GMB, Mastodon, Telegram, TikTok) = **8 redes** en 7 canales | **probado** (9 tests de Instagram: publicación y verificación) |
 | Publisher | GMB, plantillas, reintentos, cifrado de tokens | class-googlemybusiness, class-crypto, cola | existe |
 | Assistant | widget, sin IA, 100 % local | REST + widget + índice local | probado en suites |
 | PRO | automatizaciones, gamificación, offline, carteles, webhooks, bloques, PDF | código en 6 plugins | existe; falta prueba funcional por plan |
-| PRO | 8 redes | 7 implementadas | **no se cumple** → publisher#14 |
+| PRO | 8 redes | Instagram va dentro del canal Facebook/Instagram | **probado** |
 | PRO | notificaciones push | ntfy.sh | existe; servicio externo |
 
 ## Lo que hay que decidir o corregir
 
-1. **8 redes** → implementar la octava (Instagram no tiene clase) o corregir la web. Issue publisher#14.
-2. **«Sin comisiones externas»** → matizar («sin comisiones *de Convoca*»). Decisión de JC.
-3. **Push por ntfy.sh** → o se documenta como servicio externo y se hace opt-in, o se retira del mensaje de
-   privacidad. Decisión de JC.
-4. **Gamificación en Shifts** → la web la vende en el plan PRO; en shifts no está. O se implementa o se retira.
-5. **«2 minutos»** → medirlo con cronómetro en la instalación limpia, no afirmarlo.
+1. ~~**8 redes**~~ → **no era defecto**: Instagram se publica desde el canal «Facebook / Instagram»
+   (contenedor + publicación, 9 tests). El error fue mío al contar clases de canal en vez de redes. publisher#14 cerrado.
+2. **«Sin comisiones externas»** → **decidido**: «sin comisiones de Convoca». Aplicado en la home el 27/10.
+3. **Push por ntfy.sh** → **decidido**: opt-in, documentado y con aviso en la política de privacidad.
+4. **Gamificación en Shifts** → **decidido**: fuera de la tarjeta de Shifts (sigue en PRO, donde vive Members).
+   Aplicado en la home el 27/10.
+5. **«2 minutos»** → **decidido**: sin cifra. Home, «plugin-wordpress-asociaciones» y «cómo funciona»
+   pasan a «en un rato» / «es rápido» el 27/10.
+
+## Decisiones de producto (27/10)
+
+- **Bizum**: probado en producción en Lugg y funcionaba. Se queda anunciado.
+- **Check-in sin cobertura**: hay que probar la PWA sin red y, según salga, ajustar el texto.
+- **Licencia = 1 sitio**: el staging del mismo sitio no consume licencia.
+- **Precio PRO**: 99 €/año, IVA incluido, renovación manual. Al caducar se paran las actualizaciones;
+  el plugin sigue funcionando.
+- **«Gratis para siempre»**: definido en `convoca-docs/docs/guides/licensing.md` (freemium por plugin,
+  con la tabla de qué es PRO en cada uno). Corregido: 1 sitio + staging, 8 redes y courses.
 
 ## Lo que sí está probado hoy
 
