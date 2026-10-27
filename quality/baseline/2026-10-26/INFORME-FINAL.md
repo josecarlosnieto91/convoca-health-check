@@ -76,10 +76,12 @@ decisión de producto en dos puntos (`publisher#14`: la web dice 8 redes y el c�
 
 ## Riesgos abiertos
 
-- **F4 comercial sin probar**: compra en Redsys TEST, emisión, desbloqueo PRO, actualización y revocación.
-  Bloqueo de negocio: hace falta un pedido y una licencia reales.
-- **Releases desfasados**: `license-generator` 1.0.2 frente a `v1.0.0`; el tema 2.9.42 frente a `v2.7.0`.
-  Publicar es decisión de JC.
+- **F4 comercial**: el circuito de compra por Redsys se validó en producción en **Lugg** (confirmado por JC el
+  27/10). En esta máquina no se reprodujo: compra TEST, emisión, desbloqueo PRO, actualización y revocación
+  siguen sin ejecución local, y así queda escrito.
+- **Releases**: alineados el 27/10. `license-generator` v1.0.2 (15 KB, ZIP del propio tag) y tema v2.9.42
+  (994 KB, sin `vendor`: no hay dependencias de producción). Los siete plugins y `courses` ya estaban al día.
+  `mu-plugins` no publica releases: es interno.
 - **`Admin_Settings` con 1045 líneas** (`enroll#53`): el ratchet subió 1 punto; la separación de pestañas es la
   solución pendiente.
 - **Cobertura baja en members (60,2 %)**: el repo con más código (25.141 LOC) y el que más lejos está del 70 %.
